@@ -26,8 +26,7 @@ import server.Component;
 import java.io.IOException;
 import java.util.Calendar;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import javax.servlet.http.HttpServletResponse;
  
 import org.springframework.stereotype.Controller;
