@@ -1,0 +1,33 @@
+<!-- <div ng-include="'views/navigator.html'"></div> -->
+<div ng-include="'resources/views/navigator.html'"></div>
+
+<div id="form-container">
+
+  <div class="page-header text-center">
+ <!--   	<h1>SPECS Application Negotiation Wizard</h1>   -->
+			<h1>Negotiation Steps</h1>
+    
+
+
+    <comp-navbar></comp-navbar>
+
+
+  </div>
+  
+  
+  <!-- show our formData as it is being typed 
+  <pre>
+    {{ formData }}
+  </pre>
+-->
+
+   
+   <form id="signup-form">
+      <div id="form-views" ui-view></div>
+   </form>
+
+</div>
+
+
+<!-- <div ng-include="'views/footer.html'"></div> -->
+<div ng-include="'resources/views/footer.html'"></div>

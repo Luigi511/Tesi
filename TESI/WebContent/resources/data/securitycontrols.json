@@ -1,0 +1,187 @@
+{
+  "idsla": "1",
+  "capabilities": [
+    {
+      "id": "WEBPOOL",
+      "name": "Web Resilience",
+      "description": "Capability of surviving to security incidents involving a web server, by implementing proper strategies aimed at preserving business continuity, achieved through redundancy and/or diversity.",
+      "frameworks": [
+        {
+          "id": "NIST_800_53_r4",
+          "name": "NIST Control framework 800-53 rev. 4",
+          "securityControls": [
+            {
+              "description": "The organization develops a contingency plan for the information system for achieving continuity of operations for mission/business functions. Contingency planning addresses both information system restoration and implementation of alternative mission/business processes when systems are compromised.",
+              "id": "WEBPOOL_NIST_CP_2",
+              "name": "CONTINGENCY PLAN - CP-2",
+              "weight": "MEDIUM",
+              "weights": [
+                "LOWER",
+                "MEDIUM",
+                "HIGH"
+              ]
+            },
+            {
+              "description": "The organization employs a diverse set of information technologies for information system components in the implementation of the information system. In particular, the organization employs virtualization techniques to support the deployment of a diversity of applications.",
+              "id": "WEBPOOL_NIST_SC_29",
+              "name": "HETEROGENEITY - SC-29",
+              "weight": "MEDIUM",
+              "weights": [
+                "LOWER",
+                "MEDIUM",
+                "HIGH"
+              ]
+            },
+            {
+              "description": "The organization distributes processing and storage across multiple physical locations.",
+              "id": "WEBPOOL_NIST_SC_36",
+              "name": "DISTRIBUTED PROCESSING AND STORAGE - SC-36",
+              "weight": "MEDIUM",
+              "weights": [
+                "LOWER",
+                "MEDIUM",
+                "HIGH"
+              ]
+            },
+            {
+              "description": "The information system protects against or limits the effects of denial of service attacks by employing proper security safeguards.",
+              "id": "WEBPOOL_NIST_SC_5",
+              "name": "DENIAL OF SERVICE PROTECTION - SC-5",
+              "weight": "MEDIUM",
+              "weights": [
+                "LOWER",
+                "MEDIUM",
+                "HIGH"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "OPENVAS",
+      "name": "Vulnerability Scanning",
+      "description": "Capability of detecting the vulnerabilities a machine (along with the installed software) is subject to.",
+      "frameworks": [
+        {
+          "id": "NIST_800_53_r4",
+          "name": "NIST Control framework 800-53 rev. 4",
+          "securityControls": [
+            {
+              "description": "The organization develops a continuous monitoring strategy and implements a continuous monitoring program, which includes the selection of proper metrics, the definition of a monitoring frequency, the establishment of response actions to address results of the analysis of security-related information and the reporting of the security status with a defined frequency.",
+              "id": "OPENVAS_NIST_CA_7",
+              "name": "CONTINUOUS MONITORING - CA-7",
+              "weight": "MEDIUM",
+              "weights": [
+                "LOWER",
+                "MEDIUM",
+                "HIGH"
+              ]
+            },
+            {
+              "description": "The organization employs trend analysis to determine if security control implementations, the frequency of continuous monitoring activities, and/or the types of activities used in the continuous monitoring process need to be modified based on empirical data.",
+              "id": "OPENVAS_NIST_CA_7_3",
+              "name": "CONTINUOUS MONITORING | TREND ANALYSES - CA-7(3)",
+              "weight": "MEDIUM",
+              "weights": [
+                "LOWER",
+                "MEDIUM",
+                "HIGH"
+              ]
+            },
+            {
+              "description": "The organization conducts penetration testing with a defined frequency on the system.",
+              "id": "OPENVAS_NIST_CA_8",
+              "name": "PENETRATION TESTING - CA-8",
+              "weight": "MEDIUM",
+              "weights": [
+                "LOWER",
+                "MEDIUM",
+                "HIGH"
+              ]
+            },
+            {
+              "description": "The organization scans for vulnerabilities in the information system and hosted applications with a defined frequency and when new vulnerabilities potentially affecting the system/applications are identified and reported by adopting vulnerability scanning tools that are able to enumerate platforms, software flaws and improper configurations. The organization analyzes vulnerability scan reports and results and is able to perform a remediation in a given time period.",
+              "id": "OPENVAS_NIST_RA_5",
+              "name": "VULNERABILITY SCANNING - RA-5",
+              "weight": "MEDIUM",
+              "weights": [
+                "LOWER",
+                "MEDIUM",
+                "HIGH"
+              ]
+            },
+            {
+              "description": "The organization updates the information system vulnerabilities scanned with a defined frequency",
+              "id": "OPENVAS_NIST_RA_5_1",
+              "name": "VULNERABILITY SCANNING | UPDATE BY FREQUENCY - RA-5(1)",
+              "weight": "MEDIUM",
+              "weights": [
+                "LOWER",
+                "MEDIUM",
+                "HIGH"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "OSSEC",
+      "name": "DOS Detection and Mitigation",
+      "description": "Capability of detecting and reacting to security attacks aimed at distrupting a system's availability.",
+      "frameworks": [
+        {
+          "id": "NIST_800_53_r4",
+          "name": "NIST Control framework 800-53 rev. 4",
+          "securityControls": [
+            {
+              "description": "The information system protects against or limits the effects of denial of service attacks by employing proper security safeguards.",
+              "id": "OSSEC_NIST_SC_5",
+              "name": "DENIAL OF SERVICE PROTECTION - SC-5",
+              "weight": "MEDIUM",
+              "weights": [
+                "LOWER",
+                "MEDIUM",
+                "HIGH"
+              ]
+            },
+            {
+              "description": "The information system protects against or limits the effects of denial of service attacks by employing proper security safeguards.",
+              "id": "OSSEC_NIST_SC_5_3",
+              "name": "DENIAL OF SERVICE PROTECTION - SC-5(3)",
+              "weight": "MEDIUM",
+              "weights": [
+                "LOWER",
+                "MEDIUM",
+                "HIGH"
+              ]
+            },
+            {
+              "description": "The organization develops a continuous monitoring strategy and implements a continuous monitoring program, which includes the selection of proper metrics, the definition of a monitoring frequency, the establishment of response actions to address results of the analysis of security-related information and the reporting of the security status with a defined frequency.",
+              "id": "OSSEC_NIST_CA_7",
+              "name": "CONTINUOUS MONITORING - CA-7",
+              "weight": "MEDIUM",
+              "weights": [
+                "LOWER",
+                "MEDIUM",
+                "HIGH"
+              ]
+            },
+            {
+              "description": "The organization monitors the information system to detect attacks and indicators of potential attacks in accordance with a defined monitoring objectives and unauthorized local, network, and remote connections. It identifies unauthorized use of the information system and deploys proper monitoring tools to collect information about the system.",
+              "id": "OSSEC_NIST_SI_4",
+              "name": "INFORMATION SYSTEM MONITORING - SI-4",
+              "weight": "MEDIUM",
+              "weights": [
+                "LOWER",
+                "MEDIUM",
+                "HIGH"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

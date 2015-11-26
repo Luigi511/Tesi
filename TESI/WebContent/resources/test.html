@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <title>Test</title>
+
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/nav-wizard.bootstrap.css">
+  <link rel="stylesheet" href="css/app.css">
+
+  <!-- JS -->
+  <!-- load angular, nganimate, and ui-router -->
+  
+   <script src="bower_components/underscore/underscore-min.js"></script>
+
+  
+   <script src="js/test.js"></script>
+   <script type="text/javascript">
+      var formData = {"capabilities":[{"id":"WEBPOOL","frameworks":[{"id":"NIST_800_53_r4","securityControls":[{"id":"WEBPOOL_NIST_CP_2","weight":"MEDIUM"},{"id":"WEBPOOL_NIST_SC_29","weight":"MEDIUM"},{"id":"WEBPOOL_NIST_SC_36","weight":"MEDIUM"},{"id":"WEBPOOL_NIST_SC_5","weight":"MEDIUM"}]}]}],"idsla":"1"};
+      
+      
+      var metricObj = {"id":"M14_vulnerability_list_max_age","importance":"MEDIUM","operator":"eq","operand":"24"};
+      var metricObj2 = {"id":"M13_vulnerability_report_max_age","importance":"MEDIUM","operator":"eq","operand":"24"};
+      
+      var securityControlsArr = ["WEBPOOL_NIST_CP_2",
+                                "WEBPOOL_NIST_SC_29",
+                                "WEBPOOL_NIST_SC_36",
+                                "WEBPOOL_NIST_SC_5"];
+      
+      
+      
+      for(id in securityControlsArr){
+         var obj = fillMetric(securityControlsArr[id], metricObj, formData)
+      }
+      
+      for(id in securityControlsArr){
+         var obj = fillMetric(securityControlsArr[id], metricObj2, formData)
+         
+      }
+      
+      console.log(JSON.stringify(formData));
+  
+   </script>
+   
+  
+
+</head>
+
+<body >
+  <div class="container">
+    <div ui-view></div>
+  </div>
+</body>
+
+</html>

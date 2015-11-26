@@ -1,0 +1,59 @@
+<!-- ><div ng-include="'views/navigator.html'"></div>-->
+<div ng-include="'resources/views/navigator.html'"></div>
+
+<div class="panel panel-default">
+  
+  <div class="panel-heading">
+    <h2>Implement SLA</h2>
+  </div>
+		
+  <div class="panel-body ">
+
+    <div class="well">
+      This page shows the list of signed SLAs. <br/>
+      Click on the "Implement SLA" button to start the implementation process.
+    </div>
+  
+    <div class="panel panel-default">
+      <div class="panel-body">
+            
+        <table class="table">
+
+          <thead>
+            <tr>
+              <th>SLA ID</th>
+              <th></th>
+              <th></th>
+                
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr ng-repeat="implement in implements">
+              <td width="10%"><span class="badge">{{implement.id}}</span></td>
+              <td width="20%">
+                <input type="radio" name="Sla_list" id="Sla_{{implement.id}}"  ng-value="{{implement.id}}" ng-model="formImplement.SlaList">
+              </td>
+              <td>
+                <button class="btn btn-primary"  ng-click="implementSLA()" data-ng-disabled="formImplement.SlaList != '{{implement.id}}'">Implement SLA</button>
+              </td>
+            </tr>
+          </tbody>
+
+        </table>
+        
+      </div>
+    </div>
+          
+    <div class="panel panel-primary" ng-show="errorState">
+      <div class="panel-body">{{errorMessage}}</div>
+    </div>
+    <div class="panel panel-primary" ng-show="!implements.length">
+      <div class="panel-body">{{alertMessage}}</div>
+    </div>
+
+  </div> <!--  end of main panel body -->
+</div> <!--  end of main panel -->
+
+<!-- <div ng-include="'views/footer.html'"></div>-->
+<div ng-include="'resources/views/footer.html'"></div>
