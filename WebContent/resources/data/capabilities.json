@@ -1,0 +1,38 @@
+{
+  "idsla": "1",
+  "capabilities": [
+    {
+      "id": "WEBPOOL",
+      "name": "Web Resilience",
+      "description": "Capability of surviving to security incidents involving a web server, by implementing proper strategies aimed at preserving business continuity, achieved through redundancy and/or diversity.",
+      "frameworks": [
+        {
+          "id": "NIST_800_53_r4",
+          "name": "NIST Control framework 800-53 rev. 4"
+        }
+      ]
+    },
+    {
+      "id": "OPENVAS",
+      "name": "Vulnerability Scanning",
+      "description": "Capability of detecting the vulnerabilities a machine (along with the installed software) is subject to.",
+      "frameworks": [
+        {
+          "id": "NIST_800_53_r4",
+          "name": "NIST Control framework 800-53 rev. 4"
+        }
+      ]
+    },
+    {
+      "id": "OSSEC",
+      "name": "DOS Detection and Mitigation",
+      "description": "Capability of detecting and reacting to security attacks aimed at distrupting a system's availability.",
+      "frameworks": [
+        {
+          "id": "NIST_800_53_r4",
+          "name": "NIST Control framework 800-53 rev. 4"
+        }
+      ]
+    }
+  ]
+}

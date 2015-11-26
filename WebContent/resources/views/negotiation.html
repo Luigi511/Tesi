@@ -1,0 +1,382 @@
+
+<div ng-include="views/navigator.html"></div>
+<!--<div ng-include="resources/views/navigator.html"></div>-->
+
+	<div class='container'>
+
+		<section id="wizard">
+		<div class="page-header">
+			<h1>SPECS Application Negotiation Wizard</h1>
+		</div>
+
+		<div id="rootwizard">
+			<div class="navbar">
+				<div class="navbar-inner">
+					<div class="container">
+						<ul>
+							<li><a href="#tab1" data-toggle="tab">Start</a></li>
+							<li><a href="#tab2" data-toggle="tab">Select Service</a></li>
+							<li><a href="#tab3" data-toggle="tab">Select
+									Capabilities</a></li>
+							<li><a href="#tab4" data-toggle="tab">Select Security
+									Controls</a></li>
+							<li><a href="#tab5" data-toggle="tab">Define Agreement
+									Terms</a></li>
+							<li><a href="#tab6" data-toggle="tab">SLA Overview</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+
+
+			<div class="tab-content">
+				<!-- **************************************************************************************************************************** -->
+				<ul class="pager wizard">
+					<li class="previous first" style="display: none;"><a href="#">First</a></li>
+					<li class="previous"><a href="#">Previous</a></li>
+					<li class="next last" style="display: none;"><a href="#">Last</a></li>
+					<li class="next"><a href="#">Next</a></li>
+				</ul>
+				<!-- **************************************************************************************************************************** -->
+
+				<!-- START -->
+				<div class="tab-pane" id="tab1">
+
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h2>Start SLA Negotiation</h2>
+						</div>
+						<div class="panel-body ">
+							<div class="well">
+								This wizard enables you to negotiate the security level of the
+								services you are acquiring. <br /> You will go through several
+								steps that will help you select the desired service and the
+								security features you are interested in. <br /> At the end of
+								the process you will get an SLA that summarizes the guarantees
+								that come with your enhanced service.
+							</div>
+						</div>
+					</div>
+
+				</div>
+				<!-- end of tab1 -->
+				<!-- end of START -->
+
+				<!-- ***************************  -->
+				<!-- SDT -->
+				<div class="tab-pane" id="tab2">
+
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h2>Service Selection</h2>
+						</div>
+						<div class="panel-body ">
+							<div class="well">
+								Select the type of service that you want to acquire.<br\>
+								The needed resources will be acquired from an External CSP. Note
+								that, in this version of the application, the selection of the
+								provider is not enabled, and the resources will be acquired from
+								Amazon WS.
+							</div>
+
+							<div ng-controller="general as general" ng-show="general.metricNAME">Name of metric:
+								{{general.metricNAME}}</div>
+
+							<div ng-controller="general as general" ng-show="general.sdts">
+
+								<div class="panel panel-default">
+									<div class="panel-body ">
+
+										<table class="table">
+											<thead>
+												<tr>
+													<th>Type of service 12</th>
+													<th></th>
+													<th></th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr ng-repeat="sdt in general.sdts">
+													<td width="15%">{{sdt.name}}</td>
+													<td width="20%"><input type="radio" name="SDT_list"
+														id="SDT_{{sdt.id}}" value="{{sdt.id}}"></td>
+														<td ng-controller="general as general" ng-show="general.metricNAME">Name of metric:
+								{{general.metricNAME}}</td>
+												</tr>
+												
+											</tbody>
+										</table>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+
+
+				</div>
+				<!-- end of tab2 -->
+				<!-- end of START -->
+
+				<!-- ***************************  -->
+
+				<!-- CAPABILITIES -->
+				<div class="tab-pane" id="tab3">
+
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h2>Security Capabilities</h2>
+						</div>
+						<div class="panel-body ">
+							<div class="well">
+								Select one or more security capabilities that you want to add to
+								the service. <br /> A security capability is a collection of
+								security controls, i.e. safeguards and countermeasures, that can
+								be applied over your services. <br /> In case you do not select
+								any capability, the service will be delivered with no additional
+								security features or guarantees.
+							</div>
+
+
+							<table class="table" ng-controller="general as general">
+
+								<!-- <thead ng-show="Object.keys(general.sdts[general.choicedSDT[0]].capabilities).length">  -->
+								<thead>
+									<tr>
+										<th></th>
+										<th>Capability Name</th>
+										<th>Description</th>
+									<tr>
+								</thead>
+								<tbody>
+									<tr
+										ng-repeat="(key, cap) in general.sdts[general.choicedSDT[0]].capabilities">
+										<td><input type="checkbox" name="capabilityCB"
+											id="capability_{{cap.id}}" value="{{cap.id}}" /></td>
+										<td width="30%">{{cap.name}}</td>
+										<td>{{cap.descr}}</td>
+									<tr />
+								</tbody>
+							</table>
+
+						</div>
+					</div>
+				</div>
+				<!-- end of atab3 -->
+				<!-- end of CAPABILITIES -->
+
+				<!-- ***************************  -->
+
+				<!-- Security Controls -->
+				<div class="tab-pane" id="tab4">
+
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h2>Security Controls</h2>
+						</div>
+						<div class="panel-body ">
+							<div class="well">
+								For each selected capability, choose the security controls you
+								are interested in and assign them a score according to the
+								importance you give to them. <br /> The listed controls belong
+								to specific security frameworks, such as NIST Security Control
+								Framework and CSA Cloud Control Matrix. <br /> Each control is
+								associated with a set of security metrics, on top of which, in
+								the next step, you will be able to define SLOs that will be
+								inserted in a Security SLA. <br /> Note that, in case you do not
+								select any control, you will not able to define SLOs in the next
+								step.
+							</div>
+
+
+							<div ng-controller="general as general">
+								<div class="well" ng-show="general.choicedCapabilities.length">
+
+									<div class="panel panel-default"
+										ng-repeat="capability in general.choicedCapabilities">
+										<div class="panel-heading">
+											<h2>{{general.sdts[general.choicedSDT[0]].capabilities[capability.id].name}}</h2>
+										</div>
+										<div class="panel-body"
+											ng-repeat="framework in general.sdts[general.choicedSDT[0]].capabilities[capability.id].frameworks">
+											<div class="well">
+												<div class="panel panel-default">
+													<!-- Default panel contents -->
+													<div class="panel-heading">{{framework.name}}</div>
+
+													<table class="table">
+														<col width="55%">
+														<col width="45%">
+
+														<tr ng-repeat="control in framework.securityControls">
+															<td><input type="checkbox" name="SC_CBs"
+																id="SC_CB_{{control.id}}"
+																value="{{capability.id}}^{{control.id}}" />
+																{{control.name}} <br /> Importance weight: <select
+																id='SC_IMPORTANCE_{{control.id}}'>
+																	<option ng-selected="importance == control.defWeight"
+																		ng-repeat="importance in general.importances"
+																		value='{{importance}}'>{{importance}}</option>
+															</select> <br /></td>
+															<td>{{control.descr}}</td>
+
+														</tr>
+
+													</table>
+
+
+												</div>
+											</div>
+
+										</div>
+									</div>
+								</div>
+
+
+								<div class="panel panel-primary"
+									ng-show="!general.choicedCapabilities.length">
+									<div class="panel-body">You did not select any
+										capability, therefore no control is displayed.</div>
+
+								</div>
+
+
+							</div>
+							<!--  end of angular general controller -->
+						</div>
+						<!--  end of panel body -->
+					</div>
+					<!-- end panel default -->
+				</div>
+				<!-- end tab4 -->
+				<!-- end of Security Controls -->
+				<!-- ***************************  -->
+
+				<!-- Metrics and agreement -->
+				<div class="tab-pane" id="tab5">
+
+					<div class="panel panel-default">
+
+						<div class="panel-heading">
+							<h2>Service Level Objectives</h2>
+						</div>
+						<div class="panel-body ">
+
+							<div class="well">
+								Select the security metrics that you want to monitor and
+								specify, for each of them, your importance score and the SLO you
+								want to achieve. <br\> The SLO is represented by a
+								comparison expression over a metric. If you are not a security
+								expert just adopt the default values and go ahead with the next
+								step. <br\> Note that, in case you do not select any
+								metric, you will not be able to obtain any guarantee over
+								implemented security features.
+							</div>
+
+							<div ng-controller="general as general">
+								<!-- ng-show="$('input:checkbox[name=\'SC_CBs\']:checked').length!=0" -->
+
+								<div class="panel panel-default"
+									ng-repeat="capability in general.choicedCapabilities"
+									ng-show="capability.controls.length">
+									<!-- Default panel contents -->
+									<div class="panel-heading">
+										<h3>{{general.sdts[general.choicedSDT[0]].capabilities[capability.id].name}}</h3>
+									</div>
+									<div class="panel-body">
+										<!-- List group -->
+										<ul class="list-group">
+											<!-- <li class="list-group-item" ng-repeat="control in capability.controls"> -->
+
+											<li class="list-group-item"
+												ng-repeat="metric in capability.metrics"><input
+												type="checkbox" name="METRICS_CBs"
+												id="METRICS_CB_{{metric.id}}" value="{{metric.id}}" /><b>{{metric.name}}</b>
+												<br /> <i>{{metric.descr}}</i><br /> Importance: <select
+												id='SLO_IMPORTANCE_{{metric.id}}'>
+													<option ng-selected="importance == metric.importance"
+														ng-repeat="importance in general.importances"
+														value='{{importance}}'>{{importance}}</option>
+											</select> <br /> Expression: <select id="SLO_EXP_OP_{{metric.id}}"
+												ng-init="metric.op">
+													<option ng-selected="operator.value == metric.op"
+														ng-repeat="operator in general.operators"
+														value='{{operator.value}}'>{{operator.name}}</option>
+											</select> <input type="text" id="SLO_EXP_{{metric.id}}"
+												value="{{metric.expression}}" /> {{metric.unit}}<br /></li>
+
+										</ul>
+
+									</div>
+								</div>
+
+
+								<!-- <div class="panel panel-primary" ng-show="!capability.controls.length" >
+						   			<div class="panel-body">You did not select any control, therefore no metric is displayed.</div>
+								</div> -->
+
+
+							</div>
+							<!--  end of angular controller  -->
+						</div>
+						<!--  end of panel body -->
+					</div>
+					<!-- end of panel default -->
+				</div>
+				<!-- tab5 -->
+				<!-- end of Metrics and agreement -->
+
+				<!-- ***************************  -->
+
+				<!-- SHOW SLA -->
+				<div class="tab-pane" id="tab6">
+
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h2>Negotiated SLA</h2>
+						</div>
+						<div class="panel-body ">
+							<div class="well">
+								A Security SLA has been built according to your choices during
+								the negotiation process.<br\> Check it and submit it in
+								order to have it stored in your collection of negotiated SLAs.<br\>
+								The next steps of the SPECS Application will enable you to sign
+								and implement the SLA.
+							</div>
+
+
+							<button class="btn btn-primary"
+								onclick="submitSLA(); window.location.replace('./sign.do');">SUBMIT
+								AGREEMENT</button>
+							<button class="btn btn-primary"
+								onclick="window.open('data:application/xml,' + encodeURIComponent(_slaOFFER));">DOWNLOAD
+								AGREEMENT</button>
+							<div id="SLA-OFFER"></div>
+							<button class="btn btn-primary"
+								onclick="submitSLA(); window.location.replace('./sign.do');">SUBMIT
+								AGREEMENT</button>
+							<button class="btn btn-primary"
+								onclick="window.open('data:application/xml,' + encodeURIComponent(_slaOFFER));">DOWNLOAD
+								AGREEMENT</button>
+						</div>
+					</div>
+				</div>
+				<!-- tab6 -->
+				<!-- end of SHOW SLA -->
+
+
+				<!-- **************************************************************************************************************************** -->
+				<!-- **************************************************************************************************************************** -->
+				<ul class="pager wizard">
+					<li class="previous first" style="display: none;"><a href="#">First</a></li>
+					<li class="previous"><a href="#">Previous</a></li>
+					<li class="next last" style="display: none;"><a href="#">Last</a></li>
+					<li class="next"><a href="#">Next</a></li>
+				</ul>
+			</div>
+		</div>
+		<!-- end of rootwizard --> </section>
+		</div>
+		

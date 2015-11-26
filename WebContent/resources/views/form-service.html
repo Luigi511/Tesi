@@ -1,0 +1,57 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h2>Service Selection</h2>
+  </div>
+  <div class="panel-body">
+    <div class="well">
+      Select the type of service that you want to acquire.
+      <br\>
+        The needed resources will be acquired from an External CSP. 
+        Note that, in this version of the application, the selection of the provider is not enabled, and the resources will be acquired from Amazon WS.
+    </div>
+       
+    <div ng-show="services">
+
+      <div class="panel panel-default">
+        <div class="panel-body">
+
+          <table class="table">
+             
+            <thead>
+              <tr>
+                <th>Type of service</th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+             
+            <tbody>
+              <tr ng-repeat="service in services">
+                <td width="15%">{{service.id}}</td>
+                <td width="20%">
+                  <input type="radio" name="SDT_list" id="SDT_{{service.id}}" value="{{service.id}}" ng-model="formService.SDT_list">
+                </td>  
+              </tr>
+            </tbody>
+             
+          </table>
+           
+        </div>
+      </div>
+
+    </div>
+       
+    <div class="panel panel-primary" ng-show="!services.length">
+      <div class="panel-body">{{alertMessage}}</div>
+    </div>
+       
+  </div>
+</div>
+
+     
+     
+<div class="panel panel-primary" ng-show="errorState">
+   <div class="panel-body">{{errorMessage}}</div>
+</div>
+
+  
