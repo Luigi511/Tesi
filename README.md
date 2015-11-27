@@ -14,7 +14,7 @@ Prerequisites:
 * Apache Maven 3.3.x;
 * Oracle Java JDK 7;
 * Java Servlet/Web Container (recommended: Apache Tomcat 7.0.x);
-* MYSQL CLIENT
+* MYSQL
 
 
 Installation steps:
