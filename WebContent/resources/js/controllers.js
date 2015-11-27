@@ -170,6 +170,9 @@ angular.module('SlaApp.negotiate.controllers', [])
 	$scope.user_name=	$cookieStore.get('name');
     $scope.user_surname=$cookieStore.get('surname');
     $scope.user_id=		$cookieStore.get('id_utente');
+    $scope.boolean1=$cookieStore.get('check1');
+    $scope.boolean2=$cookieStore.get('check2');
+
         
     
     //prelevo tutte le categorie di threat
@@ -242,6 +245,11 @@ angular.module('SlaApp.negotiate.controllers', [])
 				}
 			}).success(function() {
 				console.log("file inviato="+$scope.myFile);
+				
+				$scope.boolean1=true;
+				$cookieStore.put('check1',$scope.boolean1);
+				
+				
 			}).error(function() {
 			});	
 		};
@@ -274,6 +282,8 @@ angular.module('SlaApp.negotiate.controllers', [])
     	   console.log("inserimento riuscito");
     	 //aggiorno i componenti a schermo
            $scope.updateOnScreen();
+           $scope.boolean2=true;
+           $cookieStore.put('check2',$scope.boolean2);
        });
        //resetto i campi
        $scope.component = {};
@@ -399,10 +409,31 @@ angular.module('SlaApp.negotiate.controllers', [])
 /////////////////////////////////////////////////////////////////
 //controller pagina iniziale di registrazione (salvataggio cookie)
 
-.controller('StartCtrl', function ($scope, $rootScope, $cookieStore, $location,$http) {
-/*  $scope.formData = {};
-  $scope.formService = {};*/
-  
+.controller('StartCtrl', function ($scope, $rootScope, $cookieStore, $location, $http, $window) {
+
+	//prelevo dati cookie; 
+	$scope.user_name=	$cookieStore.get('name');
+    $scope.user_surname=$cookieStore.get('surname');
+    $scope.user_id=		$cookieStore.get('id_utente');
+    $scope.boolean=		$cookieStore.get('pulsante');
+    
+    
+  //cancello tutti i cookie per ricominciare la sessione...
+    $scope.reset = function(){
+    	$cookieStore.remove('name');
+    	$cookieStore.remove('surname');
+    	$cookieStore.remove('id_utente');
+    	$cookieStore.remove('pulsante');
+    	$cookieStore.remove('check1');
+    	$cookieStore.remove('check2');
+    	$cookieStore.remove('threat_selection');
+    	localStorage.removeItem('imgData');
+    	console.log("cookie rimossi");
+    	//ricarico la pagina
+    	$window.location.reload();
+    }
+	
+	
     $scope.add_user = function () {
     	//salvo cookie
         $cookieStore.put('name', $scope.user_name);
@@ -421,7 +452,10 @@ angular.module('SlaApp.negotiate.controllers', [])
  	   		success(function(data) {
  	   			$scope.user_id=data;
  	   			console.log('id utente='+$scope.user_id);
- 	 	   		$cookieStore.put('id_utente',$scope.user_id); //id utente ---> chiave esterna 
+ 	 	   		$cookieStore.put('id_utente',$scope.user_id); //id utente ---> chiave esterna
+ 	 	   		
+ 	 	   		$scope.boolean=true;
+ 	 	   		$cookieStore.put('pulsante',$scope.boolean);
  	   		})
  	   		.error(function() {$scope.user_id=0;});
 

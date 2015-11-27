@@ -8,7 +8,6 @@
   
   
 
-
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/nav-wizard.bootstrap.css">
@@ -17,8 +16,11 @@
    <link rel='stylesheet' href='${pageContext.request.contextPath}/resources/css/my-loading-bar.css' type='text/css' media='all' />
 	 <link rel='stylesheet' href='${pageContext.request.contextPath}/resources/css/XMLDisplay.css' type='text/css' media='all' />
 	   <!-- load angular, nganimate, and ui-router -->
-  <script src="${pageContext.request.contextPath}/resources/bower_components/angular/angular.js"></script>
-  <script src="${pageContext.request.contextPath}/resources/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+<%--   <script src="${pageContext.request.contextPath}/resources/bower_components/angular/angular.js"></script>
+ --%>  
+   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+ 
+ <script src="${pageContext.request.contextPath}/resources/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
   <script src="${pageContext.request.contextPath}/resources/bower_components/angular-animate/angular-animate.js"></script>
    <script src="${pageContext.request.contextPath}/resources/bower_components/underscore/underscore-min.js"></script>
    <script src="${pageContext.request.contextPath}/resources/js/XMLDisplay.js"></script>
@@ -38,7 +40,6 @@
   <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
   <script src="http://malsup.github.com/jquery.form.js"></script>
   <script src="https://code.angularjs.org/1.4.8/angular-cookies.js"></script>
-  
   
   
 	

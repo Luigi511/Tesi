@@ -2,7 +2,7 @@
 						<div class="panel-heading">
 							<h2>Start SLA Negotiation</h2>
 						</div>
-						<div class="panel-body ">
+						<div class="panel-body">
 							<div class="well">
 								Questo wizard ti permette di seguire tutti i passi necessari alla realizzazione della risk 
 								analysis della tua applicazione fornendoti un aiuto nella scelta dei controlli di sicurezza
@@ -10,18 +10,51 @@
 							</div>
 							
 							
-							<div class="well">Inserisci i tuoi dati</div>
-							
-						<!-- prova cookie  -->
-						
-    					<div id="button-holder" ng-controller="StartCtrl">
-						<table border="0">
-							<tr><td>Nome</td><td>Cognome</td></tr>
-							<tr><td><input type="text" ng-model="user_name"></td><td><input type="text" ng-model="user_surname"></td></tr>
-						</table>
-						<button ng-click="add_user()">Save</button>
-						
-						</div><!-- fine controller -->
+							<div class="well">Inserisci i tuoi dati<button class="btn btn-primary pull-right" ng-click="reset()">Reset</button></div>
+													
+
+
+<form id="html5Form" method="post" class="form-horizontal"
+    data-fv-framework="bootstrap"
+    data-fv-message="This value is not valid"
+    data-fv-feedbackicons-valid="glyphicon glyphicon-ok"
+    data-fv-feedbackicons-invalid="glyphicon glyphicon-remove"
+    data-fv-feedbackicons-validating="glyphicon glyphicon-refresh">
+
+    
+        <label>Name</label>
+            <input type="text" class="form-control" name="name"
+                data-fv-message="The name is not valid"
+                required data-fv-notempty-message="The name is required and cannot be empty"
+                pattern="^[a-zA-Z0-9]+$" data-fv-regexp-message="The name can only consist of alphabetical, number" 
+                ng-model="user_name"/>
+	
+        <label>Surname</label>
+            <input type="text" class="form-control" name="surname"
+                data-fv-message="The surname is not valid"
+                required data-fv-notempty-message="The surname is required and cannot be empty"
+                pattern="^[a-zA-Z0-9]+$" data-fv-regexp-message="The surname can only consist of alphabetical, number" 
+                ng-model="user_surname"/>
+    <br>
+	<button type="submit" class="btn btn-primary pull-left" value="Save" title="Save" ng-click="add_user()">
+           <span>Save</span>
+         </button>
+         <a href="#/negotiate/insert"><button class="btn btn-primary pull-right" ng-show="boolean">Next</button></a>
+    
+
+    
+
+</form>
+	
+
+
+
+
+
+
+
+
+
 							
 							
 						</div>

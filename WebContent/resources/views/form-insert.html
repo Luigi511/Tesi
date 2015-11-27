@@ -51,7 +51,7 @@
 		<tr>
 		<td align="center">Description</td>
 		<td><textarea rows="4" cols="150" ng-model="component.description"/></textarea></td>
-		</tr><tr><td align="center"><button ng-click="add()" >Add Component</button></td></tr>
+		</tr><tr><td align="center"><button class="btn btn-primary" ng-click="add()" >Add Component</button></td></tr>
 	</table>   	   
 	
     </div>
@@ -73,7 +73,7 @@
                 <td>{{component.name}}</td>    
                 <td>{{component.description}}</td>
                 <td>{{component.type}}</td>
-                <td><input type="button" value="Delete" ng-click="remove($index,component.name,component.description)" /></td>
+                <td><input type="button" class="btn btn-primary" value="Delete" ng-click="remove($index,component.name,component.description)" /></td>
             </tr>
         </table>
     </div>
@@ -98,7 +98,7 @@
 	</tr>
 	<tr><td><img id="blah" alt="" width="100"/></td></tr>
 	<tr>
-		<td><button ng-click="uploadFile()">Upload</button></td>
+		<td><button class="btn btn-primary" ng-click="uploadFile()">Upload</button></td>
 	</tr>
 </table>
 
@@ -107,7 +107,8 @@
 	
 <!-- prova dati utente in cookie-->	
 {{user_name}} {{user_surname}} {{user_id}} 
-			
+<a href="#/negotiate/threat"><button class="btn btn-primary pull-right" ng-show="boolean1 && boolean2">Next</button></a>
+
 			
 			
 			
