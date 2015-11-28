@@ -321,24 +321,22 @@ angular.module('SlaApp.negotiate.controllers', [])
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 //controller threat modeling
-.controller('ThreatCtrl', function ($scope, $rootScope, $cookieStore, $location,$http) {
+.controller('ThreatCtrl', function ($scope, $rootScope, $cookieStore, $location, $http, $window) {
 	
 	//prelevo dati cookie; 
-	$scope.user_name=	$cookieStore.get('name');
-    $scope.user_surname=$cookieStore.get('surname');
-    $scope.user_id=		$cookieStore.get('id_utente');
+	$scope.user_name=		$cookieStore.get('name');
+    $scope.user_surname=	$cookieStore.get('surname');
+    $scope.user_id=			$cookieStore.get('id_utente');
+    $scope.booleanthreat=	$cookieStore.get('buttonthreat');
+    
+    $scope.selection=$cookieStore.get('selection');
+    if($scope.selection==undefined){
+    	$scope.selection=[];
+    }
+   
+   
+    
     
     console.log("utente="+$scope.user_name+" "+$scope.user_surname+" id= "+$scope.user_id);
     
@@ -374,35 +372,133 @@ angular.module('SlaApp.negotiate.controllers', [])
 
 	$scope.getThreats(); //carico tutti i threats
 	
+	//$scope.selection = [];
+	//funzione ricerca doppia
+	function arrayObjectIndexOf(myArray, searchTerm1, property1, searchTerm2, property2) {
+	    for(var i = 0, len = myArray.length; i < len; i++) {
+	        if ((myArray[i][property1] === searchTerm1)&&(myArray[i][property2] === searchTerm2)) return i;
+	    }
+	    return -1;
+	}
+	
 	//raccolgo i threat selezionati
-	 $scope.selection=[];
-	  $scope.toggleSelection = function toggleSelection(threatName) {
-	     var idx = $scope.selection.indexOf(threatName);
-	     // is currently selected
-	     if (idx > -1) {
-	       $scope.selection.splice(idx, 1);
-	     }
-	     // is newly selected
-	     else {
-	       $scope.selection.push(threatName);
-	     }
-	   };
+	  $scope.toggleSelection = function toggleSelection(componentName,componentid,threatName,threatid) {
+		  	
+		  	var idx = arrayObjectIndexOf($scope.selection,componentName,'component',threatName,'threat');
+	   		// is currently selected
+		    if (idx > -1) {
+		       $scope.selection.splice(idx, 1);
+		    }
+		    // is newly selected
+		    else {
+		    	$scope.selection.push(
+	   		    		   {	'component':componentName,
+	   		    			   	'componentid':componentid,
+	   		    			   	'threat':threatName,
+	   		    			   	'threatid':threatid
+	   		    		   }
+	   		       );
+		    }
+	  };//fine metodo
+	  
+		  	
+/*	        //adesso registro associazione nel db
+	    	var urlBase="http://localhost:8080/TESI";
+	    	console.log("http://localhost:8080/TESI"+ '/rest/assoc/'+componentName+'/'+threatName);
+	 	   	$http.post(urlBase + '/rest/assoc/'+componentName+'/'+threatName).
+	 	   	success(function(data) {
+	 	   		console.log("associazione correttamente inserita");
+	 	   		
+	 	   		$scope.booleanthreat=true;
+	 	   		$cookieStore.put('buttonthreat',$scope.booleanthreat);
+	 	   		
+	 	   		var idx = $scope.selection.indexOf({
+				   component:componentName,
+	   			   	threat:threatName 
+	 	   		});
+	 	   		// is currently selected
+	 		     if (idx > -1) {
+	 		       $scope.selection.splice(idx, 1);
+	 		     }
+	 		     // is newly selected
+	 		     else {
+	 		    	$scope.selection.push(
+	 	   		    		   {	component:componentName,
+	 	   		    			   	threat:threatName//,check:true
+	 	   		    		   }
+	 	   		       );
+	 		     }	       
+	 	   	});*/
+	  
+	  
+	   //funzione salvataggio dati
+	   $scope.saveSelection = function(){
+		   $cookieStore.put('selection',$scope.selection);
+		   console.log("salvato nei cookie");
+		   
+		  angular.forEach($scope.selection,function(value,key){
+			  
+			  $http.post('http://localhost:8080/TESI/rest/assoc/'+value.componentid+'/'+value.threatid).
+		 	   	success(function(data) {
+		 	   		console.log("associazione correttamente inserita");
+		 	   		
+		 	   		$scope.booleanthreat=true;
+		 	   		$cookieStore.put('buttonthreat',$scope.booleanthreat);});
+			  
+		  });
+		   
+	   }//fine saveselection
 	   
-	   $scope.saveSelection = function(){  
-		   //alla pressione del tasto save metto in cache i threat scelti
-		   $cookieStore.put('threat_selection',$scope.selection);
-	   };
-	 
-    
+	   
+	   //funzione reset dati associati
+	   $scope.resetSelection = function(){
+		  
+		  angular.forEach($scope.selection,function(value,key){
+			  
+			  $http.post('http://localhost:8080/TESI/rest/delassoc/'+value.componentid+'/'+value.threatid).
+		 	   	success(function(data) {
+		 	   		//console.log("associazione correttamente inserita");
+		 	   		
+		 	   		$scope.booleanthreat=false;
+		 	   		$cookieStore.put('buttonthreat',$scope.booleanthreat);});
+		  });
+		  
+		  //pulizia
+		  $cookieStore.remove('selection');
+		  $window.location.reload();
+	   }//fine saveselection
+	   
+	   
+	   
+	   
+	   //funzione associata alla checkbox
+	   $scope.find = function(componentName,threatName){
+		   var i = arrayObjectIndexOf($scope.selection,componentName,'component',threatName,'threat');
+		   //è già selezionato
+		   if (i > -1) {
+		       return true;
+		    }
+		    // is newly selected
+		    else {
+		    	return false;
+		    }
+		   
+	   }
+	   	
 
 
 	
-})
+})//fine
 
 
 //controller ranking
-
-
+.controller('RankCtrl', function ($scope, $rootScope, $cookieStore, $location, $http, $window) {
+	
+	//prelevo dati cookie; 
+	$scope.user_name=		$cookieStore.get('name');
+    $scope.user_surname=	$cookieStore.get('surname');
+    $scope.user_id=			$cookieStore.get('id_utente');
+})
 
 
 
@@ -426,7 +522,9 @@ angular.module('SlaApp.negotiate.controllers', [])
     	$cookieStore.remove('pulsante');
     	$cookieStore.remove('check1');
     	$cookieStore.remove('check2');
-    	$cookieStore.remove('threat_selection');
+    	$cookieStore.remove('booleanthreat');
+    	$cookieStore.remove('selection');
+    	
     	localStorage.removeItem('imgData');
     	console.log("cookie rimossi");
     	//ricarico la pagina

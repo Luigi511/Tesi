@@ -57,7 +57,7 @@ CREATE TABLE `components` (
   KEY `componentcat_idx` (`componentcat`),
   CONSTRAINT `componentcat` FOREIGN KEY (`componentcat`) REFERENCES `category` (`categoryname`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `id_utente` FOREIGN KEY (`id_utente`) REFERENCES `users` (`idusers`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -98,6 +98,34 @@ INSERT INTO `threats` VALUES (1,'Injection','Le Injection Flaws, come SQL Inject
 UNLOCK TABLES;
 
 --
+-- Table structure for table `threats_per_component`
+--
+
+DROP TABLE IF EXISTS `threats_per_component`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `threats_per_component` (
+  `idtpc` int(11) NOT NULL AUTO_INCREMENT,
+  `component` int(11) NOT NULL,
+  `threat` int(11) NOT NULL,
+  PRIMARY KEY (`idtpc`),
+  KEY `component_idx` (`component`),
+  KEY `tr_idx` (`threat`),
+  CONSTRAINT `cp` FOREIGN KEY (`component`) REFERENCES `components` (`idcomponents`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `tr` FOREIGN KEY (`threat`) REFERENCES `threats` (`idthreats`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `threats_per_component`
+--
+
+LOCK TABLES `threats_per_component` WRITE;
+/*!40000 ALTER TABLE `threats_per_component` DISABLE KEYS */;
+/*!40000 ALTER TABLE `threats_per_component` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `users`
 --
 
@@ -110,7 +138,7 @@ CREATE TABLE `users` (
   `surname` varchar(45) NOT NULL,
   `image` mediumblob,
   PRIMARY KEY (`idusers`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=67 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -131,4 +159,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-26 14:47:28
+-- Dump completed on 2015-11-28 16:05:29

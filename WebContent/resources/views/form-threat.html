@@ -78,6 +78,7 @@
     <div class="panel-body ">
     <div class="well">
       For each components select the appropriate threats
+    <button class="btn btn-primary pull-right" ng-click="resetSelection()">Reset</button>
     </div>
   
   
@@ -85,7 +86,9 @@
   <h3>{{component.name}} ({{component.type}})</h3>
   <table style="width: 100%; ">
   	<tr ng-repeat="threat in ThreatFromDB | filter:component.type"">
-  		<td width="50"><input id="{{threat.name}}" type="checkbox" value="{{threat.name}}" ng-checked="selection.indexOf(threat.name) > -1" ng-click="toggleSelection(threat.name)" name="optionb" id="optb" class="paddingClass" /></td>
+  		<td width="50"><input id="{{threat.name}}" type="checkbox" value="{{threat.name}}" 
+  		ng-checked="find(component.name,threat.name)" 
+  		ng-click="toggleSelection(component.name,component.id,threat.name,threat.idThreat)" name="optionb" id="optb" class="paddingClass" /></td>
   		<td width="20%">{{threat.name}}</td>
   		<td>{{threat.descr}}</td>
   		
@@ -95,16 +98,19 @@
   </table>
   </div>
   
+  
+  <!-- prova dati utente in cookie-->
+{{selection}}<br>
+{{user_name}} {{user_surname}} {{user_id}}<br>
+<button class="btn btn-primary pull-left" ng-click="saveSelection()">Save</button>
+<a href="#/negotiate/ranking"><button class="btn btn-primary pull-right" ng-show="booleanthreat">Next</button></a>
   </div>
   
   
 
   
   
-<!-- prova dati utente in cookie-->
-{{user_name}} {{user_surname}} {{user_id}} <br>
-Selected Threats: {{selection}}<br>
-<button ng-click="saveSelection()">Save</button>
+
 </div>
 
 

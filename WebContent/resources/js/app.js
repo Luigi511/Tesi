@@ -106,7 +106,7 @@ angular.module('SlaApp.negotiate', ['SlaApp.negotiate.controllers', 'SlaApp.nego
             controller: 'ThreatCtrl'
         })
         .state('negotiate.ranking', {
-            url: '/threat',
+            url: '/ranking',
             templateUrl: 'resources/views/form-ranking.html',
             controller: 'RankCtrl'
         })

@@ -90,6 +90,32 @@ public class ServerREST {
 		  return cp;
 	  }
 	  
+	  //API aggiungi associazione componente-threat
+	  @RequestMapping(value="/assoc/{Component}/{Threat}",method = RequestMethod.POST,headers="Accept=application/json")
+	  public void addAssociation(@PathVariable int Component,@PathVariable int Threat) throws ParseException { 
+	  Association a = new Association();
+	  a.setcomponent(Component);
+	  a.setthreat(Threat);
+	  service.addAssociation(a);
+	  }
+/*	  
+	  //API trova associazione componente-threat
+	  @RequestMapping(value="/assoc/{Component}/{Threat}",method = RequestMethod.GET,headers="Accept=application/json")
+	  public boolean getAssociation(@PathVariable int Component,@PathVariable int Threat) throws ParseException { 
+	  boolean trovato=service.FindAssociation(Component,Threat);
+	  return trovato;
+	  }*/
+	  
+	  //API rimuovi associazione componente-threat
+	  @RequestMapping(value="/delassoc/{Component}/{Threat}",method = RequestMethod.POST,headers="Accept=application/json")
+	  public void delAssociation(@PathVariable int Component,@PathVariable int Threat) throws ParseException { 
+	  service.DelAssociation(Component,Threat);
+	  }
+	  
+	  
+	  
+	  
+	  
 	  
 	  
 	  

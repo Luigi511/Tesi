@@ -212,6 +212,57 @@ public byte[] getPhotoByID(int id_user) {
 }
 
 
+public void addAssociation(Association a) {
+	  try {
+		   PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO threats_per_component(component,threat) VALUES (?,?)");
+		   
+		   //conversione dei dati nei tipi definiti da mysql
+		   preparedStatement.setInt(1, a.getcomponent());
+		   preparedStatement.setInt(2, a.getthreat());
+		   preparedStatement.executeUpdate();
+		   System.out.println("ho inviato il comando di inserimento associazione a mysql");
+		  } catch (SQLException e) {
+		   e.printStackTrace();
+		  }
+		
+	}
+
+
+public boolean FindAssociation(int component, int threat) {
+	boolean trovato=false;
+	  try {
+		   PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM threats_per_component WHERE component=? AND threat=?");
+		   
+		   preparedStatement.setInt(1, component);
+		   preparedStatement.setInt(2, threat);
+		   ResultSet rs = preparedStatement.executeQuery();
+		   while (rs.next()) {
+			   trovato=true;
+		   }
+
+		  } catch (SQLException e) {
+		   e.printStackTrace();
+
+		  }
+	
+
+	return trovato;
+}
+
+
+public void DelAssociation(int component, int threat) {
+	try {
+		 PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM threats_per_component WHERE component=? AND threat=?");
+		 preparedStatement.setInt(1, component);
+		 preparedStatement.setInt(2, threat);
+		 preparedStatement.executeUpdate();
+		 System.out.println("ho inviato il comando di cancellazione associazione a mysql");
+	  } catch (SQLException e) {
+	  	e.printStackTrace();
+	  }
+	
+}
+
 
 
 
