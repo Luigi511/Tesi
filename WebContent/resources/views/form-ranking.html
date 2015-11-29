@@ -4,6 +4,7 @@
             border-collapse: collapse;
             padding: 5px;
             
+            
          }
          
          table tr:nth-child(odd) {
@@ -30,6 +31,7 @@
   		/* Webkit browsers*/
   		-webkit-transform: scale(2);
 		}
+
 
 </style>
 
@@ -95,53 +97,45 @@
   
 
 
-    
- <div class="panel panel-default" ng-show="vedirisultati">
-    <table border="1"; width=100%>
-    	<tr><td></td><td ng-repeat='threat in selection'>{{threat.component}}</td></tr>
-    	<tr><td>Spoofing</td>				
-    		<td ng-style="set_color(threat.risk)" ng-repeat="threat in selection | filter:component.name | filter: {stride: 'SPOOFING'} "> <!-- doppio filter --> 
-			{{threat.risk}}
-			</td>
-			</tr>
-    	<tr><td>Tampering</td>
-    		<td ng-style="set_color(threat.risk)" ng-repeat="threat in selection | filter:component.name | filter: {stride: 'TAMPERING'} "> <!-- doppio filter --> 
-			{{threat.risk}}
-			</td>
-			</tr>
-    	<tr><td>Repudiation</td>
-    		<td ng-style="set_color(threat.risk)" ng-repeat="threat in selection | filter:component.name | filter: {stride: 'REPUDIATION'} "> <!-- doppio filter --> 
-			{{threat.risk}}
-			</td>																	
-			</tr>
-    	<tr><td>Information Disclosure</td>
-    		<td ng-style="set_color(threat.risk)" ng-repeat="threat in selection | filter:component.name | filter: {stride: 'INFORMATION DISCLOSURE'} "> <!-- doppio filter --> 
-			{{threat.risk}}
-			</td>															
-			</tr>
-    	<tr><td>Denial of Service</td>
-    		<td ng-style="set_color(threat.risk)" ng-repeat="threat in selection | filter:component.name | filter: {stride: 'DENIAL OF SERVICE'} "> <!-- doppio filter --> 
-			{{threat.risk}}
-			</td>																
-			</tr>
-    	<tr><td>Elevation of Privileges</td>
-    		<td ng-style="set_color(threat.risk)" ng-repeat="threat in selection | filter:component.name | filter: {stride: 'ELEVATION OF PRIVILEGES'} "> <!-- doppio filter --> 
-			{{threat.risk}}
-			</td>														
-			</tr>
-   	 	
-   	 	</table>
+  
 
-		
+
+ <div class="panel panel-default" ng-show="vedirisultati">
+   <table border="1"; width=100%>
+    <tr><td></td>							<td align="center" ng-repeat="component in ListComponentFromDB">{{component.name}}</td> </tr>
+    <tr><td>Spoofing</td>					<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'SPOOFING')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'SPOOFING')}}</td> </tr>
+    <tr><td>Tampering</td>					<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'TAMPERING')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'TAMPERING')}}</td> </tr>
+    <tr><td>Remediation</td>				<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'REPUDIATION')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'REPUDIATION')}}</td> </tr>
+    <tr><td>Information Disclosure</td>		<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'INFORMATION DISCLOSURE')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'INFORMATION DISCLOSURE')}}</td> </tr>
+    <tr><td>Denial of Service</td>			<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'DENIAL OF SERVICE')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'DENIAL OF SERVICE')}}</td> </tr>
+    <tr><td>Elevation of privileges</td>	<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'ELEVATION OF PRIVILEGES')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'ELEVATION OF PRIVILEGES')}}</td> </tr>
+   </table>
+   
+   
+
+	
 		
 </div>
+
+
+
+
+
+
+
+
+
 
    <button class="btn btn-primary pull-left" ng-click="saveRating()">Save</button><br><br>
    <button class="btn btn-primary pull-left" ng-click="showresults()" ng-show='done'>{{button}}</button>
    
-   <button class="btn btn-primary pull-left" ng-click="resetRating()" ng-show='done'>Reset</button><br>
+   <button class="btn btn-primary pull-left" ng-click="resetRating()" ng-show='done'>Reset</button>
+   <a href="#/negotiate/security"><button class="btn btn-primary pull-right" ng-show="done">Next</button></a>
+   <br>
 
-	<!-- {{selection}}--><br>
+<!-- 	{{selection}}<br>
+ -->
+	<br>
     {{user_name}} {{user_surname}} {{user_id}}<br>
      
   </div>

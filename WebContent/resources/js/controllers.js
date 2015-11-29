@@ -578,40 +578,83 @@ angular.module('SlaApp.negotiate.controllers', [])
     			value.totaleImpact=value.totaleImpactBusiness;
     		}
     		
-    		//combinazione dei rischi
+    		//combinazione dei rischi x ogni threat
+    		
+    		//Per il rischio totale ho bisogno di classificare numericamente da 1 a 9:
+    		//VERY LOW	=1
+    		//LOW		=3
+    		//MEDIUM	=5
+    		//HIGH		=7
+    		//CRITICAL	=9
+    		
     		switch(true){
     			case((value.totaleImpact>=6)&&(value.totaleImpact<=9)): //HIGH
     				switch(true){
-    				case value.totaleLikehood<3: value.risk='MEDIUM';break;
-    				case (value.totaleLikehood>=3)&&(value.totaleLikehood<6): value.risk='HIGH';break;
-    				case (value.totaleLikehood>=6)&&(value.totaleLikehood<=9): value.risk='CRITICAL';break;
+    				case value.totaleLikehood<3: value.risk='MEDIUM';value.riskNum=5;break;
+    				case (value.totaleLikehood>=3)&&(value.totaleLikehood<6): value.risk='HIGH';value.riskNum=7;break;
+    				case (value.totaleLikehood>=6)&&(value.totaleLikehood<=9): value.risk='CRITICAL';value.riskNum=9;break;
     				}
     			break;
     			
     			case((value.totaleImpact>=3)&&(value.totaleImpact<6)): //MEDIUM
     				switch(true){
-    				case value.totaleLikehood<3: value.risk='LOW';break;
-    				case (value.totaleLikehood>=3)&&(value.totaleLikehood<6): value.risk='MEDIUM';break;
-    				case (value.totaleLikehood>=6)&&(value.totaleLikehood<=9): value.risk='HIGH';break;
+    				case value.totaleLikehood<3: value.risk='LOW';value.riskNum=3;break;
+    				case (value.totaleLikehood>=3)&&(value.totaleLikehood<6): value.risk='MEDIUM';value.riskNum=5;break;
+    				case (value.totaleLikehood>=6)&&(value.totaleLikehood<=9): value.risk='HIGH';value.riskNum=7;break;
     				}
     			break;
     			
     			case(value.totaleImpact<3): //LOW
     				switch(true){
-    				case value.totaleLikehood<3: value.risk='VERY LOW';break;
-    				case (value.totaleLikehood>=3)&&(value.totaleLikehood<6): value.risk='LOW';break;
-    				case (value.totaleLikehood>=6)&&(value.totaleLikehood<=9): value.risk='MEDIUM';break;
+    				case value.totaleLikehood<3: value.risk='VERY LOW';value.riskNum=1;break;
+    				case (value.totaleLikehood>=3)&&(value.totaleLikehood<6): value.risk='LOW';value.riskNum=3;break;
+    				case (value.totaleLikehood>=6)&&(value.totaleLikehood<=9): value.risk='MEDIUM';value.riskNum=5;break;
     				}
     			break;
     		}
     		
     		
     	});
+    	
+
+    	
+    	
+    	
     	//salvo i valori inseriti per mantenere anche le tabelle
     	//$cookieStore.put('selection',$scope.selection);
     	
     	localStorage.setItem("selection", JSON.stringify($scope.selection));
     }
+    
+    
+    //funzione che mi ritorna il livello complessivo per metodologia stride e componente
+    $scope.getRisk = function(componente,stride){
+    	var temp=0; var i=0;
+		angular.forEach($scope.selection, function(value, key){
+			if((value.component==componente)&&(value.stride==stride)){
+				temp=temp+value.riskNum;
+				i++;
+			}
+
+			
+		});
+		
+		//media aritmetica
+		temp=temp/i;
+		//ho il valore di rischio complessivo: voglio una stringa
+		switch(true){
+		case((temp>=0)&&(temp<2)): var stringa="VERY LOW";break;
+		case((temp>=2)&&(temp<4)): var stringa="LOW";break;
+		case((temp>=4)&&(temp<6)): var stringa="MEDIUM";break;
+		case((temp>=6)&&(temp<8)): var stringa="HIGH";break;
+		case((temp>=8)&&(temp<10)): var stringa="CRITICAL";break;
+		
+		}
+
+    	return stringa;
+    }
+    
+    
     
     $scope.button='Show Results';
     $scope.showresults = function(){
@@ -631,7 +674,9 @@ angular.module('SlaApp.negotiate.controllers', [])
     	
     }
     
-    $scope.set_color = function (risk) {
+    $scope.set_color = function (comp,stride) {
+    	
+    	var risk=$scope.getRisk(comp,stride);
     	
     	switch(true){
     	case(risk=='VERY LOW'): $scope.color={ "background": "#00FF1A" };break;
@@ -681,6 +726,7 @@ angular.module('SlaApp.negotiate.controllers', [])
     	$cookieStore.remove('check1');
     	$cookieStore.remove('check2');
     	$cookieStore.remove('booleanthreat');
+    	$cookieStore.remove('done');
     	//$cookieStore.remove('selection');
     	$cookieStore.remove('buttonthreat');
     	
