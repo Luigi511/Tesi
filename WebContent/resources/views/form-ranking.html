@@ -1,14 +1,147 @@
+  	   <style>
+         table, th , td {
+            border: 0px solid grey;
+            border-collapse: collapse;
+            padding: 5px;
+            
+         }
+         
+         table tr:nth-child(odd) {
+            background-color: #f2f2f2;
+            
+         }
+         
+         table tr:nth-child(even) {
+            background-color: #ffffff;
+         }
+         textarea {
+ 			width:100%;
+		}
+		input[type=number]{
+    		width: 30px;
+		}
+		img	{
+			width:100%;
+		}
+		input[type=checkbox] {
+  		/* All browsers except webkit*/
+  		transform: scale(2);
+
+  		/* Webkit browsers*/
+  		-webkit-transform: scale(2);
+		}
+
+</style>
+
+
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h2>TITOLO</h2>
+    <h2>Risk Rating</h2>
   </div>
   <div class="panel-body ">
-    <div class="well">
-      INFORMAZIONI
+    <div class="well" ng-hide="done">
+		By following the approach here, it is possible to estimate the severity of all of these risks to the business and make an informed decision about what to do about those risks. Having a system in place for rating risks will save time and eliminate arguing about priorities. This system will help to ensure that the business doesn't get distracted by minor risks while ignoring more serious risks that are less well understood.(The OWASP Risk Rating Methodology)
+    	<br><br>For each threat, insert the appropriate values to assess likelihood and impact overall system.
     </div>
+    
+  <div class="panel panel-default" ng-repeat="component in ListComponentFromDB" ng-hide="vedirisultati">
+  	<h3>{{component.name}} ({{component.type}})</h3>
+  	<table style="width: 100%; ">
+
+  		<tr ng-repeat='threat in selection | filter:component.name'>
+  			<td width="10%">{{threat.threat}}<br>({{threat.stride}})</td>
+  			<td align="center"><b>OVERALL RISK SEVERITY = {{threat.risk}}</b>
+  			
+  			<table>
+			<td align="center" valign="top"><b>LIKEHOOD = {{threat.totaleLikehood}}</b>
+			
+				<table>
+				
+				<tr><td align="center"><b>Threat Agent Factors</b></td><td align="center"><b>Vulnerability Factors</b></td></tr>
+				</table>
+				<table>
+				<tr><td>Skill level</td>	<td><input type="number" ng-model="threat.skill" min="0" max="9"></td>														<td>Ease of discovery</td>		<td><input type="number" ng-model="threat.discover" min="0" max="9"></td></tr>
+				<tr><td>Motive</td>			<td><input type="number" ng-model="threat.motive" min="0" max="9"></td>														<td>Ease of exploit</td>		<td><input type="number" ng-model="threat.ease" min="0" max="9"></td></tr>
+				<tr><td>Opportunity</td>	<td><input type="number" ng-model="threat.opportunity" min="0" max="9"></td>												<td>Awareness</td>				<td><input type="number" ng-model="threat.aware" min="0" max="9"></td></tr>
+				<tr><td>Size</td>			<td><input type="number" ng-model="threat.size" min="0" max="9"></td>														<td>Intrusion detection</td>	<td><input type="number" ng-model="threat.id" min="0" max="9"></td></tr>
+				
+				</table>
+			
+			</td>
+			
+			<td align="center" valign="top"><b>IMPACT = {{threat.totaleImpact}}</b>
+			
+				<table>
+				
+				<tr><td align="center"><b>Technical Impact Factors</b></td><td align="center"><b>Business Impact Factors</b></td></tr>
+				</table>
+				<table>
+				<tr><td>Loss of confidentiality</td>	<td><input type="number" ng-model="threat.confide" min="0" max="9" value="0"></td>								<td>Financial damage</td>		<td><input type="number" ng-model="threat.financial" min="0" max="9" value="0"></td></tr>
+				<tr><td>Loss of integrity</td>			<td><input type="number" ng-model="threat.integri" min="0" max="9" value="0"></td>								<td>Reputation damage</td>		<td><input type="number" ng-model="threat.reputation" min="0" max="9" value="0"></td></tr>
+				<tr><td>Loss of availability</td>		<td><input type="number" ng-model="threat.avalai" min="0" max="9" value="0"></td>								<td>Non-compliance</td>			<td><input type="number" ng-model="threat.noncompliance" min="0" max="9" value="0"></td></tr>
+				<tr><td>Loss of accountability</td>		<td><input type="number" ng-model="threat.accounta" min="0" max="9" value="0"></td>								<td>Privacy violation</td>		<td><input type="number" ng-model="threat.privacy" min="0" max="9" value="0"></td></tr>
+				
+				</table>
+			
+			</td>
+
+		</table></td>
+		
+		
+  		</tr>
+
+  	</table>
+  </div>
+  
 
 
+    
+ <div class="panel panel-default" ng-show="vedirisultati">
+    <table border="1"; width=100%>
+    	<tr><td></td><td ng-repeat='threat in selection'>{{threat.component}}</td></tr>
+    	<tr><td>Spoofing</td>				
+    		<td ng-style="set_color(threat.risk)" ng-repeat="threat in selection | filter:component.name | filter: {stride: 'SPOOFING'} "> <!-- doppio filter --> 
+			{{threat.risk}}
+			</td>
+			</tr>
+    	<tr><td>Tampering</td>
+    		<td ng-style="set_color(threat.risk)" ng-repeat="threat in selection | filter:component.name | filter: {stride: 'TAMPERING'} "> <!-- doppio filter --> 
+			{{threat.risk}}
+			</td>
+			</tr>
+    	<tr><td>Repudiation</td>
+    		<td ng-style="set_color(threat.risk)" ng-repeat="threat in selection | filter:component.name | filter: {stride: 'REPUDIATION'} "> <!-- doppio filter --> 
+			{{threat.risk}}
+			</td>																	
+			</tr>
+    	<tr><td>Information Disclosure</td>
+    		<td ng-style="set_color(threat.risk)" ng-repeat="threat in selection | filter:component.name | filter: {stride: 'INFORMATION DISCLOSURE'} "> <!-- doppio filter --> 
+			{{threat.risk}}
+			</td>															
+			</tr>
+    	<tr><td>Denial of Service</td>
+    		<td ng-style="set_color(threat.risk)" ng-repeat="threat in selection | filter:component.name | filter: {stride: 'DENIAL OF SERVICE'} "> <!-- doppio filter --> 
+			{{threat.risk}}
+			</td>																
+			</tr>
+    	<tr><td>Elevation of Privileges</td>
+    		<td ng-style="set_color(threat.risk)" ng-repeat="threat in selection | filter:component.name | filter: {stride: 'ELEVATION OF PRIVILEGES'} "> <!-- doppio filter --> 
+			{{threat.risk}}
+			</td>														
+			</tr>
+   	 	
+   	 	</table>
 
+		
+		
+</div>
+
+   <button class="btn btn-primary pull-left" ng-click="saveRating()">Save</button><br><br>
+   <button class="btn btn-primary pull-left" ng-click="showresults()" ng-show='done'>{{button}}</button>
+   
+   <button class="btn btn-primary pull-left" ng-click="resetRating()" ng-show='done'>Reset</button><br>
+
+	<!-- {{selection}}--><br>
     {{user_name}} {{user_surname}} {{user_id}}<br>
      
   </div>

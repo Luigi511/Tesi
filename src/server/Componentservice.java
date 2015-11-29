@@ -179,9 +179,10 @@ public List<Threat> getAllThreats() {
 			  t.setname(rs.getString("threatname"));
 			  t.setdescr(rs.getString("threatdescription"));
 			  t.setCat(rs.getString("threatcat"));
+			  t.setSTRIDE(rs.getString("stride"));
 			  
 			  ts.add(t);
-			  //System.out.println("prelevato threat= "+rs.getString("threatname")+" id="+rs.getInt("idthreats"));
+			  System.out.println("prelevato threat= "+rs.getString("threatname")+" id="+rs.getInt("idthreats")+" STRIDE= "+rs.getString("stride"));
 			  //System.out.println("inoltro componente= "+c.getName()+c.getDescription()+" id="+c.getId()+" categoria="+c.getType());
 
 		  }

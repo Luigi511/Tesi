@@ -330,8 +330,10 @@ angular.module('SlaApp.negotiate.controllers', [])
     $scope.user_id=			$cookieStore.get('id_utente');
     $scope.booleanthreat=	$cookieStore.get('buttonthreat');
     
-    $scope.selection=$cookieStore.get('selection');
-    if($scope.selection==undefined){
+    //$scope.selection=$cookieStore.get('selection');
+    $scope.selection=JSON.parse(localStorage.getItem('selection'));
+    
+    if($scope.selection==null){
     	$scope.selection=[];
     }
    
@@ -346,7 +348,7 @@ angular.module('SlaApp.negotiate.controllers', [])
     bannerImg.src = "data:image/png;base64," + dataImage;
     
     
-    //definisco prima la funzione che ritorna tutti i threats
+    //prevelo tutti i threats
     $scope.getThreats = function() {
     	$http.get("http://localhost:8080/TESI/rest/threats").
     		success(function(result) {
@@ -382,7 +384,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 	}
 	
 	//raccolgo i threat selezionati
-	  $scope.toggleSelection = function toggleSelection(componentName,componentid,threatName,threatid) {
+	  $scope.toggleSelection = function toggleSelection(componentName,componentid,threatName,threatid,stride) {
 		  	
 		  	var idx = arrayObjectIndexOf($scope.selection,componentName,'component',threatName,'threat');
 	   		// is currently selected
@@ -395,46 +397,23 @@ angular.module('SlaApp.negotiate.controllers', [])
 	   		    		   {	'component':componentName,
 	   		    			   	'componentid':componentid,
 	   		    			   	'threat':threatName,
-	   		    			   	'threatid':threatid
+	   		    			   	'threatid':threatid,
+	   		    			   	'stride':stride,
 	   		    		   }
 	   		       );
 		    }
 	  };//fine metodo
 	  
 		  	
-/*	        //adesso registro associazione nel db
-	    	var urlBase="http://localhost:8080/TESI";
-	    	console.log("http://localhost:8080/TESI"+ '/rest/assoc/'+componentName+'/'+threatName);
-	 	   	$http.post(urlBase + '/rest/assoc/'+componentName+'/'+threatName).
-	 	   	success(function(data) {
-	 	   		console.log("associazione correttamente inserita");
-	 	   		
-	 	   		$scope.booleanthreat=true;
-	 	   		$cookieStore.put('buttonthreat',$scope.booleanthreat);
-	 	   		
-	 	   		var idx = $scope.selection.indexOf({
-				   component:componentName,
-	   			   	threat:threatName 
-	 	   		});
-	 	   		// is currently selected
-	 		     if (idx > -1) {
-	 		       $scope.selection.splice(idx, 1);
-	 		     }
-	 		     // is newly selected
-	 		     else {
-	 		    	$scope.selection.push(
-	 	   		    		   {	component:componentName,
-	 	   		    			   	threat:threatName//,check:true
-	 	   		    		   }
-	 	   		       );
-	 		     }	       
-	 	   	});*/
+
 	  
 	  
 	   //funzione salvataggio dati
 	   $scope.saveSelection = function(){
-		   $cookieStore.put('selection',$scope.selection);
-		   console.log("salvato nei cookie");
+		   
+		   localStorage.setItem("selection", JSON.stringify($scope.selection));
+		   //$cookieStore.put('selection',$scope.selection);
+		   console.log("salvato nel localstorage");
 		   
 		  angular.forEach($scope.selection,function(value,key){
 			  
@@ -464,7 +443,9 @@ angular.module('SlaApp.negotiate.controllers', [])
 		  });
 		  
 		  //pulizia
-		  $cookieStore.remove('selection');
+		  
+		  $cookieStore.remove('done');
+		  localStorage.removeItem('selection');
 		  $window.location.reload();
 	   }//fine saveselection
 	   
@@ -498,7 +479,184 @@ angular.module('SlaApp.negotiate.controllers', [])
 	$scope.user_name=		$cookieStore.get('name');
     $scope.user_surname=	$cookieStore.get('surname');
     $scope.user_id=			$cookieStore.get('id_utente');
-})
+    
+    //$scope.selection=		$cookieStore.get('selection');
+    $scope.selection=JSON.parse(localStorage.getItem('selection'));
+    $scope.done=			$cookieStore.get('done');
+    
+    //prelevo i componenti dell'utente
+	$scope.ListComponentFromDB = [];
+	$http.get("http://localhost:8080/TESI/rest/components/"+$scope.user_id).
+		success(function(data) {
+			$scope.ListComponentFromDB = data;
+			console.log('componenti utente prelevati');		
+	});
+    
+    //inizializzazione dati in tabella
+	angular.forEach($scope.selection, function(value, key){
+		
+		if(($scope.done==false)||($scope.done==undefined)){
+			
+			//inizializzazione
+			value.skill=0;
+			value.motive=0;
+			value.opportunity=0;
+			value.size=0;
+			value.discover=0;
+			value.ease=0;
+			value.aware=0;
+			value.id=0;
+			
+			//technical impacts
+			value.confide=0;
+			value.integri=0;
+			value.avalai=0;
+			value.accounta=0;
+			
+			//business impacts
+			value.financial=0;
+			value.reputation=0;
+			value.noncompliance=0;
+			value.privacy=0;
+		}
+		
+		
+		value.totaleLikehood=(value.skill+value.motive+value.opportunity+value.size+value.discover+value.ease+value.aware+value.id)/8;
+		
+		value.totaleImpactBusiness=(value.financial+value.reputation+value.noncompliance+value.privacy)/4;
+		value.totaleImpactTechnical=(value.confide+value.integri+value.avalai+value.accounta)/4;
+		if(value.totaleImpactBusiness==0){
+			value.totaleImpact=value.totaleImpactTechnical;
+		}else{
+			value.totaleImpact=value.totaleImpactBusiness;
+		}
+		
+		//combinazione dei rischi
+		switch(true){
+			case((value.totaleImpact>=6)&&(value.totaleImpact<9)): //HIGH
+				switch(true){
+				case value.totaleLikehood<3: value.risk='MEDIUM';break;
+				case (value.totaleLikehood>=3)&&(value.totaleLikehood<6): value.risk='HIGH';break;
+				case (value.totaleLikehood>=6)&&(value.totaleLikehood<9): value.risk='CRITICAL';break;
+				}
+			break;
+			
+			case((value.totaleImpact>=3)&&(value.totaleImpact<6)): //MEDIUM
+				switch(true){
+				case value.totaleLikehood<3: value.risk='LOW';break;
+				case (value.totaleLikehood>=3)&&(value.totaleLikehood<6): value.risk='MEDIUM';break;
+				case (value.totaleLikehood>=6)&&(value.totaleLikehood<9): value.risk='HIGH';break;
+				}
+			break;
+			
+			case(value.totaleImpact<3): //LOW
+				switch(true){
+				case value.totaleLikehood<3: value.risk='VERY LOW';break;
+				case (value.totaleLikehood>=3)&&(value.totaleLikehood<6): value.risk='LOW';break;
+				case (value.totaleLikehood>=6)&&(value.totaleLikehood<9): value.risk='MEDIUM';break;
+				}
+			break;
+		}
+		
+		
+		
+	});
+    
+    $scope.saveRating = function(){
+    	
+    	$scope.done=true;
+    	$cookieStore.put('done',$scope.done);
+    	
+    	angular.forEach($scope.selection, function(value, key){
+    		value.totaleLikehood=(value.skill+value.motive+value.opportunity+value.size+value.discover+value.ease+value.aware+value.id)/8;		
+    	
+    		value.totaleImpactBusiness=(value.financial+value.reputation+value.noncompliance+value.privacy)/4;
+    		value.totaleImpactTechnical=(value.confide+value.integri+value.avalai+value.accounta)/4;
+    		if(value.totaleImpactBusiness==0){
+    			value.totaleImpact=value.totaleImpactTechnical;
+    		}else{
+    			value.totaleImpact=value.totaleImpactBusiness;
+    		}
+    		
+    		//combinazione dei rischi
+    		switch(true){
+    			case((value.totaleImpact>=6)&&(value.totaleImpact<=9)): //HIGH
+    				switch(true){
+    				case value.totaleLikehood<3: value.risk='MEDIUM';break;
+    				case (value.totaleLikehood>=3)&&(value.totaleLikehood<6): value.risk='HIGH';break;
+    				case (value.totaleLikehood>=6)&&(value.totaleLikehood<=9): value.risk='CRITICAL';break;
+    				}
+    			break;
+    			
+    			case((value.totaleImpact>=3)&&(value.totaleImpact<6)): //MEDIUM
+    				switch(true){
+    				case value.totaleLikehood<3: value.risk='LOW';break;
+    				case (value.totaleLikehood>=3)&&(value.totaleLikehood<6): value.risk='MEDIUM';break;
+    				case (value.totaleLikehood>=6)&&(value.totaleLikehood<=9): value.risk='HIGH';break;
+    				}
+    			break;
+    			
+    			case(value.totaleImpact<3): //LOW
+    				switch(true){
+    				case value.totaleLikehood<3: value.risk='VERY LOW';break;
+    				case (value.totaleLikehood>=3)&&(value.totaleLikehood<6): value.risk='LOW';break;
+    				case (value.totaleLikehood>=6)&&(value.totaleLikehood<=9): value.risk='MEDIUM';break;
+    				}
+    			break;
+    		}
+    		
+    		
+    	});
+    	//salvo i valori inseriti per mantenere anche le tabelle
+    	//$cookieStore.put('selection',$scope.selection);
+    	
+    	localStorage.setItem("selection", JSON.stringify($scope.selection));
+    }
+    
+    $scope.button='Show Results';
+    $scope.showresults = function(){
+    	
+    	if(($scope.vedirisultati==undefined)||($scope.vedirisultati==false)){
+    		$scope.vedirisultati=true;
+    		$scope.button='Show Threat Tables';}
+    	else{
+    		$scope.vedirisultati=false;
+    		$scope.button='Show Results';
+    	}
+    }
+    
+    $scope.resetRating = function(){
+    	$cookieStore.remove('done');
+		$window.location.reload();
+    	
+    }
+    
+    $scope.set_color = function (risk) {
+    	
+    	switch(true){
+    	case(risk=='VERY LOW'): $scope.color={ "background": "#00FF1A" };break;
+    	case(risk=='LOW'): 		$scope.color={ "background": "#FFFC1A" };break;
+    	case(risk=='MEDIUM'):	$scope.color={ "background": "#FFBA37" };break;
+    	case(risk=='HIGH'): 	$scope.color={ "background": "#FF5035" };break;
+    	case(risk=='CRITICAL'): $scope.color={ "background": "#FF68E4" };break;
+    	
+    	}
+    	return $scope.color;
+    	}
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+})//fine controller ranking
 
 
 
@@ -523,9 +681,11 @@ angular.module('SlaApp.negotiate.controllers', [])
     	$cookieStore.remove('check1');
     	$cookieStore.remove('check2');
     	$cookieStore.remove('booleanthreat');
-    	$cookieStore.remove('selection');
+    	//$cookieStore.remove('selection');
+    	$cookieStore.remove('buttonthreat');
     	
     	localStorage.removeItem('imgData');
+    	localStorage.removeItem('selection');
     	console.log("cookie rimossi");
     	//ricarico la pagina
     	$window.location.reload();

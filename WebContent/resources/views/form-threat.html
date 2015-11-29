@@ -85,10 +85,10 @@
   <div class="panel panel-default" ng-repeat="component in ListComponentFromDB">
   <h3>{{component.name}} ({{component.type}})</h3>
   <table style="width: 100%; ">
-  	<tr ng-repeat="threat in ThreatFromDB | filter:component.type"">
+  	<tr ng-repeat="threat in ThreatFromDB | filter:component.type">
   		<td width="50"><input id="{{threat.name}}" type="checkbox" value="{{threat.name}}" 
   		ng-checked="find(component.name,threat.name)" 
-  		ng-click="toggleSelection(component.name,component.id,threat.name,threat.idThreat)" name="optionb" id="optb" class="paddingClass" /></td>
+  		ng-click="toggleSelection(component.name,component.id,threat.name,threat.idThreat,threat.stride)" name="optionb" id="optb" class="paddingClass" /></td>
   		<td width="20%">{{threat.name}}</td>
   		<td>{{threat.descr}}</td>
   		
@@ -100,8 +100,8 @@
   
   
   <!-- prova dati utente in cookie-->
-{{selection}}<br>
-{{user_name}} {{user_surname}} {{user_id}}<br>
+<!-- {{selection}}<br>
+ -->{{user_name}} {{user_surname}} {{user_id}}<br>
 <button class="btn btn-primary pull-left" ng-click="saveSelection()">Save</button>
 <a href="#/negotiate/ranking"><button class="btn btn-primary pull-right" ng-show="booleanthreat">Next</button></a>
   </div>
