@@ -2,6 +2,7 @@
 /bin/
 .project
 .settings
+.openshift
 /build/
 /Users/
 target
