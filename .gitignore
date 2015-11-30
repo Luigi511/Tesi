@@ -4,3 +4,7 @@
 .settings
 /build/
 /Users/
+target
+.settings/*
+!.settings/.jsdtscope
+.classpath
