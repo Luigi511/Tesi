@@ -30,4 +30,4 @@ NOTE: importing the database you are asked to assign a name; this must be equal 
 
 at the line: url=jdbc:mysql://localhost:3306/{{nomedb}} 
 
-5) run on server (tomcat server)
+5) run on server (tomcat server) 
