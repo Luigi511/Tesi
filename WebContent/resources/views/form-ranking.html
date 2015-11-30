@@ -31,9 +31,163 @@
   		/* Webkit browsers*/
   		-webkit-transform: scale(2);
 		}
+		
+a.tip {
+    
+    text-decoration: none
+}
+a.tip:hover {
+    cursor: help;
+    position: relative
+}
+a.tip span {
+    display: none
+}
+a.tip:hover span {
+    border: #c0c0c0 1px dotted;
+    padding: 5px 20px 5px 5px;
+    display: block;
+    z-index: 100;
+    background:  #f0f0f0 no-repeat 100% 5%;
+    left: 0px;
+    margin: 10px;
+    width: 250px;
+    position: absolute;
+    top: 10px;
+    text-decoration: none
+}
+
+a.tip2 {
+    color:#000000;
+    text-decoration: none
+}
+a.tip2:hover {
+    cursor: help;
+    position: relative
+}
+a.tip2 span {
+    display: none
+}
+a.tip2:hover span {
+    border: #c0c0c0 1px dotted;
+    padding: 5px 20px 5px 5px;
+    display: block;
+    z-index: 100;
+    background:  #f0f0f0 no-repeat 100% 5%;
+    left: 0px;
+    margin: 10px;
+    width: 250px;
+    position: absolute;
+    top: 10px;
+    text-decoration: none
+}
+
+/* tabella a mostro
+ */
+ .CSSTableGenerator {
+	margin:0px;padding:0px;
+	width:100%;
+	box-shadow: 10px 10px 5px #888888;
+	border:1px solid #000000;
+	
+	-moz-border-radius-bottomleft:0px;
+	-webkit-border-bottom-left-radius:0px;
+	border-bottom-left-radius:0px;
+	
+	-moz-border-radius-bottomright:0px;
+	-webkit-border-bottom-right-radius:0px;
+	border-bottom-right-radius:0px;
+	
+	-moz-border-radius-topright:0px;
+	-webkit-border-top-right-radius:0px;
+	border-top-right-radius:0px;
+	
+	-moz-border-radius-topleft:0px;
+	-webkit-border-top-left-radius:0px;
+	border-top-left-radius:0px;
+}.CSSTableGenerator table{
+    border-collapse: collapse;
+        border-spacing: 0;
+	width:100%;
+	height:100%;
+	margin:0px;padding:0px;
+}.CSSTableGenerator tr:last-child td:last-child {
+	-moz-border-radius-bottomright:0px;
+	-webkit-border-bottom-right-radius:0px;
+	border-bottom-right-radius:0px;
+}
+.CSSTableGenerator table tr:first-child td:first-child {
+	-moz-border-radius-topleft:0px;
+	-webkit-border-top-left-radius:0px;
+	border-top-left-radius:0px;
+}
+.CSSTableGenerator table tr:first-child td:last-child {
+	-moz-border-radius-topright:0px;
+	-webkit-border-top-right-radius:0px;
+	border-top-right-radius:0px;
+}.CSSTableGenerator tr:last-child td:first-child{
+	-moz-border-radius-bottomleft:0px;
+	-webkit-border-bottom-left-radius:0px;
+	border-bottom-left-radius:0px;
+}.CSSTableGenerator tr:hover td{
+	background-color:#f2f2f2;
+		
+
+}
+.CSSTableGenerator td{
+	vertical-align:middle;
+	
+	background-color:#ffffff;
+
+	border:1px solid #000000;
+	border-width:0px 1px 1px 0px;
+	text-align:center;
+	padding:7px;
+	font-size:14px;
+	font-family:Arial;
+	font-weight:normal;
+	color:#000000;
+}.CSSTableGenerator tr:last-child td{
+	border-width:0px 1px 0px 0px;
+}.CSSTableGenerator tr td:last-child{
+	border-width:0px 0px 1px 0px;
+}.CSSTableGenerator tr:last-child td:last-child{
+	border-width:0px 0px 0px 0px;
+}
+.CSSTableGenerator tr:first-child td{
+		background:-o-linear-gradient(bottom, #ffffff 5%, #ffffff 100%);	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ffffff), color-stop(1, #ffffff) );
+	background:-moz-linear-gradient( center top, #ffffff 5%, #ffffff 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff", endColorstr="#ffffff");	background: -o-linear-gradient(top,#ffffff,ffffff);
+
+	background-color:#ffffff;
+	border:0px solid #000000;
+	text-align:center;
+	border-width:0px 0px 1px 1px;
+	font-size:14px;
+	font-family:Arial;
+	font-weight:bold;
+	color:#000000;
+}
+.CSSTableGenerator tr:first-child:hover td{
+	background:-o-linear-gradient(bottom, #ffffff 5%, #ffffff 100%);	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ffffff), color-stop(1, #ffffff) );
+	background:-moz-linear-gradient( center top, #ffffff 5%, #ffffff 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff", endColorstr="#ffffff");	background: -o-linear-gradient(top,#ffffff,ffffff);
+
+	background-color:#ffffff;
+}
+.CSSTableGenerator tr:first-child td:first-child{
+	border-width:0px 0px 1px 0px;
+}
+.CSSTableGenerator tr:first-child td:last-child{
+	border-width:0px 0px 1px 1px;
+}
+ 
+ 
+ 
+ </style>
 
 
-</style>
+
 
 
 <div class="panel panel-default">
@@ -51,7 +205,7 @@
   	<table style="width: 100%; ">
 
   		<tr ng-repeat='threat in selection | filter:component.name'>
-  			<td width="10%">{{threat.threat}}<br>({{threat.stride}})</td>
+  			<td width="10%"><a class="tip2">{{threat.threat}}<br>({{threat.stride}})<span>{{threat.description}}</span></a></td>
   			<td align="center"><b>OVERALL RISK SEVERITY = {{threat.risk}}</b>
   			
   			<table>
@@ -62,10 +216,22 @@
 				<tr><td align="center"><b>Threat Agent Factors</b></td><td align="center"><b>Vulnerability Factors</b></td></tr>
 				</table>
 				<table>
-				<tr><td>Skill level</td>	<td><input type="number" ng-model="threat.skill" min="0" max="9"></td>														<td>Ease of discovery</td>		<td><input type="number" ng-model="threat.discover" min="0" max="9"></td></tr>
-				<tr><td>Motive</td>			<td><input type="number" ng-model="threat.motive" min="0" max="9"></td>														<td>Ease of exploit</td>		<td><input type="number" ng-model="threat.ease" min="0" max="9"></td></tr>
-				<tr><td>Opportunity</td>	<td><input type="number" ng-model="threat.opportunity" min="0" max="9"></td>												<td>Awareness</td>				<td><input type="number" ng-model="threat.aware" min="0" max="9"></td></tr>
-				<tr><td>Size</td>			<td><input type="number" ng-model="threat.size" min="0" max="9"></td>														<td>Intrusion detection</td>	<td><input type="number" ng-model="threat.id" min="0" max="9"></td></tr>
+				<tr><td><a class="tip">Skill level<span>How technically skilled is this group of threat agents?</span></a></td>	
+				<td><input type="number" ng-model="threat.skill" min="0" max="9"></td>														
+				<td><a class="tip">Ease of discovery<span>How easy is it for this group of threat agents to discover this vulnerability?</span></a></td>		
+				<td><input type="number" ng-model="threat.discover" min="0" max="9"></td></tr>
+				<tr><td><a class="tip">Motive<span>How motivated are the threat agents to find and exploit this vulnerability?</span></a></td>			
+				<td><input type="number" ng-model="threat.motive" min="0" max="9"></td>														
+				<td><a class="tip">Ease of exploit<span>How easy is it for this group of threat agents to actually exploit this vulnerability?</span></a></td>		
+				<td><input type="number" ng-model="threat.ease" min="0" max="9"></td></tr>
+				<tr><td><a class="tip">Opportunity<span>What resources and opportunities are required for this group of threat agents to find and exploit this vulnerability?</span></a></td>	
+				<td><input type="number" ng-model="threat.opportunity" min="0" max="9"></td>												
+				<td><a class="tip">Awareness<span>How well known is this vulnerability to this group of threat agents?</span></a></td>				
+				<td><input type="number" ng-model="threat.aware" min="0" max="9"></td></tr>
+				<tr><td><a class="tip">Size<span>How large is this group of threat agents?</span></a></td>			
+				<td><input type="number" ng-model="threat.size" min="0" max="9"></td>														
+				<td><a class="tip">Intrusion detection<span>How likely is an exploit to be detected?</span></a></td>
+				<td><input type="number" ng-model="threat.id" min="0" max="9"></td></tr>
 				
 				</table>
 			
@@ -78,10 +244,22 @@
 				<tr><td align="center"><b>Technical Impact Factors</b></td><td align="center"><b>Business Impact Factors</b></td></tr>
 				</table>
 				<table>
-				<tr><td>Loss of confidentiality</td>	<td><input type="number" ng-model="threat.confide" min="0" max="9" value="0"></td>								<td>Financial damage</td>		<td><input type="number" ng-model="threat.financial" min="0" max="9" value="0"></td></tr>
-				<tr><td>Loss of integrity</td>			<td><input type="number" ng-model="threat.integri" min="0" max="9" value="0"></td>								<td>Reputation damage</td>		<td><input type="number" ng-model="threat.reputation" min="0" max="9" value="0"></td></tr>
-				<tr><td>Loss of availability</td>		<td><input type="number" ng-model="threat.avalai" min="0" max="9" value="0"></td>								<td>Non-compliance</td>			<td><input type="number" ng-model="threat.noncompliance" min="0" max="9" value="0"></td></tr>
-				<tr><td>Loss of accountability</td>		<td><input type="number" ng-model="threat.accounta" min="0" max="9" value="0"></td>								<td>Privacy violation</td>		<td><input type="number" ng-model="threat.privacy" min="0" max="9" value="0"></td></tr>
+				<tr><td><a class="tip">Loss of confidentiality<span>How much data could be disclosed and how sensitive is it?</span></a></td>	
+				<td><input type="number" ng-model="threat.confide" min="0" max="9" value="0"></td>								
+				<td><a class="tip">Financial damage<span>How much financial damage will result from an exploit?</span></a></td>		
+				<td><input type="number" ng-model="threat.financial" min="0" max="9" value="0"></td></tr>
+				<tr><td><a class="tip">Loss of integrity<span>How much data could be corrupted and how damaged is it?</span></a></td>			
+				<td><input type="number" ng-model="threat.integri" min="0" max="9" value="0"></td>								
+				<td><a class="tip">Reputation damage<span>Would an exploit result in reputation damage that would harm the business?</span></a></td>		
+				<td><input type="number" ng-model="threat.reputation" min="0" max="9" value="0"></td></tr>
+				<tr><td><a class="tip">Loss of availability<span>How much service could be lost and how vital is it?</span></a></td>		
+				<td><input type="number" ng-model="threat.avalai" min="0" max="9" value="0"></td>								
+				<td><a class="tip">Non-compliance<span>How much exposure does non-compliance introduce?</span></a></td>			
+				<td><input type="number" ng-model="threat.noncompliance" min="0" max="9" value="0"></td></tr>
+				<tr><td><a class="tip">Loss of accountability<span>Are the threat agents' actions traceable to an individual?</span></a></td>		
+				<td><input type="number" ng-model="threat.accounta" min="0" max="9" value="0"></td>								
+				<td><a class="tip">Privacy violation<span>How much personally identifiable information could be disclosed?</span></a></td>		
+				<td><input type="number" ng-model="threat.privacy" min="0" max="9" value="0"></td></tr>
 				
 				</table>
 			
@@ -101,14 +279,14 @@
 
 
  <div class="panel panel-default" ng-show="vedirisultati">
-   <table border="1"; width=100%>
-    <tr><td></td>							<td align="center" ng-repeat="component in ListComponentFromDB">{{component.name}}</td> </tr>
-    <tr><td>Spoofing</td>					<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'SPOOFING')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'SPOOFING')}}</td> </tr>
-    <tr><td>Tampering</td>					<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'TAMPERING')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'TAMPERING')}}</td> </tr>
-    <tr><td>Remediation</td>				<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'REPUDIATION')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'REPUDIATION')}}</td> </tr>
-    <tr><td>Information Disclosure</td>		<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'INFORMATION DISCLOSURE')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'INFORMATION DISCLOSURE')}}</td> </tr>
-    <tr><td>Denial of Service</td>			<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'DENIAL OF SERVICE')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'DENIAL OF SERVICE')}}</td> </tr>
-    <tr><td>Elevation of privileges</td>	<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'ELEVATION OF PRIVILEGES')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'ELEVATION OF PRIVILEGES')}}</td> </tr>
+   <table class="CSSTableGenerator" border="1"; width=100%>
+    <tr><td></td>									<td align="center" ng-repeat="component in ListComponentFromDB">{{component.name}}</td> </tr>
+    <tr><td><b>Spoofing</b></td>					<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'SPOOFING')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'SPOOFING')}}</td> </tr>
+    <tr><td><b>Tampering</b></td>					<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'TAMPERING')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'TAMPERING')}}</td> </tr>
+    <tr><td><b>Remediation</b></td>					<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'REPUDIATION')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'REPUDIATION')}}</td> </tr>
+    <tr><td><b>Information Disclosure</b></td>		<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'INFORMATION DISCLOSURE')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'INFORMATION DISCLOSURE')}}</td> </tr>
+    <tr><td><b>Denial of Service</b></td>			<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'DENIAL OF SERVICE')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'DENIAL OF SERVICE')}}</td> </tr>
+    <tr><td><b>Elevation of privileges</b></td>		<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'ELEVATION OF PRIVILEGES')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'ELEVATION OF PRIVILEGES')}}</td> </tr>
    </table>
    
    

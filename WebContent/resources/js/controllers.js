@@ -384,7 +384,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 	}
 	
 	//raccolgo i threat selezionati
-	  $scope.toggleSelection = function toggleSelection(componentName,componentid,threatName,threatid,stride) {
+	  $scope.toggleSelection = function toggleSelection(componentName,componentid,threatName,threatid,stride,descr) {
 		  	
 		  	var idx = arrayObjectIndexOf($scope.selection,componentName,'component',threatName,'threat');
 	   		// is currently selected
@@ -399,6 +399,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 	   		    			   	'threat':threatName,
 	   		    			   	'threatid':threatid,
 	   		    			   	'stride':stride,
+	   		    			   	'description':descr,
 	   		    		   }
 	   		       );
 		    }

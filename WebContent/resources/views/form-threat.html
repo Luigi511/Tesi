@@ -88,7 +88,7 @@
   	<tr ng-repeat="threat in ThreatFromDB | filter:component.type">
   		<td width="50"><input id="{{threat.name}}" type="checkbox" value="{{threat.name}}" 
   		ng-checked="find(component.name,threat.name)" 
-  		ng-click="toggleSelection(component.name,component.id,threat.name,threat.idThreat,threat.stride)" name="optionb" id="optb" class="paddingClass" /></td>
+  		ng-click="toggleSelection(component.name,component.id,threat.name,threat.idThreat,threat.stride,threat.descr)" name="optionb" id="optb" class="paddingClass" /></td>
   		<td width="20%">{{threat.name}}</td>
   		<td>{{threat.descr}}</td>
   		

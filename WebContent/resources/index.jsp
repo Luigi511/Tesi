@@ -37,10 +37,11 @@
   
   
   <!-- aggiunti da me  -->
-  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<!--   <script src="http://code.jquery.com/jquery-1.9.1.js"></script> -->  
   <script src="http://malsup.github.com/jquery.form.js"></script>
   <script src="https://code.angularjs.org/1.4.8/angular-cookies.js"></script>
-  
+
   
 	
 </head>
