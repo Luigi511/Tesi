@@ -107,9 +107,9 @@ public class ServerREST {
 	  }*/
 	  
 	  //API rimuovi associazione componente-threat
-	  @RequestMapping(value="/delassoc/{Component}/{Threat}",method = RequestMethod.POST,headers="Accept=application/json")
-	  public void delAssociation(@PathVariable int Component,@PathVariable int Threat) throws ParseException { 
-	  service.DelAssociation(Component,Threat);
+	  @RequestMapping(value="/delassoc/{Component}",method = RequestMethod.POST,headers="Accept=application/json")
+	  public void delAssociation(@PathVariable int Component) throws ParseException { 
+	  service.DelAssociation(Component);
 	  }
 	  
 	  

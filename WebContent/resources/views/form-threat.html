@@ -78,8 +78,8 @@
     <div class="panel-body ">
     <div class="well">
       For each components select the appropriate threats
-    <button class="btn btn-primary pull-right" ng-click="resetSelection()">Reset</button>
-    </div>
+<!--     <button class="btn btn-primary pull-right" ng-click="resetSelection()">Reset</button>
+ -->    </div>
   
   
   <div class="panel panel-default" ng-repeat="component in ListComponentFromDB">
@@ -100,8 +100,8 @@
   
   
   <!-- prova dati utente in cookie-->
-<!-- {{selection}}<br>
- -->{{user_name}} {{user_surname}} {{user_id}}<br>
+{{selection}}<br>
+ {{user_name}} {{user_surname}} {{user_id}}<br>
 <button class="btn btn-primary pull-left" ng-click="saveSelection()">Save</button>
 <a href="#/negotiate/ranking"><button class="btn btn-primary pull-right" ng-show="booleanthreat">Next</button></a>
   </div>

@@ -251,11 +251,10 @@ public boolean FindAssociation(int component, int threat) {
 }
 
 
-public void DelAssociation(int component, int threat) {
+public void DelAssociation(int component) {
 	try {
-		 PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM threats_per_component WHERE component=? AND threat=?");
+		 PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM threats_per_component WHERE component=?");
 		 preparedStatement.setInt(1, component);
-		 preparedStatement.setInt(2, threat);
 		 preparedStatement.executeUpdate();
 		 System.out.println("ho inviato il comando di cancellazione associazione a mysql");
 	  } catch (SQLException e) {

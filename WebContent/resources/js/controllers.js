@@ -328,7 +328,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 
 
 //controller threat modeling
-.controller('ThreatCtrl', function ($scope, $rootScope, $cookieStore, $location, $http, $window) {
+.controller('ThreatCtrl', function ($scope, $rootScope, $cookieStore, $location, $http, $window, $timeout) {
 	
 	//prelevo dati cookie; 
 	$scope.user_name=		$cookieStore.get('name');
@@ -413,6 +413,27 @@ angular.module('SlaApp.negotiate.controllers', [])
 	   		    			   	'threatid':threatid,
 	   		    			   	'stride':stride,
 	   		    			   	'description':descr,
+	   		    				
+	   		    			   	'skill':0,
+	   		    			   	'motive':0,
+	   		    			   	'opportunity':0,
+	   		    			   	'size':0,
+	   		    			   	'discover':0,
+	   		    			   	'ease':0,
+	   		    			   	'aware':0,
+	   		    			   	'id':0,
+	   					
+	   		    			   	//technical impacts
+	   		    			   	'confide':0,
+	   		    			   	'integri':0,
+	   		    			   	'avalai':0,
+	   		    			   	'accounta':0,
+	   					
+	   		    			   	//business impacts
+	   		    			   	'financial':0,
+	   		    			   	'reputation':0,
+	   		    			   	'noncompliance':0,
+	   		    			   	'privacy':0
 	   		    		   }
 	   		       );
 		    }
@@ -421,47 +442,52 @@ angular.module('SlaApp.negotiate.controllers', [])
 		  	
 
 	  
-	  
 	   //funzione salvataggio dati
 	   $scope.saveSelection = function(){
 		   
-		   localStorage.setItem("selection", JSON.stringify($scope.selection));
-		   //$cookieStore.put('selection',$scope.selection);
-		   console.log("salvato nel localstorage");
+		   if($scope.booleanthreat==true){
+		   		//salvo di nuovo quindi pulisco prima TUTTO
+			   	angular.forEach($scope.ListComponentFromDB,function(value,key){
+					  
+					  $http.post(urlBase+'/rest/delassoc/'+value.id).
+				 	   	success(function(data) {
+				 	   		console.log("elimino dal db il componente id="+value.id);
+				 	   		
+				 	   		
+				 	   		//$cookieStore.put('buttonthreat',$scope.booleanthreat);
+				 	   		});
+				  });
+		   //provo a mettere un timeout di 5 secondi per evitare sovrapposizioni
+			   	$scope.booleanthreat=false;
+			   	$timeout(saveSelection2, 3000);
+		   }
+		   else{
+			   saveSelection2();
+		   }
+	   }
+	   
+	   
+	   function saveSelection2(){
 		   
-		  angular.forEach($scope.selection,function(value,key){
+			   localStorage.setItem("selection", JSON.stringify($scope.selection));
+			   //$cookieStore.put('selection',$scope.selection);
+			   console.log("salvato nel localstorage");
+		   
+			   angular.forEach($scope.selection,function(valore,chiave){
 			  
-			  $http.post(urlBase+'/rest/assoc/'+value.componentid+'/'+value.threatid).
-		 	   	success(function(data) {
-		 	   		console.log("associazione correttamente inserita");
+				   $http.post(urlBase+'/rest/assoc/'+valore.componentid+'/'+valore.threatid).
+		 	   		success(function(data) {
+		 	   		console.log("associazione correttamente inserita componente id="+valore.componentid+" threat id= "+valore.threatid);
 		 	   		
 		 	   		$scope.booleanthreat=true;
 		 	   		$cookieStore.put('buttonthreat',$scope.booleanthreat);});
 			  
-		  });
+			   });
 		   
 	   }//fine saveselection
 	   
 	   
-	   //funzione reset dati associati
-	   $scope.resetSelection = function(){
-		  
-		  angular.forEach($scope.selection,function(value,key){
-			  
-			  $http.post(urlBase+'/rest/delassoc/'+value.componentid+'/'+value.threatid).
-		 	   	success(function(data) {
-		 	   		//console.log("associazione correttamente inserita");
-		 	   		
-		 	   		$scope.booleanthreat=false;
-		 	   		$cookieStore.put('buttonthreat',$scope.booleanthreat);});
-		  });
-		  
-		  //pulizia
-		  
-		  $cookieStore.remove('done');
-		  localStorage.removeItem('selection');
-		  $window.location.reload();
-	   }//fine saveselection
+
 	   
 	   
 	   
