@@ -178,7 +178,8 @@ angular.module('SlaApp.negotiate.controllers', [])
     	var urlBase="http://localhost:8080/TESI";
     }
     else {
-    	var urlBase="https://threatapplication.herokuapp.com";
+    	//var urlBase="https://threatapplication.herokuapp.com";
+    	var urlBase="https://threatapplication-luigidm91.rhcloud.com/TESI-0.0.1-SNAPSHOT";
     }
     
     //prelevo tutte le categorie di threat
@@ -340,7 +341,9 @@ angular.module('SlaApp.negotiate.controllers', [])
     	var urlBase="http://localhost:8080/TESI";
     }
     else {
-    	var urlBase="https://threatapplication.herokuapp.com";
+    	//var urlBase="https://threatapplication.herokuapp.com";
+    	var urlBase="https://threatapplication-luigidm91.rhcloud.com/TESI-0.0.1-SNAPSHOT";
+
     }
     
     //$scope.selection=$cookieStore.get('selection');
@@ -528,7 +531,9 @@ angular.module('SlaApp.negotiate.controllers', [])
     	var urlBase="http://localhost:8080/TESI";
     }
     else {
-    	var urlBase="https://threatapplication.herokuapp.com";
+    	//var urlBase="https://threatapplication.herokuapp.com";
+    	var urlBase="https://threatapplication-luigidm91.rhcloud.com/TESI-0.0.1-SNAPSHOT";
+
     }
     
     //prelevo i componenti dell'utente
@@ -795,7 +800,9 @@ angular.module('SlaApp.negotiate.controllers', [])
         	var urlBase="http://localhost:8080/TESI";
         }
         else {
-        	var urlBase="https://threatapplication.herokuapp.com";
+        	//var urlBase="https://threatapplication.herokuapp.com";
+        	var urlBase="https://threatapplication-luigidm91.rhcloud.com/TESI-0.0.1-SNAPSHOT";
+
         }
 
  	   	console.log("inserito nella tabella url:"+urlBase + '/rest/user/' +$scope.user_name+'/'+$scope.user_surname)
