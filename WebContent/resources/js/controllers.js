@@ -163,7 +163,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 
 
 //controller per l'inserimento dei componenti del sistema 
-.controller("InsertCtrl",function($scope,$http,$cookieStore) {
+.controller("InsertCtrl",function($scope,$http,$cookieStore,$location) {
 	
 	
 	//prelevo dati cookie; 
@@ -174,9 +174,15 @@ angular.module('SlaApp.negotiate.controllers', [])
     $scope.boolean2=$cookieStore.get('check2');
 
         
+    if($location.$$host=='localhost'){
+    	var urlBase="http://localhost:8080/TESI";
+    }
+    else {
+    	var urlBase="https://threatapplication.herokuapp.com";
+    }
     
     //prelevo tutte le categorie di threat
-    $http.get("http://localhost:8080/TESI/rest/categories").
+    $http.get(urlBase+"/rest/categories").
         success(function(data) {
             $scope.categories = data;
 /*            for(var i=0;i<$scope.categories.length;i++){
@@ -191,7 +197,7 @@ angular.module('SlaApp.negotiate.controllers', [])
     //funzione di aggiornamento tabella dei componenti
     $scope.updateOnScreen = function() {
     	//prelevo i componenti dell'utente
-    	$http.get("http://localhost:8080/TESI/rest/components/"+$scope.user_id).
+    	$http.get(urlBase+"/rest/components/"+$scope.user_id).
     		success(function(data) {
     			$scope.ListComponentFromDB = data;
     			console.log('componenti utente prelevati');
@@ -231,14 +237,14 @@ angular.module('SlaApp.negotiate.controllers', [])
 
 			//la carico nel db
 			var file = $scope.myFile;
-			var uploadUrl = "/TESI/rest/upload";
+			
 			
 			var fd = new FormData();
 			fd.append('file', file);
 
 			//fd.append('person', name);
 			//fd.append('date', date);
-			$http.post(uploadUrl+'/'+$scope.user_id, fd, {
+			$http.post(urlBase+'/rest/upload/'+$scope.user_id, fd, {
 				transformRequest : angular.identity,
 				headers : {
 					'Content-Type' : undefined
@@ -256,7 +262,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 
 	///////////////////////////////////////////////////////
 	// upload componenti
-	var urlBase="http://localhost:8080/TESI";
+	
 
 	//upload nome e descr
     $scope.component = {};
@@ -330,6 +336,13 @@ angular.module('SlaApp.negotiate.controllers', [])
     $scope.user_id=			$cookieStore.get('id_utente');
     $scope.booleanthreat=	$cookieStore.get('buttonthreat');
     
+    if($location.$$host=='localhost'){
+    	var urlBase="http://localhost:8080/TESI";
+    }
+    else {
+    	var urlBase="https://threatapplication.herokuapp.com";
+    }
+    
     //$scope.selection=$cookieStore.get('selection');
     $scope.selection=JSON.parse(localStorage.getItem('selection'));
     
@@ -350,7 +363,7 @@ angular.module('SlaApp.negotiate.controllers', [])
     
     //prevelo tutti i threats
     $scope.getThreats = function() {
-    	$http.get("http://localhost:8080/TESI/rest/threats").
+    	$http.get(urlBase+"/rest/threats").
     		success(function(result) {
     			$scope.ThreatFromDB = result;
     			console.log('threat prelevati');		    			
@@ -360,7 +373,7 @@ angular.module('SlaApp.negotiate.controllers', [])
     
   //prelevo i componenti dell'utente
 	$scope.ListComponentFromDB = [];
-	$http.get("http://localhost:8080/TESI/rest/components/"+$scope.user_id).
+	$http.get(urlBase+"/rest/components/"+$scope.user_id).
 		success(function(data) {
 			$scope.ListComponentFromDB = data;
 			console.log('componenti utente prelevati');
@@ -418,7 +431,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 		   
 		  angular.forEach($scope.selection,function(value,key){
 			  
-			  $http.post('http://localhost:8080/TESI/rest/assoc/'+value.componentid+'/'+value.threatid).
+			  $http.post(urlBase+'/rest/assoc/'+value.componentid+'/'+value.threatid).
 		 	   	success(function(data) {
 		 	   		console.log("associazione correttamente inserita");
 		 	   		
@@ -435,7 +448,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 		  
 		  angular.forEach($scope.selection,function(value,key){
 			  
-			  $http.post('http://localhost:8080/TESI/rest/delassoc/'+value.componentid+'/'+value.threatid).
+			  $http.post(urlBase+'/rest/delassoc/'+value.componentid+'/'+value.threatid).
 		 	   	success(function(data) {
 		 	   		//console.log("associazione correttamente inserita");
 		 	   		
@@ -485,9 +498,16 @@ angular.module('SlaApp.negotiate.controllers', [])
     $scope.selection=JSON.parse(localStorage.getItem('selection'));
     $scope.done=			$cookieStore.get('done');
     
+    if($location.$$host=='localhost'){
+    	var urlBase="http://localhost:8080/TESI";
+    }
+    else {
+    	var urlBase="https://threatapplication.herokuapp.com";
+    }
+    
     //prelevo i componenti dell'utente
 	$scope.ListComponentFromDB = [];
-	$http.get("http://localhost:8080/TESI/rest/components/"+$scope.user_id).
+	$http.get(urlBase+"/rest/components/"+$scope.user_id).
 		success(function(data) {
 			$scope.ListComponentFromDB = data;
 			console.log('componenti utente prelevati');		
@@ -744,16 +764,23 @@ angular.module('SlaApp.negotiate.controllers', [])
         $cookieStore.put('name', $scope.user_name);
         $cookieStore.put('surname', $scope.user_surname);
         //adesso registro utente nel db
-    	var urlBase="http://localhost:8080/TESI";
+        
+        if($location.$$host=='localhost'){
+        	var urlBase="http://localhost:8080/TESI";
+        }
+        else {
+        	var urlBase="https://threatapplication.herokuapp.com";
+        }
 
  	   	console.log("inserito nella tabella url:"+urlBase + '/rest/user/' +$scope.user_name+'/'+$scope.user_surname)
  	   	$http.post(urlBase + '/rest/user/'+$scope.user_name+'/'+$scope.user_surname).
  	   	success(function(data) {
  	   		console.log("utente correttamente inserito");
  	   		
+ 	   		
  	   		console.log("Acquisisco id utente");
  	   		$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
- 	   		$http.get("http://localhost:8080/TESI"+'/rest/user/'+$scope.user_name+'/'+$scope.user_surname).
+ 	   		$http.get(urlBase+'/rest/user/'+$scope.user_name+'/'+$scope.user_surname).
  	   		success(function(data) {
  	   			$scope.user_id=data;
  	   			console.log('id utente='+$scope.user_id);

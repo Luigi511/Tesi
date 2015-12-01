@@ -2,6 +2,9 @@
 
 This README would normally document whatever steps are necessary to get your application up and running.
 
+You can try a demo updated every 2-3 days with latest functionality at:
+https://threatapplication.herokuapp.com/
+
 ## Installation ##
 
 **Compile and install from source**
