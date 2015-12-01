@@ -21,7 +21,14 @@ public class DBUtility {
                 InputStream inputStream = DBUtility.class.getClassLoader().getResourceAsStream("/config.properties");
                 prop.load(inputStream);
                 String driver = prop.getProperty("driver");
-                String url = prop.getProperty("url");
+                //String url = prop.getProperty("url");
+                
+                //per openshift
+                String host = System.getenv("OPENSHIFT_MYSQL_DB_HOST");
+                String port = System.getenv("OPENSHIFT_MYSQL_DB_PORT");
+                String url = String.format("jdbc:mysql://%s:%s/threatapplication", host, port);
+
+                
                 String user = prop.getProperty("user");
                 String password = prop.getProperty("password");
                 Class.forName(driver);

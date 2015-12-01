@@ -4,11 +4,12 @@ url=jdbc:mysql://localhost:3306/threatapplication
 user=root
 password=root
 
-//db in remoto (CLEARDB)
+
+//db in remoto (openshift)
 driver=com.mysql.jdbc.Driver
-url=jdbc:mysql://us-cdbr-iron-east-03.cleardb.net/heroku_bb14542cd9a8b61?reconnect=true
-user=b952f7aa4be99c
-password=b20a090c
+user=adminTKE1mm4
+password=y8mpc2n9Jl6V
+
 
 //db in remoto (JAWSDB)
 driver=com.mysql.jdbc.Driver
