@@ -170,8 +170,8 @@ angular.module('SlaApp.negotiate.controllers', [])
 	$scope.user_name=	$cookieStore.get('name');
     $scope.user_surname=$cookieStore.get('surname');
     $scope.user_id=		$cookieStore.get('id_utente');
-    $scope.boolean1=$cookieStore.get('check1');
-    $scope.boolean2=$cookieStore.get('check2');
+    $scope.boolean1=	$cookieStore.get('check1');
+    $scope.boolean2=	$cookieStore.get('check2');
 
         
     if($location.$$host=='localhost'){
