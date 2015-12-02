@@ -7,8 +7,8 @@ password=root
 
 //db in remoto (openshift)
 driver=com.mysql.jdbc.Driver
-user=adminTKE1mm4
-password=y8mpc2n9Jl6V
+user=adminfDBKQmm
+password=nwyeKQKsMKHT
 
 
 //db in remoto (JAWSDB)
