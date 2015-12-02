@@ -217,7 +217,7 @@ a.tip2:hover span {
 				</table>
 				<table>
 				<tr><td><a class="tip">Skill level<span>How technically skilled is this group of threat agents?</span></a></td>	
-				<td><input type="number" ng-model="threat.skill" min="0" max="9"></td>														
+				<td><input type="number" inputmode="numeric" pattern="[0-9]" ng-model="threat.skill" min="0" max="9"></td>														
 				<td><a class="tip">Ease of discovery<span>How easy is it for this group of threat agents to discover this vulnerability?</span></a></td>		
 				<td><input type="number" ng-model="threat.discover" min="0" max="9"></td></tr>
 				<tr><td><a class="tip">Motive<span>How motivated are the threat agents to find and exploit this vulnerability?</span></a></td>			

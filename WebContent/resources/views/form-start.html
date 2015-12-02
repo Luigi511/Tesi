@@ -14,26 +14,27 @@
 													
 
 
-<form id="html5Form" method="post" class="form-horizontal"
+<form id="html5Form" method="post" ><!--  class="form-horizontal"
     data-fv-framework="bootstrap"
     data-fv-message="This value is not valid"
     data-fv-feedbackicons-valid="glyphicon glyphicon-ok"
     data-fv-feedbackicons-invalid="glyphicon glyphicon-remove"
-    data-fv-feedbackicons-validating="glyphicon glyphicon-refresh">
+    data-fv-feedbackicons-validating="glyphicon glyphicon-refresh"> -->
 
     
         <label>Name</label>
             <input type="text" class="form-control" name="name"
-                data-fv-message="The name is not valid"
-                required data-fv-notempty-message="The name is required and cannot be empty"
-                pattern="^[a-zA-Z0-9]+$" data-fv-regexp-message="The name can only consist of alphabetical, number" 
+                required
+                pattern="[a-zA-Z]+[a-zA-Z ]+"
+                maxlength="25"
                 ng-model="user_name"/>
 	
         <label>Surname</label>
             <input type="text" class="form-control" name="surname"
-                data-fv-message="The surname is not valid"
-                required data-fv-notempty-message="The surname is required and cannot be empty"
-                pattern="^[a-zA-Z0-9]+$" data-fv-regexp-message="The surname can only consist of alphabetical, number" 
+                
+                required
+                pattern="[a-zA-Z.'-]+[a-zA-Z ]+"
+                maxlength="45"
                 ng-model="user_surname"/>
     <br>
 	<button type="submit" class="btn btn-primary pull-left" value="Save" title="Save" ng-click="add_user()">

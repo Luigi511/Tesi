@@ -167,9 +167,9 @@ public class ServerREST {
 			
 	  
 	  //API elimina componente
-	  @RequestMapping(value="/delete/{Name}/{Desc}",method = RequestMethod.POST,headers="Accept=application/json")
-	  public void deleteComponent(@PathVariable String Name,@PathVariable String Desc) throws ParseException { 
-	  service.deleteComponent(Name,Desc);
+	  @RequestMapping(value="/delete/{id}",method = RequestMethod.POST,headers="Accept=application/json")
+	  public void deleteComponent(@PathVariable int id) throws ParseException { 
+	  service.deleteComponent(id);
 	  }
 	  
 	  

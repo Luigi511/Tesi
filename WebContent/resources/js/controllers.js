@@ -163,7 +163,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 
 
 //controller per l'inserimento dei componenti del sistema 
-.controller("InsertCtrl",function($scope,$http,$cookieStore,$location) {
+.controller("InsertCtrl",function($scope,$http,$cookieStore,$location,$window) {
 	
 	
 	//prelevo dati cookie; 
@@ -172,6 +172,7 @@ angular.module('SlaApp.negotiate.controllers', [])
     $scope.user_id=		$cookieStore.get('id_utente');
     $scope.boolean1=	$cookieStore.get('check1');
     $scope.boolean2=	$cookieStore.get('check2');
+    $scope.boolean3=	$cookieStore.get('check3');
 
         
     if($location.$$host=='localhost'){
@@ -201,6 +202,12 @@ angular.module('SlaApp.negotiate.controllers', [])
     		success(function(data) {
     			$scope.ListComponentFromDB = data;
     			console.log('componenti utente prelevati');
+    			
+    	        //se la lista di componenti resta vuota non devo abilitare il next button
+    			console.log($scope.ListComponentFromDB[0]);
+    	        if($scope.ListComponentFromDB[0]==undefined){
+    	        	$scope.boolean2=false;
+    	        }
     				    			
     		});
     };
@@ -272,6 +279,13 @@ angular.module('SlaApp.negotiate.controllers', [])
      
     //funzione aggiungi in tabella (e in db)
     $scope.add = function(){
+    	//validazione
+    	console.log($scope.component.name);
+    	console.log($scope.component.description);
+    	console.log($scope.component.category);
+    	
+    	if(($scope.component.name!="")&&($scope.component.description!="")&&($scope.component.category!=undefined)){
+    	
     	$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
 
         var data = {};
@@ -295,29 +309,43 @@ angular.module('SlaApp.negotiate.controllers', [])
        $scope.component = {};
        
        
-       
+    	}//fine if 
 
        
     }
     
     ///////////////////////////////////////////////////////////////////
     //funzione rimuovi da tabella
-    $scope.remove = function(obj,name,description){
+    $scope.remove = function(obj,id,name,description){
     	//rimuovo da db
-        console.log(urlBase + '/rest/delete/' +name+'/'+description);
-        $http.post(urlBase + '/rest/delete/' +name+'/'+description).
+        console.log(urlBase + '/rest/delete/'+id);
+        $http.post(urlBase + '/rest/delete/'+id).
         success(function(data) {
             //rimuovo da tab a schermo
             if(obj != -1) {
     	    $scope.componentList.splice(obj, 1);
             }
-        });     
+        }).error(function() {
+        	
+        	//in caso di errore mando un alert perchè probabilmente sto cercando di cancellare
+        	//senza aver cancellato prima le associazioni!
+        	
+        	});
+        
+        
       //aggiorno i componenti dell'utente
         $scope.updateOnScreen();
+        
+
     }
 
     
-
+    $scope.next = function(){
+    	//sono andato avanti, quindi faccio sparire il form della foto (per evitare cambi)
+    	$scope.boolean3=true;
+    	$cookieStore.put('check3',$scope.boolean3);
+    	
+    }
     
     
 })
@@ -774,6 +802,7 @@ angular.module('SlaApp.negotiate.controllers', [])
     	$cookieStore.remove('pulsante');
     	$cookieStore.remove('check1');
     	$cookieStore.remove('check2');
+    	$cookieStore.remove('check3');
     	$cookieStore.remove('booleanthreat');
     	$cookieStore.remove('done');
     	//$cookieStore.remove('selection');
@@ -788,6 +817,11 @@ angular.module('SlaApp.negotiate.controllers', [])
 	
 	
     $scope.add_user = function () {
+    //lo faccio solo se gli input sono validi
+    	console.log($scope.user_name);
+    	console.log($scope.user_surname);
+    	if(($scope.user_name!=undefined)&&($scope.user_surname!=undefined)){
+    
     	//salvo cookie
         $cookieStore.put('name', $scope.user_name);
         $cookieStore.put('surname', $scope.user_surname);
@@ -825,7 +859,7 @@ angular.module('SlaApp.negotiate.controllers', [])
  	   		
  	   		
        });    
-    }
+    }}
 })
 
 

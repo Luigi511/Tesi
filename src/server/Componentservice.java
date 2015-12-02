@@ -70,11 +70,11 @@ private int id;
  }
 
 
-public void deleteComponent(String name, String desc) {
+public void deleteComponent(int id) {
 	try {
-		 PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM components WHERE name=? AND description=?");
-		 preparedStatement.setString(1, name);
-		 preparedStatement.setString(2, desc);
+		 PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM components WHERE idcomponents=?");
+		 preparedStatement.setInt(1, id);
+
 		 preparedStatement.executeUpdate();
 		 System.out.println("ho inviato il comando di cancellazione a mysql");
 	  } catch (SQLException e) {
