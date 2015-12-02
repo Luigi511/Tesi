@@ -178,8 +178,7 @@ angular.module('SlaApp.negotiate.controllers', [])
     	var urlBase="http://localhost:8080/TESI";
     }
     else {
-    	//var urlBase="https://threatapplication.herokuapp.com";
-    	var urlBase="https://threatapplication-luigidm91.rhcloud.com/TESI-0.0.1-SNAPSHOT";
+    	var urlBase="https://threatapplication.herokuapp.com";
     }
     
     //prelevo tutte le categorie di threat
@@ -341,8 +340,7 @@ angular.module('SlaApp.negotiate.controllers', [])
     	var urlBase="http://localhost:8080/TESI";
     }
     else {
-    	//var urlBase="https://threatapplication.herokuapp.com";
-    	var urlBase="https://threatapplication-luigidm91.rhcloud.com/TESI-0.0.1-SNAPSHOT";
+    	var urlBase="https://threatapplication.herokuapp.com";
 
     }
     
@@ -531,8 +529,7 @@ angular.module('SlaApp.negotiate.controllers', [])
     	var urlBase="http://localhost:8080/TESI";
     }
     else {
-    	//var urlBase="https://threatapplication.herokuapp.com";
-    	var urlBase="https://threatapplication-luigidm91.rhcloud.com/TESI-0.0.1-SNAPSHOT";
+    	var urlBase="https://threatapplication.herokuapp.com";
 
     }
     
@@ -800,8 +797,7 @@ angular.module('SlaApp.negotiate.controllers', [])
         	var urlBase="http://localhost:8080/TESI";
         }
         else {
-        	//var urlBase="https://threatapplication.herokuapp.com";
-        	var urlBase="https://threatapplication-luigidm91.rhcloud.com/TESI-0.0.1-SNAPSHOT";
+        	var urlBase="https://threatapplication.herokuapp.com";
 
         	
         }
