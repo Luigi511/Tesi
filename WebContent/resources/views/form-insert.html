@@ -41,17 +41,17 @@
     <div class="panel panel-default">
     <table style="width: 100%; ">
     	<tr>
-    	<td align="center">Component Name</td>
+    	<td align="center">Component Name<br><span style="color:red" ng-show="component.name==undefined">Required!</span></td>
     	<td><input type="text" maxlength="45" ng-model="component.name"/><br/></td>
 		</tr>
 		<tr>
-    	<td align="center">Component Type</td>
+    	<td align="center">Component Type<br><span style="color:red" ng-show="component.category==undefined">Required!</td>
     	<td><select ng-model="component.category" ng-options="category for category in categories"></select><br/></td>
 		</tr>
 		<tr>
 		<td align="center">Description</td>
-		<td><textarea maxlength="50" rows="4" cols="150" ng-model="component.description"/></textarea></td>
-		</tr><tr><td align="center"><button class="btn btn-primary" ng-click="add()" >Add Component</button></td></tr>
+		<td><textarea maxlength="50" rows="4" cols="150" ng-model="component.description" name='not defined'></textarea></td>
+		</tr><tr><td align="center"><button class="btn btn-primary" ng-click="add()">Add Component</button></td></tr>
 	</table>   	   
 	
     </div>
@@ -91,7 +91,7 @@
       Inserire un'immagine che rappresenti per intero il sistema (non gestisce ancora il cambio foto)
     </div>
 
-<table class="table" ng-hide="boolean3">
+<table class="table" ng-hide="boolean3&&boolean1">
 	<tr>
 		<td ng-hide="boolean1"><input type="file", class="custom-file-input", file-model="myFile", accept="image/*" onchange="$('#blah')[0].src = window.URL.createObjectURL(this.files[0])"></td>
 					
@@ -107,7 +107,7 @@
 	
 <!-- prova dati utente in cookie-->	
 {{user_name}} {{user_surname}} {{user_id}} 
-<a href="#/negotiate/threat"><button class="btn btn-primary pull-right" ng-show="boolean1 && boolean2" ng-click="next()">Next</button></a>
+<a href="#/negotiate/threat"><button class="btn btn-primary pull-right" ng-show="boolean2" ng-click="next()">Next</button></a>
 
 			
 			

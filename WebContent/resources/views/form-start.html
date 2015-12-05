@@ -10,11 +10,13 @@
 							</div>
 							
 							
-							<div class="well">Inserisci i tuoi dati<button class="btn btn-primary pull-right" ng-click="reset()">Reset</button></div>
+							<div class="well">Inserisci i tuoi dati<!-- <button class="btn btn-primary pull-right" ng-click="reset()">Reset</button> -->
+							</div>
 													
 
-
-<form id="html5Form" method="post" ><!--  class="form-horizontal"
+<table width="100%">
+<tr><td>
+<!-- <form id="html5Form" method="post"> class="form-horizontal"
     data-fv-framework="bootstrap"
     data-fv-message="This value is not valid"
     data-fv-feedbackicons-valid="glyphicon glyphicon-ok"
@@ -22,31 +24,37 @@
     data-fv-feedbackicons-validating="glyphicon glyphicon-refresh"> -->
 
     
-        <label>Name</label>
-            <input type="text" class="form-control" name="name"
+        <label>Name</label></td></tr>
+            <tr><td>
+            <input type="text" class="form-control" name="name" ng-disabled="boolean"
                 required
                 pattern="[a-zA-Z]+[a-zA-Z ]+"
                 maxlength="25"
                 ng-model="user_name"/>
-	
-        <label>Surname</label>
-            <input type="text" class="form-control" name="surname"
+            </td></tr> 
+			<tr><td>
+        <label>Surname</label></td></tr> 
+        	<tr><td>
+            <input type="text" class="form-control" name="surname" ng-disabled="boolean"
                 
                 required
                 pattern="[a-zA-Z.'-]+[a-zA-Z ]+"
                 maxlength="45"
                 ng-model="user_surname"/>
+            </td></tr>
+</table>	
+
     <br>
-	<button type="submit" class="btn btn-primary pull-left" value="Save" title="Save" ng-click="add_user()">
+	<button type="submit" class="btn btn-primary pull-left" value="Save" title="Save" ng-click="add_user()" ng-hide="boolean">
            <span>Save</span>
          </button>
-         <a href="#/negotiate/insert"><button class="btn btn-primary pull-right" ng-show="boolean">Next</button></a>
+         <a href="#/negotiate/insert"><button class="btn btn-primary pull-left" ng-show="boolean">Next</button></a>
     
 
     
 
-</form>
-	
+<!-- </form> -->
+
 
 
 

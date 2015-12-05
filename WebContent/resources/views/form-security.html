@@ -1,7 +1,141 @@
+<style>
+/* tabella a mostro
+ */
+ .CSSTableGenerator {
+	margin:0px;padding:0px;
+	width:100%;
+	box-shadow: 10px 10px 5px #888888;
+	border:1px solid #000000;
+	
+	-moz-border-radius-bottomleft:0px;
+	-webkit-border-bottom-left-radius:0px;
+	border-bottom-left-radius:0px;
+	
+	-moz-border-radius-bottomright:0px;
+	-webkit-border-bottom-right-radius:0px;
+	border-bottom-right-radius:0px;
+	
+	-moz-border-radius-topright:0px;
+	-webkit-border-top-right-radius:0px;
+	border-top-right-radius:0px;
+	
+	-moz-border-radius-topleft:0px;
+	-webkit-border-top-left-radius:0px;
+	border-top-left-radius:0px;
+}.CSSTableGenerator table{
+    border-collapse: collapse;
+        border-spacing: 0;
+	width:100%;
+	height:100%;
+	margin:0px;padding:0px;
+}.CSSTableGenerator tr:last-child td:last-child {
+	-moz-border-radius-bottomright:0px;
+	-webkit-border-bottom-right-radius:0px;
+	border-bottom-right-radius:0px;
+}
+.CSSTableGenerator table tr:first-child td:first-child {
+	-moz-border-radius-topleft:0px;
+	-webkit-border-top-left-radius:0px;
+	border-top-left-radius:0px;
+}
+.CSSTableGenerator table tr:first-child td:last-child {
+	-moz-border-radius-topright:0px;
+	-webkit-border-top-right-radius:0px;
+	border-top-right-radius:0px;
+}.CSSTableGenerator tr:last-child td:first-child{
+	-moz-border-radius-bottomleft:0px;
+	-webkit-border-bottom-left-radius:0px;
+	border-bottom-left-radius:0px;
+}.CSSTableGenerator tr:hover td{
+	background-color:#f2f2f2;
+		
+
+}
+.CSSTableGenerator td{
+	vertical-align:middle;
+	
+	background-color:#ffffff;
+
+	border:1px solid #000000;
+	border-width:0px 1px 1px 0px;
+	text-align:center;
+	padding:7px;
+	font-size:14px;
+	font-family:Arial;
+	font-weight:normal;
+	color:#000000;
+}.CSSTableGenerator tr:last-child td{
+	border-width:0px 1px 0px 0px;
+}.CSSTableGenerator tr td:last-child{
+	border-width:0px 0px 1px 0px;
+}.CSSTableGenerator tr:last-child td:last-child{
+	border-width:0px 0px 0px 0px;
+}
+.CSSTableGenerator tr:first-child td{
+		background:-o-linear-gradient(bottom, #ffffff 5%, #ffffff 100%);	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ffffff), color-stop(1, #ffffff) );
+	background:-moz-linear-gradient( center top, #ffffff 5%, #ffffff 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff", endColorstr="#ffffff");	background: -o-linear-gradient(top,#ffffff,ffffff);
+
+	background-color:#ffffff;
+	border:0px solid #000000;
+	text-align:center;
+	border-width:0px 0px 1px 1px;
+	font-size:14px;
+	font-family:Arial;
+	font-weight:bold;
+	color:#000000;
+}
+.CSSTableGenerator tr:first-child:hover td{
+	background:-o-linear-gradient(bottom, #ffffff 5%, #ffffff 100%);	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ffffff), color-stop(1, #ffffff) );
+	background:-moz-linear-gradient( center top, #ffffff 5%, #ffffff 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff", endColorstr="#ffffff");	background: -o-linear-gradient(top,#ffffff,ffffff);
+
+	background-color:#ffffff;
+}
+.CSSTableGenerator tr:first-child td:first-child{
+	border-width:0px 0px 1px 0px;
+}
+.CSSTableGenerator tr:first-child td:last-child{
+	border-width:0px 0px 1px 1px;
+}
+ 
+ 
+ 
+ </style>
+
+
+
+
 <div class="panel panel-default">
   <div class="panel-heading">
     <h2>Security Controls</h2>
   </div>
+  
+   <div class="panel panel-default">
+   <table class="CSSTableGenerator" border="1"; width=100%>
+    <tr><td></td>									<td align="center" ng-repeat="component in ListComponentFromDB">{{component.name}}</td> </tr>
+    <tr><td><b>Spoofing</b></td>					<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'SPOOFING')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'SPOOFING')}}</td> </tr>
+    <tr><td><b>Tampering</b></td>					<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'TAMPERING')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'TAMPERING')}}</td> </tr>
+    <tr><td><b>Repudiation</b></td>					<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'REPUDIATION')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'REPUDIATION')}}</td> </tr>
+    <tr><td><b>Information Disclosure</b></td>		<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'INFORMATION DISCLOSURE')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'INFORMATION DISCLOSURE')}}</td> </tr>
+    <tr><td><b>Denial of Service</b></td>			<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'DENIAL OF SERVICE')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'DENIAL OF SERVICE')}}</td> </tr>
+    <tr><td><b>Elevation of privileges</b></td>		<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'ELEVATION OF PRIVILEGES')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'ELEVATION OF PRIVILEGES')}}</td> </tr>
+   </table>		
+</div>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+ <!--  
   <div class="panel-body ">
     <div class="well">
       For each selected capability, choose the security controls you are interested in and assign them a score according to the importance you give to them.
@@ -19,7 +153,7 @@
           <div class="panel-body" ng-repeat="framework in capability.frameworks">
         <div class="well">
               <div class="panel panel-default">
-                <!-- Default panel contents -->
+                Default panel contents
                 <div class="panel-heading">{{framework.name}}</div>
 
                 <table class="table">
@@ -64,12 +198,12 @@
          <div class="panel-body">{{alertMessage}}</div>
       </div>
 
-    <!--  end of angular general controller -->
+     end of angular general controller
   </div>
-  <!--  end of panel body -->
+   end of panel body
 </div>
-<!-- end panel default -->
+end panel default
 
 <div class="panel panel-primary" ng-show="errorState">
    <div class="panel-body">{{errorMessage}}</div>
-</div>
+</div> -->

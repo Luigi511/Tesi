@@ -3,15 +3,36 @@ angular.module('SlaApp.controllers', [])
 //VADO A DEFINIRE TUTTI I CONTROLLER DELLA BARRA IN ALTO
 //OGNI CONTROLLER E' ASSOCIATO AD UNA PAGINA HTML NEL FILE app.js
 
-.controller('SlaCtrl', function ($scope, $location, $tabActive, $state) {
+.controller('SlaCtrl', function ($scope, $cookieStore, $location, $tabActive, $state) {
   
   $scope.tabActive = function(viewLocation){
     return $tabActive.get(viewLocation, $location.path());
   }
   
   $scope.go = function(route){
+	  	//reset quando premo il tasto start dopo aver gia cominciato 
+	  	$cookieStore.remove('name');
+		$cookieStore.remove('surname');
+		$cookieStore.remove('id_utente');
+		$cookieStore.remove('pulsante');
+		$cookieStore.remove('check1');
+		$cookieStore.remove('check2');
+		$cookieStore.remove('check3');
+		$cookieStore.remove('booleanthreat');
+		$cookieStore.remove('done');
+		//$cookieStore.remove('selection');
+		$cookieStore.remove('buttonthreat');
+		
+		localStorage.removeItem('imgData');
+		localStorage.removeItem('selection');
+		console.log("cookie rimossi");
+	  
+	  
         $state.go(route);
   } 
+  
+  
+  
   
 })
 
@@ -170,9 +191,9 @@ angular.module('SlaApp.negotiate.controllers', [])
 	$scope.user_name=	$cookieStore.get('name');
     $scope.user_surname=$cookieStore.get('surname');
     $scope.user_id=		$cookieStore.get('id_utente');
-    $scope.boolean1=	$cookieStore.get('check1');
-    $scope.boolean2=	$cookieStore.get('check2');
-    $scope.boolean3=	$cookieStore.get('check3');
+    $scope.boolean1=	$cookieStore.get('check1'); //gestisce caricamento foto
+    $scope.boolean2=	$cookieStore.get('check2'); //gestisce inserimento pezzi
+    $scope.boolean3=	$cookieStore.get('check3'); //gestisce pressione next
 
         
     if($location.$$host=='localhost'){
@@ -273,9 +294,11 @@ angular.module('SlaApp.negotiate.controllers', [])
 
 	//upload nome e descr
     $scope.component = {};
-    $scope.component.name = "";
-    $scope.component.description = "";
+/*    $scope.component.name = "";
+    $scope.component.description = "";*/
     $scope.componentList = [];
+    
+
      
     //funzione aggiungi in tabella (e in db)
     $scope.add = function(){
@@ -284,7 +307,11 @@ angular.module('SlaApp.negotiate.controllers', [])
     	console.log($scope.component.description);
     	console.log($scope.component.category);
     	
-    	if(($scope.component.name!="")&&($scope.component.description!="")&&($scope.component.category!=undefined)){
+/*    	if($scope.component.description==""){
+    		$scope.component.description="not defined";	
+    	}*/
+    	
+    	if(($scope.component.name!=undefined)&&($scope.component.category!=undefined)){
     	
     	$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
 
@@ -486,9 +513,9 @@ angular.module('SlaApp.negotiate.controllers', [])
 				 	   		//$cookieStore.put('buttonthreat',$scope.booleanthreat);
 				 	   		});
 				  });
-		   //provo a mettere un timeout di 5 secondi per evitare sovrapposizioni
+		   //provo a mettere un timeout di 2 secondi per evitare sovrapposizioni
 			   	$scope.booleanthreat=false;
-			   	$timeout(saveSelection2, 3000);
+			   	$timeout(saveSelection2, 2000);
 		   }
 		   else{
 			   saveSelection2();
@@ -791,11 +818,13 @@ angular.module('SlaApp.negotiate.controllers', [])
 	$scope.user_name=	$cookieStore.get('name');
     $scope.user_surname=$cookieStore.get('surname');
     $scope.user_id=		$cookieStore.get('id_utente');
-    $scope.boolean=		$cookieStore.get('pulsante');
+    
+    if($cookieStore.get('pulsante')==undefined){$scope.boolean=false;}
+    else{$scope.boolean=		$cookieStore.get('pulsante');}
     
     
-  //cancello tutti i cookie per ricominciare la sessione...
-    $scope.reset = function(){
+  //cancello tutti i cookie per ricominciare la sessione... tasto al momento disabilitato
+/*    $scope.reset = function(){
     	$cookieStore.remove('name');
     	$cookieStore.remove('surname');
     	$cookieStore.remove('id_utente');
@@ -813,7 +842,7 @@ angular.module('SlaApp.negotiate.controllers', [])
     	console.log("cookie rimossi");
     	//ricarico la pagina
     	$window.location.reload();
-    }
+    }*/
 	
 	
     $scope.add_user = function () {
@@ -821,19 +850,20 @@ angular.module('SlaApp.negotiate.controllers', [])
     	console.log($scope.user_name);
     	console.log($scope.user_surname);
     	if(($scope.user_name!=undefined)&&($scope.user_surname!=undefined)){
+    		
+    		
     
     	//salvo cookie
         $cookieStore.put('name', $scope.user_name);
         $cookieStore.put('surname', $scope.user_surname);
-        //adesso registro utente nel db
         
+        //adesso registro utente nel db
+
         if($location.$$host=='localhost'){
         	var urlBase="http://localhost:8080/TESI";
         }
         else {
         	var urlBase="https://threatapplication.herokuapp.com";
-
-        	
         }
 
  	   	console.log("inserito nella tabella url:"+urlBase + '/rest/user/' +$scope.user_name+'/'+$scope.user_surname)
@@ -862,80 +892,53 @@ angular.module('SlaApp.negotiate.controllers', [])
     }}
 })
 
-
-
-//////////////////////////////////////////////////////////////////////////////////
-.controller('ServiceCtrl', function ($scope, $location, ServiceFactory, cfpLoadingBar, $tabActive) {
-  
-  //Set Negotiate Tab on the SLA NavBar
-  $scope.$parent.tabActive = function(viewLocation){
-    return $tabActive.set(viewLocation, '/negotiate/start');
-  }
-  
-  $scope.alertMessage = "Error: no service is displayed.";
-  cfpLoadingBar.start();
-  ServiceFactory.all()
-    .success(function (data, status, headers, config) {
-       //console.log(data);
-       //console.log(status);
-       if(data.length == 0)
-          $scope.alertMessage = "No data received from server.";
-       else {
-          $scope.services = data.services;
-          $scope.formData.idsla = data.idsla;
-       }
-       cfpLoadingBar.complete();
-    })
-    .error(function (statusText) {
-       $scope.errorState = true;
-       $scope.errorMessage = (statusText == null) ? "Server Connection Error!" : "Server Connection Error! " + statusText;
-       // View error
-       console.log("Errore di connessione al server: " + statusText);
-       cfpLoadingBar.complete();
-    });
-
-})
-
-.controller('CapabilityCtrl', function ($scope, CapabilityFactory, cfpLoadingBar, $tabActive) {
-  
-  //Set Negotiate Tab on the SLA NavBar
-  $scope.$parent.tabActive = function(viewLocation){
-    return $tabActive.set(viewLocation, '/negotiate/start');
-  }
+//controller selezione controlli di sicurezza
+.controller('SecurityCtrl', function ($scope, SecurityFactory, cfpLoadingBar, $tabActive, $http, $cookieStore, $location) {
+	
+    $scope.user_id=		$cookieStore.get('id_utente');
+    $scope.selection=	JSON.parse(localStorage.getItem('selection'));
+    
+    if($location.$$host=='localhost'){
+    	var urlBase="http://localhost:8080/TESI";
+    }
+    else {
+    	var urlBase="https://threatapplication.herokuapp.com";
+    }
+    
+    
+    //prelevo i componenti dell'utente
+	$scope.ListComponentFromDB = [];
+	$http.get(urlBase+"/rest/components/"+$scope.user_id).
+		success(function(data) {
+			$scope.ListComponentFromDB = data;
+			console.log('componenti utente prelevati');		
+	});
+	
+    $scope.getRisk = function(componente,stride){
+    	var temp=0; var i=0;
+		angular.forEach($scope.selection, function(value, key){
+			if((value.component==componente)&&(value.stride==stride)){
+				temp=temp+value.riskNum;
+				i++;
+			}
+		});
+		
+		//media aritmetica
+		temp=temp/i;
+		//ho il valore di rischio complessivo: voglio una stringa
+		switch(true){
+		case((temp>=0)&&(temp<2)): var stringa="VERY LOW";break;
+		case((temp>=2)&&(temp<4)): var stringa="LOW";break;
+		case((temp>=4)&&(temp<6)): var stringa="MEDIUM";break;
+		case((temp>=6)&&(temp<8)): var stringa="HIGH";break;
+		case((temp>=8)&&(temp<10)): var stringa="CRITICAL";break;
+		}
+    	return stringa;
+    }
+	
+	
    
-  $scope.alertMessage = "You did not select any service, therefore no control is displayed.";
-
-  if($scope.formService.SDT_list != null)
-  {
-     cfpLoadingBar.start();
-     CapabilityFactory.get($scope.formService.SDT_list)
-       .success(function (data, status, headers, config) {
-          //console.log(data);
-          //console.log(status);
-          if(data.length == 0)
-             $scope.alertMessage = "No data received from server.";      
-          else {
-             $scope.capabilities = data.capabilities;
-             $scope.idsla = data.idsla;
-             $scope.formService.idsla = data.idsla;
-             $scope.formData.idsla = data.idsla;
-          }
-          cfpLoadingBar.complete();
-       })
-       .error(function (statusText) {
-          $scope.errorState = true;
-          $scope.errorMessage = (statusText == null) ? "Server Connection Error!" : "Server Connection Error! " + statusText;
-          // View error
-          console.log("Errore di connessione al server: " + statusText);
-          cfpLoadingBar.complete();
-       });
-  }
-
-})
-
-.controller('SecurityCtrl', function ($scope,SecurityFactory, cfpLoadingBar, $tabActive) {
-   
-  //Set Negotiate Tab on the SLA NavBar
+/*  //Set Negotiate Tab on the SLA NavBar
   $scope.$parent.tabActive = function(viewLocation){
     return $tabActive.set(viewLocation, '/negotiate/start');
   }
@@ -980,7 +983,86 @@ angular.module('SlaApp.negotiate.controllers', [])
     $scope.formData.capabilities = capabilities;   
   }
 
+*/})
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////
+//pagina selezione controlli di sicurezza
+.controller('ServiceCtrl', function ($scope, $location, ServiceFactory, cfpLoadingBar, $tabActive, $http, $cookieStore) {
+	
+	
+
+  
+  //Set Negotiate Tab on the SLA NavBar
+  $scope.$parent.tabActive = function(viewLocation){
+    return $tabActive.set(viewLocation, '/negotiate/start');
+  }
+  
+  $scope.alertMessage = "Error: no service is displayed.";
+  cfpLoadingBar.start();
+  ServiceFactory.all()
+    .success(function (data, status, headers, config) {
+       //console.log(data);
+       //console.log(status);
+       if(data.length == 0)
+          $scope.alertMessage = "No data received from server.";
+       else {
+          $scope.services = data.services;
+          $scope.formData.idsla = data.idsla;
+       }
+       cfpLoadingBar.complete();
+    })
+    .error(function (statusText) {
+       $scope.errorState = true;
+       $scope.errorMessage = (statusText == null) ? "Server Connection Error!" : "Server Connection Error! " + statusText;
+       // View error
+       console.log("Errore di connessione al server: " + statusText);
+       cfpLoadingBar.complete();
+    });
+
+
 })
+
+.controller('CapabilityCtrl', function ($scope, CapabilityFactory, cfpLoadingBar, $tabActive) {
+  
+  //Set Negotiate Tab on the SLA NavBar
+  $scope.$parent.tabActive = function(viewLocation){
+    return $tabActive.set(viewLocation, '/negotiate/start');
+  }
+   
+  $scope.alertMessage = "You did not select any service, therefore no control is displayed.";
+
+  if($scope.formService.SDT_list != null)
+  {
+     cfpLoadingBar.start();
+     CapabilityFactory.get($scope.formService.SDT_list)
+       .success(function (data, status, headers, config) {
+          //console.log(data);
+          //console.log(status);
+          if(data.length == 0)
+             $scope.alertMessage = "No data received from server.";      
+          else {
+             $scope.capabilities = data.capabilities;
+             $scope.idsla = data.idsla;
+             $scope.formService.idsla = data.idsla;
+             $scope.formData.idsla = data.idsla;
+          }
+          cfpLoadingBar.complete();
+       })
+       .error(function (statusText) {
+          $scope.errorState = true;
+          $scope.errorMessage = (statusText == null) ? "Server Connection Error!" : "Server Connection Error! " + statusText;
+          // View error
+          console.log("Errore di connessione al server: " + statusText);
+          cfpLoadingBar.complete();
+       });
+  }
+
+})
+
+
 
 .controller('AgreementCtrl', function ($scope,AgreementFactory, cfpLoadingBar, $tabActive) {
   
