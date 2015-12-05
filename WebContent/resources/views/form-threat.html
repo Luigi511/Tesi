@@ -5,7 +5,7 @@
 
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h2>Your System</h2>
+    <h2>Your System</h2><span ng-hide="boolean1" style="color:red">You did not enter a photo!</span>
   </div>
   <div class="panel-body ">
 	
@@ -46,7 +46,7 @@
 
   	
   	
-<table style="width: 100%; ">
+<table style="width: 100%;" ng-show="boolean1">
 <!-- <tr>
 	<td align="center"><h3>Scheme</h3></td>
 	<td align="center"><h3>Components</h3></td>
@@ -55,10 +55,11 @@
 	<td style="width: 75%; ">
     		<img src="" id="tableBanner" />
     </td>
-    <td style="width: 25%; ">
-    	<table style="width: 100%; ">	
+    <td style="width: 25%; " valign="top">
+    	<table style="width: 100%; ">
+    		<tr><td align="center"><b>Components</b></td></tr>	
     		<tr ng-repeat="component in ListComponentFromDB">
-                <td>{{component.name}}</td> 
+                <td align="center">{{component.name}}</td> 
  <!--           <td>{{component.description}}</td> 
                 <td>{{component.type}}</td>
                 <td>{{component.id}}</td>  -->   
@@ -67,6 +68,21 @@
     </td>
 </tr>	 	
 </table>
+
+<!-- se la foto non c'è faccio vedere una tabella più dettagliata
+ -->
+ 
+ <table ng-hide="boolean1" style="width: 100%; ">
+ <tr><td>Id</td><td>Component name</td><td>Type</td><td>Description</td></tr>
+ <tr ng-repeat="component in ListComponentFromDB">
+ 	<td>{{component.id}}</td>
+ 	<td>{{component.name}}</td>
+ 	<td>{{component.type}}</td>
+ 	<td>{{component.description}}</td>
+ </tr>
+ </table>
+ 
+ 
   </div>
 </div>
 

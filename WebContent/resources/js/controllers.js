@@ -191,7 +191,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 	$scope.user_name=	$cookieStore.get('name');
     $scope.user_surname=$cookieStore.get('surname');
     $scope.user_id=		$cookieStore.get('id_utente');
-    $scope.boolean1=	$cookieStore.get('check1'); //gestisce caricamento foto
+    $scope.boolean1=	$cookieStore.get('check1'); //gestisce pressione upload
     $scope.boolean2=	$cookieStore.get('check2'); //gestisce inserimento pezzi
     $scope.boolean3=	$cookieStore.get('check3'); //gestisce pressione next
 
@@ -202,6 +202,12 @@ angular.module('SlaApp.negotiate.controllers', [])
     else {
     	var urlBase="https://threatapplication.herokuapp.com";
     }
+    
+    //recupero la foto dal localstorage
+    var dataImage = localStorage.getItem('imgData');
+    bannerImg = document.getElementById('tableBanner');
+    bannerImg.src = "data:image/png;base64," + dataImage;
+    
     
     //prelevo tutte le categorie di threat
     $http.get(urlBase+"/rest/categories").
@@ -255,11 +261,11 @@ angular.module('SlaApp.negotiate.controllers', [])
     	//upload schema
 		$scope.uploadFile = function() {
 			
-			//provo a salvarla nel localstorage
+/*			//provo a salvarla nel localstorage
 			bannerImage = document.getElementById('blah');
 			imgData = getBase64Image(bannerImage);
 			localStorage.setItem("imgData", imgData);
-			console.log('foto salvata nel localstorage');
+			console.log('foto salvata nel localstorage');*/
 			
 			
 
@@ -282,6 +288,17 @@ angular.module('SlaApp.negotiate.controllers', [])
 				
 				$scope.boolean1=true;
 				$cookieStore.put('check1',$scope.boolean1);
+				
+				//adesso la metto nel localstorage e la mostro a schermo
+				bannerImage = document.getElementById('blah');
+				imgData = getBase64Image(bannerImage);
+				localStorage.setItem("imgData", imgData);
+				console.log('foto salvata nel localstorage');
+				
+			    //recupero la foto dal localstorage
+			    var dataImage = localStorage.getItem('imgData');
+			    bannerImg = document.getElementById('tableBanner');
+			    bannerImg.src = "data:image/png;base64," + dataImage;
 				
 				
 			}).error(function() {
@@ -389,6 +406,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 	$scope.user_name=		$cookieStore.get('name');
     $scope.user_surname=	$cookieStore.get('surname');
     $scope.user_id=			$cookieStore.get('id_utente');
+    $scope.boolean1=		$cookieStore.get('check1'); //se la foto c'è allora è true
     $scope.booleanthreat=	$cookieStore.get('buttonthreat');
     
     if($location.$$host=='localhost'){

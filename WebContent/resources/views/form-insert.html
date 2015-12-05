@@ -91,17 +91,21 @@
       Inserire un'immagine che rappresenti per intero il sistema (non gestisce ancora il cambio foto)
     </div>
 
-<table class="table" ng-hide="boolean3&&boolean1">
+<table class="table" ng-hide="boolean1">
 	<tr>
-		<td ng-hide="boolean1"><input type="file", class="custom-file-input", file-model="myFile", accept="image/*" onchange="$('#blah')[0].src = window.URL.createObjectURL(this.files[0])"></td>
-					
+		<td><input type="file", class="custom-file-input", file-model="myFile", accept="image/*" onchange="$('#blah')[0].src = window.URL.createObjectURL(this.files[0])"></td>
+				
 	</tr>
 	<tr><td><img id="blah" alt="" width="100"/></td></tr>
 	<tr>
-		<td ng-hide="boolean1"><button class="btn btn-primary" ng-click="uploadFile()">Upload</button></td>
+		<td><button class="btn btn-primary" ng-click="uploadFile()">Upload</button></td>
 	</tr>
 </table>
 
+
+<table class="table" ng-show="boolean1">
+<tr><td><img src="" id="tableBanner"  width="100"/></td></tr>
+</table>
 
 
 	
