@@ -181,6 +181,90 @@ angular.module('SlaApp.controllers', [])
 
 angular.module('SlaApp.negotiate.controllers', [])
 
+/////////////////////////////////////////////////////////////////
+//controller pagina iniziale di registrazione (salvataggio cookie)
+
+.controller('StartCtrl', function ($scope, $rootScope, $cookieStore, $location, $http, $window) {
+
+	//prelevo dati cookie; 
+	$scope.user_name=	$cookieStore.get('name');
+    $scope.user_surname=$cookieStore.get('surname');
+    $scope.user_id=		$cookieStore.get('id_utente');
+    
+    if($cookieStore.get('pulsante')==undefined){$scope.boolean=false;}
+    else{$scope.boolean=		$cookieStore.get('pulsante');}
+    
+    
+  //cancello tutti i cookie per ricominciare la sessione... tasto al momento disabilitato
+/*    $scope.reset = function(){
+    	$cookieStore.remove('name');
+    	$cookieStore.remove('surname');
+    	$cookieStore.remove('id_utente');
+    	$cookieStore.remove('pulsante');
+    	$cookieStore.remove('check1');
+    	$cookieStore.remove('check2');
+    	$cookieStore.remove('check3');
+    	$cookieStore.remove('booleanthreat');
+    	$cookieStore.remove('done');
+    	//$cookieStore.remove('selection');
+    	$cookieStore.remove('buttonthreat');
+    	
+    	localStorage.removeItem('imgData');
+    	localStorage.removeItem('selection');
+    	console.log("cookie rimossi");
+    	//ricarico la pagina
+    	$window.location.reload();
+    }*/
+	
+	
+    $scope.add_user = function () {
+    //lo faccio solo se gli input sono validi
+    	console.log($scope.user_name);
+    	console.log($scope.user_surname);
+    	if(($scope.user_name!=undefined)&&($scope.user_surname!=undefined)){
+    		
+    		
+    
+    	//salvo cookie
+        $cookieStore.put('name', $scope.user_name);
+        $cookieStore.put('surname', $scope.user_surname);
+        
+        //adesso registro utente nel db
+
+        if($location.$$host=='localhost'){
+        	var urlBase="http://localhost:8080/TESI";
+        }
+        else {
+        	var urlBase="https://threatapplication.herokuapp.com";
+        }
+
+ 	   	console.log("inserito nella tabella url:"+urlBase + '/rest/user/' +$scope.user_name+'/'+$scope.user_surname)
+ 	   	$http.post(urlBase + '/rest/user/'+$scope.user_name+'/'+$scope.user_surname).
+ 	   	success(function(data) {
+ 	   		console.log("utente correttamente inserito");
+ 	   		
+ 	   		
+ 	   		console.log("Acquisisco id utente");
+ 	   		$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+ 	   		$http.get(urlBase+'/rest/user/'+$scope.user_name+'/'+$scope.user_surname).
+ 	   		success(function(data) {
+ 	   			$scope.user_id=data;
+ 	   			console.log('id utente='+$scope.user_id);
+ 	 	   		$cookieStore.put('id_utente',$scope.user_id); //id utente ---> chiave esterna
+ 	 	   		
+ 	 	   		$scope.boolean=true;
+ 	 	   		$cookieStore.put('pulsante',$scope.boolean);
+ 	   		})
+ 	   		.error(function() {$scope.user_id=0;});
+
+ 	   		
+ 	   		
+ 	   		
+       });    
+    }}
+})
+
+
 
 
 //controller per l'inserimento dei componenti del sistema 
@@ -361,6 +445,9 @@ angular.module('SlaApp.negotiate.controllers', [])
     ///////////////////////////////////////////////////////////////////
     //funzione rimuovi da tabella
     $scope.remove = function(obj,id,name,description){
+    	
+    	//per cancellare un componente devi prima rimuovere l'associazione con i threat!!
+    	
     	//rimuovo da db
         console.log(urlBase + '/rest/delete/'+id);
         $http.post(urlBase + '/rest/delete/'+id).
@@ -372,8 +459,7 @@ angular.module('SlaApp.negotiate.controllers', [])
         }).error(function() {
         	
         	//in caso di errore mando un alert perchè probabilmente sto cercando di cancellare
-        	//senza aver cancellato prima le associazioni!
-        	
+        	//senza aver cancellato prima le associazioni!        	
         	});
         
         
@@ -827,94 +913,14 @@ angular.module('SlaApp.negotiate.controllers', [])
 
 
 
-/////////////////////////////////////////////////////////////////
-//controller pagina iniziale di registrazione (salvataggio cookie)
-
-.controller('StartCtrl', function ($scope, $rootScope, $cookieStore, $location, $http, $window) {
-
-	//prelevo dati cookie; 
-	$scope.user_name=	$cookieStore.get('name');
-    $scope.user_surname=$cookieStore.get('surname');
-    $scope.user_id=		$cookieStore.get('id_utente');
-    
-    if($cookieStore.get('pulsante')==undefined){$scope.boolean=false;}
-    else{$scope.boolean=		$cookieStore.get('pulsante');}
-    
-    
-  //cancello tutti i cookie per ricominciare la sessione... tasto al momento disabilitato
-/*    $scope.reset = function(){
-    	$cookieStore.remove('name');
-    	$cookieStore.remove('surname');
-    	$cookieStore.remove('id_utente');
-    	$cookieStore.remove('pulsante');
-    	$cookieStore.remove('check1');
-    	$cookieStore.remove('check2');
-    	$cookieStore.remove('check3');
-    	$cookieStore.remove('booleanthreat');
-    	$cookieStore.remove('done');
-    	//$cookieStore.remove('selection');
-    	$cookieStore.remove('buttonthreat');
-    	
-    	localStorage.removeItem('imgData');
-    	localStorage.removeItem('selection');
-    	console.log("cookie rimossi");
-    	//ricarico la pagina
-    	$window.location.reload();
-    }*/
-	
-	
-    $scope.add_user = function () {
-    //lo faccio solo se gli input sono validi
-    	console.log($scope.user_name);
-    	console.log($scope.user_surname);
-    	if(($scope.user_name!=undefined)&&($scope.user_surname!=undefined)){
-    		
-    		
-    
-    	//salvo cookie
-        $cookieStore.put('name', $scope.user_name);
-        $cookieStore.put('surname', $scope.user_surname);
-        
-        //adesso registro utente nel db
-
-        if($location.$$host=='localhost'){
-        	var urlBase="http://localhost:8080/TESI";
-        }
-        else {
-        	var urlBase="https://threatapplication.herokuapp.com";
-        }
-
- 	   	console.log("inserito nella tabella url:"+urlBase + '/rest/user/' +$scope.user_name+'/'+$scope.user_surname)
- 	   	$http.post(urlBase + '/rest/user/'+$scope.user_name+'/'+$scope.user_surname).
- 	   	success(function(data) {
- 	   		console.log("utente correttamente inserito");
- 	   		
- 	   		
- 	   		console.log("Acquisisco id utente");
- 	   		$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
- 	   		$http.get(urlBase+'/rest/user/'+$scope.user_name+'/'+$scope.user_surname).
- 	   		success(function(data) {
- 	   			$scope.user_id=data;
- 	   			console.log('id utente='+$scope.user_id);
- 	 	   		$cookieStore.put('id_utente',$scope.user_id); //id utente ---> chiave esterna
- 	 	   		
- 	 	   		$scope.boolean=true;
- 	 	   		$cookieStore.put('pulsante',$scope.boolean);
- 	   		})
- 	   		.error(function() {$scope.user_id=0;});
-
- 	   		
- 	   		
- 	   		
-       });    
-    }}
-})
-
 //controller selezione controlli di sicurezza
 .controller('SecurityCtrl', function ($scope, SecurityFactory, cfpLoadingBar, $tabActive, $http, $cookieStore, $location) {
 	
-    $scope.user_id=		$cookieStore.get('id_utente');
-    $scope.selection=	JSON.parse(localStorage.getItem('selection'));
+	//prelevo dati cookie; 
+	$scope.user_name=		$cookieStore.get('name');
+    $scope.user_surname=	$cookieStore.get('surname');
+    $scope.user_id=			$cookieStore.get('id_utente');
+    $scope.selection=		JSON.parse(localStorage.getItem('selection'));
     
     if($location.$$host=='localhost'){
     	var urlBase="http://localhost:8080/TESI";
