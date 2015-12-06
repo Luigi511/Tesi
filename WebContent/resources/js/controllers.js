@@ -22,9 +22,11 @@ angular.module('SlaApp.controllers', [])
 		$cookieStore.remove('done');
 		//$cookieStore.remove('selection');
 		$cookieStore.remove('buttonthreat');
+		$cookieStore.remove('controls');
 		
 		localStorage.removeItem('imgData');
 		localStorage.removeItem('selection');
+		localStorage.removeItem('controlselection');
 		console.log("cookie rimossi");
 	  
 	  
@@ -630,7 +632,8 @@ angular.module('SlaApp.negotiate.controllers', [])
 	   function saveSelection2(){
 		   
 			   localStorage.setItem("selection", JSON.stringify($scope.selection));
-			   //$cookieStore.put('selection',$scope.selection);
+			   localStorage.removeItem('controlselection'); //pulizia per dopo...
+
 			   console.log("salvato nel localstorage");
 		   
 			   angular.forEach($scope.selection,function(valore,chiave){
@@ -681,7 +684,7 @@ angular.module('SlaApp.negotiate.controllers', [])
     $scope.user_id=			$cookieStore.get('id_utente');
     
     //$scope.selection=		$cookieStore.get('selection');
-    $scope.selection=JSON.parse(localStorage.getItem('selection'));
+    $scope.selection=		JSON.parse(localStorage.getItem('selection'));
     $scope.done=			$cookieStore.get('done');
     
     if($location.$$host=='localhost'){
@@ -914,13 +917,16 @@ angular.module('SlaApp.negotiate.controllers', [])
 
 
 //controller selezione controlli di sicurezza
-.controller('SecurityCtrl', function ($scope, SecurityFactory, cfpLoadingBar, $tabActive, $http, $cookieStore, $location) {
+.controller('SecurityCtrl', function ($scope, SecurityFactory, cfpLoadingBar, $tabActive, $http, $cookieStore, $location, $timeout) {
 	
 	//prelevo dati cookie; 
 	$scope.user_name=		$cookieStore.get('name');
     $scope.user_surname=	$cookieStore.get('surname');
     $scope.user_id=			$cookieStore.get('id_utente');
     $scope.selection=		JSON.parse(localStorage.getItem('selection'));
+    $scope.controlselected=	$cookieStore.get('controls');
+    
+    
     
     if($location.$$host=='localhost'){
     	var urlBase="http://localhost:8080/TESI";
@@ -928,6 +934,13 @@ angular.module('SlaApp.negotiate.controllers', [])
     else {
     	var urlBase="https://threatapplication.herokuapp.com";
     }
+    
+    $scope.controlselection=JSON.parse(localStorage.getItem('controlselection'));
+    
+    if($scope.controlselection==null){
+    	$scope.controlselection=[];
+    }
+    
     
     
     //prelevo i componenti dell'utente
@@ -938,6 +951,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 			console.log('componenti utente prelevati');		
 	});
 	
+	//funzione calcolo rischio complessivo STRIDE
     $scope.getRisk = function(componente,stride){
     	var temp=0; var i=0;
 		angular.forEach($scope.selection, function(value, key){
@@ -946,7 +960,6 @@ angular.module('SlaApp.negotiate.controllers', [])
 				i++;
 			}
 		});
-		
 		//media aritmetica
 		temp=temp/i;
 		//ho il valore di rischio complessivo: voglio una stringa
@@ -959,6 +972,113 @@ angular.module('SlaApp.negotiate.controllers', [])
 		}
     	return stringa;
     }
+    
+    //ricevo tutti i controlli
+	$scope.controls = [];
+	$http.get(urlBase+"/rest/controls/").
+		success(function(data) {
+			$scope.controls = data;
+			console.log('controlli prelevati dal db');		
+	});
+	
+	
+	//funzione di ricerca nella lista
+	function arrayObjectIndexOf(myArray, searchTerm1, property1, searchTerm2, property2) {
+	    for(var i = 0, len = myArray.length; i < len; i++) {
+	        if ((myArray[i][property1] === searchTerm1)&&(myArray[i][property2] === searchTerm2)) return i;
+	    }
+	    return -1;
+	}
+	
+	//raccolgo i controlli di sicurezza selezionati
+	  $scope.toggleSelection = function toggleSelection(control,component) {
+		  	
+		  	var idx = arrayObjectIndexOf($scope.controlselection,control,'control',component,'component');
+	   		// is currently selected
+		    if (idx > -1) {
+		       $scope.controlselection.splice(idx, 1);
+		    }
+		    // is newly selected
+		    else {
+		    	$scope.controlselection.push(
+	   		    		   {	'control':control,
+	   		    			   	'component':component,
+	   		    		});
+		    }
+	  };//fine metodo
+	
+	  
+	   //funzione associata alla checkbox
+	   $scope.find = function(control,component){
+		   var i = arrayObjectIndexOf($scope.controlselection,control,'control',component,'component');
+		   //è già selezionato
+		   if (i > -1) {
+		       return true;
+		    }
+		    // is newly selected
+		    else {
+		    	return false;
+		    }
+	   }
+	  
+	   
+	   
+	   
+	   //funzione salvataggio dati
+	   $scope.saveSelection = function(){
+		   
+		   if($scope.controlselected==true){
+		   		//salvo di nuovo quindi pulisco prima TUTTO
+
+					   	angular.forEach($scope.ListComponentFromDB,function(value,key){
+							  
+							  $http.post(urlBase+'/rest/delassocControl/'+value.id).
+						 	   	success(function(data) {
+						 	   		console.log("elimino dal db i controlli associati");
+						 	   		});
+						  });
+				 
+		   //provo a mettere un timeout di 2 secondi per evitare sovrapposizioni
+			   	$scope.controlselected=false;
+			   	$timeout(saveSelection2, 2000);
+		   }
+		   else{
+			   saveSelection2();
+		   }
+	   }
+	   
+	   
+	   function saveSelection2(){
+		   
+			   localStorage.setItem("controlselection", JSON.stringify($scope.controlselection));
+			   console.log("salvato nel localstorage");
+		   
+			   angular.forEach($scope.controlselection,function(valore,chiave){
+			  
+				   $http.post(urlBase+'/rest/assocControl/'+valore.control+'/'+valore.component).
+		 	   		success(function(data) {
+		 	   		console.log("associazione controlli-componente correttamente inserita");
+		 	   		
+		 	   		$scope.controlselected=true;
+		 	   		$cookieStore.put('controls',$scope.controlselected);});
+			  
+			   });
+		   
+	   }//fine saveselection
+	   
+	   //per nascondere le tabelle
+	   $scope.toggleTable=function(component)
+	   {
+	      if (document.getElementById(component).style.display == "table" ) {
+	          document.getElementById(component).style.display="none";
+
+	      } else {
+	         document.getElementById(component).style.display="table";
+
+	   }
+	   }
+
+	   
 	
 	
    

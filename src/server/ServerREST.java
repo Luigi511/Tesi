@@ -112,12 +112,7 @@ public class ServerREST {
 	  service.DelAssociation(Component);
 	  }
 	  
-	  
-	  
-	  
-	  
-	  
-	  
+
 	  
 	  //API aggiungi utente
 	  @RequestMapping(value="/user/{Name}/{Surname}",method = RequestMethod.POST,headers="Accept=application/json")
@@ -174,11 +169,37 @@ public class ServerREST {
 	  
 	  
 	  //API RICHIESTA ELENCO CATEGORIE DI THREATS
-	    @RequestMapping(value="/categories",method = RequestMethod.GET,headers="Accept=application/json")
-	    public List<String> getAllCat() {  
-	     List<String> cat=service.getAllCat();
-		return cat;
-	    }
+	  @RequestMapping(value="/categories",method = RequestMethod.GET,headers="Accept=application/json")
+	  public List<String> getAllCat() {  
+	    List<String> cat=service.getAllCat();
+	  return cat;
+	  }
+	  
+	  
+	  //API tutti i threats
+	  @RequestMapping(value="/controls",method = RequestMethod.GET,headers="Accept=application/json")
+	  public List<Controls> getControls() throws ParseException { 
+		List<Controls> ctr=service.getAllControls();
+		return ctr;
+	  }
+	  
+	  
+	  
+	  
+	  //API aggiungi associazione controllo-componente
+	  @RequestMapping(value="/assocControl/{Control}/{comp}",method = RequestMethod.POST,headers="Accept=application/json")
+	  public void addAssociationControl(@PathVariable String Control,@PathVariable int comp) throws ParseException { 
+	  AssociationControl a = new AssociationControl(Control,comp);
+
+	  service.addAssociationControl(a);
+	  }
+	  
+	  //API rimuovi associazione controlli-componente
+	  @RequestMapping(value="/delassocControl/{comp}",method = RequestMethod.POST,headers="Accept=application/json")
+	  public void delAssociationControl(@PathVariable int comp) throws ParseException { 
+	  service.DelAssociationControl(comp);
+	  }
+	  
 	  
 	  
 	  

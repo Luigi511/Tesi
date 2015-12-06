@@ -1,6 +1,25 @@
 <style>
 /* tabella a mostro
  */
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+input[type=checkbox] {
+	/* All browsers except webkit*/
+	transform: scale(2);
+
+	/* Webkit browsers*/
+	-webkit-transform: scale(2);
+}
+
+
+ 
  .CSSTableGenerator {
 	margin:0px;padding:0px;
 	width:100%;
@@ -98,17 +117,19 @@
 .CSSTableGenerator tr:first-child td:last-child{
 	border-width:0px 0px 1px 1px;
 }
+.vericaltext{
+    width:1px;
+    word-wrap: break-word;
+    font-family: monospace; /* this is just for good looks */
+}
  
- 
- 
- </style>
-
+</style>
 
 
 
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h2>Security Controls</h2>
+    <h2>Risk Rating Results</h2>
   </div>
   
    <div class="panel panel-default">
@@ -119,9 +140,160 @@
     <tr><td><b>Repudiation</b></td>					<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'REPUDIATION')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'REPUDIATION')}}</td> </tr>
     <tr><td><b>Information Disclosure</b></td>		<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'INFORMATION DISCLOSURE')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'INFORMATION DISCLOSURE')}}</td> </tr>
     <tr><td><b>Denial of Service</b></td>			<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'DENIAL OF SERVICE')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'DENIAL OF SERVICE')}}</td> </tr>
-    <tr><td><b>Elevation of privileges</b></td>		<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'ELEVATION OF PRIVILEGES')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'ELEVATION OF PRIVILEGES')}}</td> </tr>
+    <tr><td><b>Elevation of Privileges</b></td>		<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'ELEVATION OF PRIVILEGES')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'ELEVATION OF PRIVILEGES')}}</td> </tr>
    </table>		
 </div>
+</div>
+  
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h2>Security Controls Selection</h2>
+  </div>
+    <div class="panel-body ">
+    	<div class="well">
+      		For each components select the appropriate security controls
+		</div>
+  
+  
+  <div class="panel panel-default" ng-repeat="component in ListComponentFromDB">
+  <p style="text-align:center"><font size="6">{{component.name}} ({{component.type}})</font>
+  <button class="btn btn-primary pull-right" 
+  	ng-click="toggleTable(component.name)"
+  	ng-hide="((getRisk(component.name,'SPOOFING')==undefined)&&(getRisk(component.name,'TAMPERING')==undefined)&&(getRisk(component.name,'REPUDIATION')==undefined)&&(getRisk(component.name,'INFORMATION DISCLOSURE')==undefined)&&(getRisk(component.name,'DENIAL OF SERVICE')==undefined)&&(getRisk(component.name,'ELEVATION OF PRIVILEGES')==undefined))"
+  	>Click to fade in/out</button></p>
+  
+  
+  
+  <table style="width: 100%; display:none;" id="{{component.name}}">
+  
+  
+  <tr ng-hide="getRisk(component.name,'SPOOFING')==undefined" style="border: 1px solid black;"><td align="center" valign="top" width="6%" style="border: 1px solid black;"><p class="vericaltext"><font size="8"><b>SPOOFING</b></font></p></td>
+  	<td>
+  	<table>
+		<tr ng-repeat="control in controls | filter:'SPOOFING'">
+			<td width="5%"><input type="checkbox" ng-click="toggleSelection(control.controlID, component.id)" ng-checked="find(control.controlID, component.id)" ></td><td>
+			<table style="border: 1px solid black;">
+			<tr><td><b>{{control.controlID}}&nbsp{{control.controlName}}</b></td></tr>
+			<tr><td>{{control.desc}}</td></tr>
+			</table>
+		</td></tr>
+  	</table>
+  	</td>
+  </tr>
+  
+  <tr ng-hide="getRisk(component.name,'TAMPERING')==undefined" style="border: 1px solid black;"><td align="center"  valign="top" width="6%" style="border: 1px solid black;"><p class="vericaltext"><font size="8"><b>TAMPERING</b></font></p></td>
+  	<td>
+  	<table>
+		<tr ng-repeat="control in controls | filter:'TAMPERING'">
+			<td width="5%"><input type="checkbox" ng-click="toggleSelection(control.controlID, component.id)" ng-checked="find(control.controlID, component.id)" ></td><td>
+			<table style="border: 1px solid black;">
+			<tr><td><b>{{control.controlID}}&nbsp{{control.controlName}}</b></td></tr>
+			<tr><td>{{control.desc}}</td></tr>
+			</table>
+		</td></tr>
+  	</table>
+  	</td>
+  </tr>
+  
+  <tr ng-hide="getRisk(component.name,'REPUDIATION')==undefined" style="border: 1px solid black;"><td align="center"  valign="top" width="6%" style="border: 1px solid black;"><p class="vericaltext"><font size="8"><b>REPUDIATION</b></font></p></td>
+  	<td>
+  	<table>
+		<tr ng-repeat="control in controls | filter:'REPUDIATION'">
+			<td width="5%"><input type="checkbox" ng-click="toggleSelection(control.controlID, component.id)" ng-checked="find(control.controlID, component.id)" ></td><td>
+			<table style="border: 1px solid black;">
+			<tr><td><b>{{control.controlID}}&nbsp{{control.controlName}}</b></td></tr>
+			<tr><td>{{control.desc}}</td></tr>
+			</table>
+		</td></tr>
+  	</table>
+  	</td>
+  </tr>
+  
+  <tr ng-hide="getRisk(component.name,'INFORMATION DISCLOSURE')==undefined" style="border: 1px solid black;"><td align="center"  valign="top" width="6%" style="border: 1px solid black;"><p class="vericaltext"><font size="8"><b>INFORMATION DISCLOSURE</b></font></p></td>
+  	<td>
+  	<table>
+		<tr ng-repeat="control in controls | filter:'INFORMATION DISCLOSURE'">
+			<td width="5%"><input type="checkbox" ng-click="toggleSelection(control.controlID, component.id)" ng-checked="find(control.controlID, component.id)" ></td><td>
+			<table style="border: 1px solid black;">
+			<tr><td><b>{{control.controlID}}&nbsp{{control.controlName}}</b></td></tr>
+			<tr><td>{{control.desc}}</td></tr>
+			</table>
+		</td></tr>
+  	</table>
+  	</td>
+  </tr>
+  
+  <tr ng-hide="getRisk(component.name,'DENIAL OF SERVICE')==undefined" style="border: 1px solid black;"><td align="center"  valign="top" width="6%" style="border: 1px solid black;"><p class="vericaltext"><font size="8"><b>DENIAL OF SERVICE</b></font></p></td>
+  	<td>
+  	<table>
+		<tr ng-repeat="control in controls | filter:'DENIAL OF SERVICE'">
+			<td width="5%"><input type="checkbox" ng-click="toggleSelection(control.controlID, component.id)" ng-checked="find(control.controlID, component.id)" ></td><td>
+			<table style="border: 1px solid black;">
+			<tr><td><b>{{control.controlID}}&nbsp{{control.controlName}}</b></td></tr>
+			<tr><td>{{control.desc}}</td></tr>
+			</table>
+		</td></tr>
+  	</table>
+  	</td>
+  </tr>
+  
+  <tr ng-hide="getRisk(component.name,'ELEVATION OF PRIVILEGES')==undefined" style="border: 1px solid black;"><td align="center"  valign="top" width="6%" style="border: 1px solid black;"><p class="vericaltext"><font size="8"><b>ELEVATION  OF  PRIVILEGES</b></font></p></td>
+  	<td>
+  	<table>
+		<tr ng-repeat="control in controls | filter:'ELEVATION OF PRIVILEGES'">
+			<td width="5%"><input type="checkbox" ng-click="toggleSelection(control.controlID, component.id)" ng-checked="find(control.controlID, component.id)" ></td><td>
+			<table style="border: 1px solid black;">
+			<tr><td><b>{{control.controlID}}&nbsp{{control.controlName}}</b></td></tr>
+			<tr><td>{{control.desc}}</td></tr>
+			</table>
+		</td></tr>
+  	</table>
+  	</td>
+  </tr>
+  
+  
+  </table>
+  <p align="center" style="color:red" ng-show="((getRisk(component.name,'SPOOFING')==undefined)&&(getRisk(component.name,'TAMPERING')==undefined)&&(getRisk(component.name,'REPUDIATION')==undefined)&&(getRisk(component.name,'INFORMATION DISCLOSURE')==undefined)&&(getRisk(component.name,'DENIAL OF SERVICE')==undefined)&&(getRisk(component.name,'ELEVATION OF PRIVILEGES')==undefined))">You have not selected any threat!</p>
+  <br><br><br>
+</div>
+  
+  
+<br>
+<button class="btn btn-primary pull-left" ng-click="saveSelection()">Save</button>
+<a href="#/negotiate/agreement"><button class="btn btn-primary pull-right" ng-show="controlselected">Next</button></a>
+  </div>
+  
+  
+  <!-- prova dati utente in cookie-->
+<!--  {{controlselection}}<br> -->
+
+ 
+ <br>
+{{user_name}} {{user_surname}} {{user_id}}
+  
+  
+
+</div>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   
   

@@ -264,6 +264,63 @@ public void DelAssociation(int component) {
 }
 
 
+public List<Controls> getAllControls() {
+List<Controls> lc = new ArrayList<Controls>();
+try {
+	  PreparedStatement preparedStatement = connection.prepareStatement("SELECT controls_per_threat.*,controls.* FROM controls_per_threat INNER JOIN controls on controls_per_threat.controlid=controls.idControl;");
+	  ResultSet rs = preparedStatement.executeQuery();
+	  while (rs.next()) {
+		  Controls t = new Controls();
+		  t.setControlID(rs.getString("controlid"));
+		  t.setid(rs.getInt("id"));
+		  t.setStrideCat(rs.getString("StrideCat"));
+		  t.setIDCONTROL(rs.getString("idControl"));
+		  t.setcontrolname(rs.getString("controlName"));
+		  t.setfamilyID(rs.getString("familyId"));
+		  t.setfamilyName(rs.getString("familyName"));
+		  t.setcontrol(rs.getInt("control"));
+		  t.setenh(rs.getInt("enhancement"));
+		  t.setcontrolDescr(rs.getString("controlDescription"));
+		  
+		  
+		  lc.add(t);
+
+	  } System.out.println("prelevati i controlli");
+} catch (SQLException e) {
+	  e.printStackTrace();
+}
+return lc;
+}
+
+
+public void addAssociationControl(AssociationControl a) {
+	  try {
+		   PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO controls_selected_by_users(controlloscelto_id,componente_id) VALUES (?,?)");
+		   
+		   preparedStatement.setString(1, a.getcontrol());
+		   preparedStatement.setInt(2, a.getcomponente());
+		   preparedStatement.executeUpdate();
+		   System.out.println("ho inviato il comando di inserimento associazione controlli a mysql");
+		  } catch (SQLException e) {
+		   e.printStackTrace();
+		  }
+		
+	}
+
+
+public void DelAssociationControl(int comp) {
+	try {
+		 PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM controls_selected_by_users WHERE componente_id=?");
+		 preparedStatement.setInt(1, comp);
+		 preparedStatement.executeUpdate();
+		 System.out.println("ho inviato il comando di cancellazione dei controlli associati al componente");
+	  } catch (SQLException e) {
+	  	e.printStackTrace();
+	  }
+	
+}
+
+
 
 
  
