@@ -41,7 +41,7 @@
     <div class="panel panel-default">
     <table style="width: 100%; ">
     	<tr>
-    	<td align="center">Component Name<br><span style="color:red" ng-show="component.name==undefined">Required!</span></td>
+    	<td align="center">Component Name<br><span style="color:red" ng-show="component.name==undefined">Required!</span><span style="color:red" ng-show="error_name">ERROR: Use a different name!</span></td>
     	<td><input type="text" maxlength="45" ng-model="component.name"/><br/></td>
 		</tr>
 		<tr>
@@ -51,7 +51,7 @@
 		<tr>
 		<td align="center">Description</td>
 		<td><textarea maxlength="50" rows="4" cols="150" ng-model="component.description" name='not defined'></textarea></td>
-		</tr><tr><td align="center"><button class="btn btn-primary" ng-click="add()">Add Component</button></td></tr>
+		</tr><tr><td align="center"><button class="btn btn-primary" ng-click="add(component.name)">Add Component</button></td></tr>
 	</table>   	   
 	
     </div>

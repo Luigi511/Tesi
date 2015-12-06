@@ -270,7 +270,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 
 
 //controller per l'inserimento dei componenti del sistema 
-.controller("InsertCtrl",function($scope,$http,$cookieStore,$location,$window) {
+.controller("InsertCtrl",function($scope,$http,$cookieStore,$location,$window,$timeout) {
 	
 	
 	//prelevo dati cookie; 
@@ -317,7 +317,7 @@ angular.module('SlaApp.negotiate.controllers', [])
     			console.log('componenti utente prelevati');
     			
     	        //se la lista di componenti resta vuota non devo abilitare il next button
-    			console.log($scope.ListComponentFromDB[0]);
+    			//console.log($scope.ListComponentFromDB[0]);
     	        if($scope.ListComponentFromDB[0]==undefined){
     	        	$scope.boolean2=false;
     	        }
@@ -402,19 +402,34 @@ angular.module('SlaApp.negotiate.controllers', [])
     $scope.componentList = [];
     
 
-     
+
+    
     //funzione aggiungi in tabella (e in db)
     $scope.add = function(){
+    	
+    	$scope.error_name=false;
+    	
     	//validazione
     	console.log($scope.component.name);
     	console.log($scope.component.description);
     	console.log($scope.component.category);
     	
+    	//verifico che il nome non sia già presente
+    	angular.forEach($scope.ListComponentFromDB,function(value,key){
+    		console.log("verifico match nome: inserito="+$scope.component.name+" in tabella="+value.name);
+    		if(value.name==$scope.component.name){
+    			$scope.error_name=true;
+    		}
+
+    	});
+    	$timeout(1000);
+    	
+    	
 /*    	if($scope.component.description==""){
     		$scope.component.description="not defined";	
     	}*/
     	
-    	if(($scope.component.name!=undefined)&&($scope.component.category!=undefined)){
+    	if(($scope.component.name!=undefined)&&($scope.component.category!=undefined)&&($scope.error_name!=true)){
     	
     	$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
 
