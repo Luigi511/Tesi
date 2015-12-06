@@ -625,9 +625,16 @@ angular.module('SlaApp.negotiate.controllers', [])
 		   if($scope.booleanthreat==true){
 		   		//salvo di nuovo quindi pulisco prima TUTTO
 			   	angular.forEach($scope.ListComponentFromDB,function(value,key){
+			   		
+			   		//elimino prima le possibili associazioni create in avanti nel wizard 
+			   		$http.post(urlBase+'/rest/delassocControl/'+value.id).
+			   			success(function(data) {
+			   				console.log("elimino dal db i controlli associati ad ogni componente!");
+					 });
 					  
-					  $http.post(urlBase+'/rest/delassoc/'+value.id).
-				 	   	success(function(data) {
+					//elimino le associazioni create in questa pagina
+					$http.post(urlBase+'/rest/delassoc/'+value.id).
+				 	  	success(function(data) {
 				 	   		console.log("elimino dal db il componente id="+value.id);
 				 	   		
 				 	   		
