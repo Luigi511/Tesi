@@ -196,7 +196,7 @@ input[type=checkbox] {
   
 <!--   tabella solo controlli suggeriti -->  
   <table style="width: 100%; display:table;"  id="{{component.id}}">
-  <tr ng-repeat="tr in selection | filter:component.name " style="border: 1px solid black;">
+  <tr ng-repeat="tr in selection | filter:component.id " style="border: 1px solid black;">
 					
 	<td>			<table>
 						<p style="text-align:center">Suggested Controls for threat: <b>{{tr.threat}}</b><br>Stride: <b>{{tr.stride}}</b> | Risk: <b>{{tr.risk}}</b></p>
