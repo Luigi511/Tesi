@@ -122,6 +122,25 @@ input[type=checkbox] {
     word-wrap: break-word;
     font-family: monospace; /* this is just for good looks */
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  
 </style>
 
@@ -134,7 +153,7 @@ input[type=checkbox] {
   
    <div class="panel panel-default">
    <table class="CSSTableGenerator" border="1"; width=100%>
-    <tr><td></td>									<td align="center" ng-repeat="component in ListComponentFromDB">{{component.name}}</td> </tr>
+    <tr><td width=30%></td>									<td align="center" ng-repeat="component in ListComponentFromDB">{{component.name}}</td> </tr>
     <tr><td><b>Spoofing</b></td>					<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'SPOOFING')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'SPOOFING')}}</td> </tr>
     <tr><td><b>Tampering</b></td>					<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'TAMPERING')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'TAMPERING')}}</td> </tr>
     <tr><td><b>Repudiation</b></td>					<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'REPUDIATION')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'REPUDIATION')}}</td> </tr>
@@ -151,25 +170,64 @@ input[type=checkbox] {
   </div>
     <div class="panel-body ">
     	<div class="well">
-      		For each components select the appropriate security controls
+      		For each components select the appropriate security controls.<br>
+      		Press the buttons to fade in/out the control lists.
 		</div>
   
   
   <div class="panel panel-default" ng-repeat="component in ListComponentFromDB">
   <p style="text-align:center"><font size="6">{{component.name}} ({{component.type}})</font>
-  <button class="btn btn-primary pull-right" 
+
+	</p><p style="text-align:center">
+	
+<!-- 	HO ASSEGNATO NOMI DIVERSI ALLE TABELLE PER POTERLE ABBASSARE -->
+	
+	<button
+  	ng-click="toggleTable(component.id)"
+  	ng-hide="((getRisk(component.name,'SPOOFING')==undefined)&&(getRisk(component.name,'TAMPERING')==undefined)&&(getRisk(component.name,'REPUDIATION')==undefined)&&(getRisk(component.name,'INFORMATION DISCLOSURE')==undefined)&&(getRisk(component.name,'DENIAL OF SERVICE')==undefined)&&(getRisk(component.name,'ELEVATION OF PRIVILEGES')==undefined))"
+  	>Suggested Controls</button>     
+	
+    <button 
   	ng-click="toggleTable(component.name)"
   	ng-hide="((getRisk(component.name,'SPOOFING')==undefined)&&(getRisk(component.name,'TAMPERING')==undefined)&&(getRisk(component.name,'REPUDIATION')==undefined)&&(getRisk(component.name,'INFORMATION DISCLOSURE')==undefined)&&(getRisk(component.name,'DENIAL OF SERVICE')==undefined)&&(getRisk(component.name,'ELEVATION OF PRIVILEGES')==undefined))"
-  	>Click to fade in/out</button></p>
+  	>All controls</button>
+  	
+  	</p>
+  
+<!--   tabella solo controlli suggeriti -->  
+  <table style="width: 100%; display:table;"  id="{{component.id}}">
+  <tr ng-repeat="tr in selection | filter:component.name " style="border: 1px solid black;">
+					
+	<td>			<table>
+						<p style="text-align:center">Suggested Controls for threat: <b>{{tr.threat}}</b><br>Stride: <b>{{tr.stride}}</b> | Risk: <b>{{tr.risk}}</b></p>
+						<tr ng-repeat="c in controllisuggeriti | filter:tr.threat" ><!-- style="border: 1px solid black;" -->
+							<td width="5%"><input type="checkbox"
+											ng-click="toggleSelection(c.control, component.id)" 
+											ng-checked="find(c.control, component.id)" >
+							
+							</td><td>
+							<table style="border: 1px solid black;">
+								<tr><td><b>{{c.control}}&nbsp{{c.controlname}}</b></td></tr>
+								<tr><td>{{c.controldesc}}</td></tr>
+							</table>
+						</tr>
+					</table>
+	</td>
+	</tr>
+	
+  </table>
+  <br><br>
   
   
   
+<!--   tabella tutti i controlli -->
   <table style="width: 100%; display:none;" id="{{component.name}}">
   
   
   <tr ng-hide="getRisk(component.name,'SPOOFING')==undefined" style="border: 1px solid black;"><td align="center" valign="top" width="6%" style="border: 1px solid black;"><p class="vericaltext"><font size="8"><b>SPOOFING</b></font></p></td>
   	<td>
   	<table>
+  		<p style="text-align:center">All Security Controls | STRIDE Category: <b>SPOOFING</b></p> 		
 		<tr ng-repeat="control in controls | filter:'SPOOFING'">
 			<td width="5%"><input type="checkbox" ng-click="toggleSelection(control.controlID, component.id)" ng-checked="find(control.controlID, component.id)" ></td><td>
 			<table style="border: 1px solid black;">
@@ -184,6 +242,8 @@ input[type=checkbox] {
   <tr ng-hide="getRisk(component.name,'TAMPERING')==undefined" style="border: 1px solid black;"><td align="center"  valign="top" width="6%" style="border: 1px solid black;"><p class="vericaltext"><font size="8"><b>TAMPERING</b></font></p></td>
   	<td>
   	<table>
+  		<p style="text-align:center">All Security Controls | STRIDE Category: <b>TAMPERING</b></p>
+  		
 		<tr ng-repeat="control in controls | filter:'TAMPERING'">
 			<td width="5%"><input type="checkbox" ng-click="toggleSelection(control.controlID, component.id)" ng-checked="find(control.controlID, component.id)" ></td><td>
 			<table style="border: 1px solid black;">
@@ -198,6 +258,7 @@ input[type=checkbox] {
   <tr ng-hide="getRisk(component.name,'REPUDIATION')==undefined" style="border: 1px solid black;"><td align="center"  valign="top" width="6%" style="border: 1px solid black;"><p class="vericaltext"><font size="8"><b>REPUDIATION</b></font></p></td>
   	<td>
   	<table>
+  		<p style="text-align:center">All Security Controls | STRIDE Category: <b>REPUDIATION</b></p>
 		<tr ng-repeat="control in controls | filter:'REPUDIATION'">
 			<td width="5%"><input type="checkbox" ng-click="toggleSelection(control.controlID, component.id)" ng-checked="find(control.controlID, component.id)" ></td><td>
 			<table style="border: 1px solid black;">
@@ -212,6 +273,7 @@ input[type=checkbox] {
   <tr ng-hide="getRisk(component.name,'INFORMATION DISCLOSURE')==undefined" style="border: 1px solid black;"><td align="center"  valign="top" width="6%" style="border: 1px solid black;"><p class="vericaltext"><font size="8"><b>INFORMATION DISCLOSURE</b></font></p></td>
   	<td>
   	<table>
+  		<p style="text-align:center">All Security Controls | STRIDE Category: <b>INFORMATION DISCLOSURE</b></p>
 		<tr ng-repeat="control in controls | filter:'INFORMATION DISCLOSURE'">
 			<td width="5%"><input type="checkbox" ng-click="toggleSelection(control.controlID, component.id)" ng-checked="find(control.controlID, component.id)" ></td><td>
 			<table style="border: 1px solid black;">
@@ -226,6 +288,7 @@ input[type=checkbox] {
   <tr ng-hide="getRisk(component.name,'DENIAL OF SERVICE')==undefined" style="border: 1px solid black;"><td align="center"  valign="top" width="6%" style="border: 1px solid black;"><p class="vericaltext"><font size="8"><b>DENIAL OF SERVICE</b></font></p></td>
   	<td>
   	<table>
+  		<p style="text-align:center">All Security Controls | STRIDE Category: <b>DENIAL OF SERVICE</b></p>
 		<tr ng-repeat="control in controls | filter:'DENIAL OF SERVICE'">
 			<td width="5%"><input type="checkbox" ng-click="toggleSelection(control.controlID, component.id)" ng-checked="find(control.controlID, component.id)" ></td><td>
 			<table style="border: 1px solid black;">
@@ -240,6 +303,7 @@ input[type=checkbox] {
   <tr ng-hide="getRisk(component.name,'ELEVATION OF PRIVILEGES')==undefined" style="border: 1px solid black;"><td align="center"  valign="top" width="6%" style="border: 1px solid black;"><p class="vericaltext"><font size="8"><b>ELEVATION  OF  PRIVILEGES</b></font></p></td>
   	<td>
   	<table>
+  		<p style="text-align:center">All Security Controls | STRIDE Category: <b>ELEVATION OF PRIVILEGES</b></p>
 		<tr ng-repeat="control in controls | filter:'ELEVATION OF PRIVILEGES'">
 			<td width="5%"><input type="checkbox" ng-click="toggleSelection(control.controlID, component.id)" ng-checked="find(control.controlID, component.id)" ></td><td>
 			<table style="border: 1px solid black;">

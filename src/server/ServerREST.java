@@ -203,6 +203,15 @@ public class ServerREST {
 	  
 	  
 	  
+	  //API tutti i controlli suggeriti
+	  @RequestMapping(value="/controllisuggeriti",method = RequestMethod.GET,headers="Accept=application/json")
+	  public List<ControlliSuggeriti> getControlsSug() throws ParseException { 
+		List<ControlliSuggeriti> cs=service.getControlsSugg();
+		return cs;
+	  }
+	  
+	  
+	  
 	  
 /*	  //prova
 	  @RequestMapping(value="/hello/{Name}/{Desc}")

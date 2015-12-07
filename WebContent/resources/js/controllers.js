@@ -1088,18 +1088,30 @@ angular.module('SlaApp.negotiate.controllers', [])
 		   
 	   }//fine saveselection
 	   
-	   //per nascondere le tabelle
-	   $scope.toggleTable=function(component)
-	   {
+
+	   
+	   //per nascondere le tabelle e cambiare colore 
+	   $scope.toggleTable=function(component){
 	      if (document.getElementById(component).style.display == "table" ) {
 	          document.getElementById(component).style.display="none";
+
+	          
 
 	      } else {
 	         document.getElementById(component).style.display="table";
 
-	   }
-	   }
 
+	      }
+	   }
+	   
+	   
+	   //all'avvio scarico la lista di tutti i controlli suggeriti
+		$scope.controllisuggeriti = [];
+		$http.get(urlBase+"/rest/controllisuggeriti").
+			success(function(eccolo) {
+				$scope.controllisuggeriti = eccolo;
+				console.log('lista di controlli suggeriti ricevuta');		
+		});
 	   
 	
 	
