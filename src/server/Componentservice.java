@@ -324,7 +324,7 @@ public void DelAssociationControl(int comp) {
 public List<ControlliSuggeriti> getControlsSugg() {
 	List<ControlliSuggeriti> li = new ArrayList<ControlliSuggeriti>();
 	try {
-		  PreparedStatement preparedStatement = connection.prepareStatement("SELECT control_suggested.id, controls.idControl, controls.controlName, controls.controlDescription, threats.threatname, threats.threatdescription, threats.stride FROM (control_suggested INNER JOIN controls on control_suggested.control=controls.idControl) inner join threats on control_suggested.threat=threats.idthreats;");
+		  PreparedStatement preparedStatement = connection.prepareStatement("SELECT control_suggested.id, controls.idControl, controls.controlName, controls.controlDescription,controls.minrisk, threats.threatname, threats.threatdescription, threats.stride FROM (control_suggested INNER JOIN controls on control_suggested.control=controls.idControl) inner join threats on control_suggested.threat=threats.idthreats;");
 		  ResultSet rs = preparedStatement.executeQuery();
 		  while (rs.next()) {
 			  ControlliSuggeriti cs = new ControlliSuggeriti();
@@ -334,7 +334,8 @@ public List<ControlliSuggeriti> getControlsSugg() {
 			  cs.setControl(rs.getString("idControl"));
 			  cs.setControlName(rs.getString("controlName"));
 			  cs.setControldesc(rs.getString("controlDescription"));
-
+			  cs.setMinrisk(rs.getInt("minrisk"));
+			  
 			  cs.setThreatname(rs.getString("threatname"));
 			  cs.setThreatDesc(rs.getString("threatdescription"));
 			  cs.setStride(rs.getString("stride"));

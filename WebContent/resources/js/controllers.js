@@ -1119,7 +1119,35 @@ angular.module('SlaApp.negotiate.controllers', [])
 				console.log('lista di controlli suggeriti ricevuta');		
 		});
 	   
-	
+		
+		//all'inizio non applicato il filtraggio dei controlli necessari!
+		$scope.variabile=false;
+		$scope.nomepulsantefiltro='Only Required?:  NO';
+		//funzione switch filtro
+		$scope.cambiofiltro=function(){
+			if($scope.variabile==true){
+				$scope.variabile=false;
+				$scope.nomepulsantefiltro='Only Required?:  NO';
+
+			}
+			else{
+				$scope.variabile=true;
+				$scope.nomepulsantefiltro='Only Required?: YES';
+
+			}
+		}
+		
+		$scope.valoretestuale=function(numero){
+			
+			switch(numero){
+			case(1): var string="VERY LOW";break;
+			case(5): var string="MEDIUM";break;
+			case(7): var string="HIGH";break;
+			case(11): var string="NONE";break;
+			}
+		return string;	
+		}
+
 	
    
 /*  //Set Negotiate Tab on the SLA NavBar

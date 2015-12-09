@@ -18,6 +18,11 @@ input[type=checkbox] {
 	-webkit-transform: scale(2);
 }
 
+/* in the css file or in a style block */
+.angular-with-newlines {
+    white-space: pre-line;
+}
+
 
  
  .CSSTableGenerator {
@@ -170,8 +175,19 @@ input[type=checkbox] {
   </div>
     <div class="panel-body ">
     	<div class="well">
-      		For each components select the appropriate security controls.<br>
-      		Press the buttons to fade in/out the control lists.
+    		Below there is a list of security controls suggested on the threats that you have previously chosen, 
+    		plus other optional controls for each STRIDE category.
+			<br>  <br>    		
+			For each components select the appropriate security controls.<br>
+			
+    		<br>
+      		<ol>Tips:
+      		<li>Press the respective button to fade in/out the control lists;</li>
+      		<li>You can also filter the list to get only the security controls that are needed to solve your critical issues.
+      		<button	ng-click="cambiofiltro()">{{nomepulsantefiltro}}</button></li>
+      		</ol> 
+    		      		
+      		
 		</div>
   
   
@@ -192,6 +208,8 @@ input[type=checkbox] {
   	ng-hide="((getRisk(component.name,'SPOOFING')==undefined)&&(getRisk(component.name,'TAMPERING')==undefined)&&(getRisk(component.name,'REPUDIATION')==undefined)&&(getRisk(component.name,'INFORMATION DISCLOSURE')==undefined)&&(getRisk(component.name,'DENIAL OF SERVICE')==undefined)&&(getRisk(component.name,'ELEVATION OF PRIVILEGES')==undefined))"
   	>All controls</button>
   	
+
+  	
   	</p>
   
 <!--   tabella solo controlli suggeriti -->  
@@ -199,17 +217,26 @@ input[type=checkbox] {
   <tr ng-repeat="tr in selection | filter:component.id " style="border: 1px solid black;">
 					
 	<td>			<table>
-						<p >Suggested Controls for threat: <b>{{tr.threat}}</b><br>Stride: <b>{{tr.stride}}</b> | Risk: <b>{{tr.risk}}</b></p>
-						<tr ng-repeat="c in controllisuggeriti | filter:tr.threat" ><!-- style="border: 1px solid black;" -->
+						<p><u>Suggested Controls for threat</u>: <b>{{tr.threat}}</b>
+						
+						<br><u>Stride</u>: <b>{{tr.stride}}</b> | <u>Risk</u>: <b>{{tr.risk}}</b>
+						<br><u>Description</u>: {{tr.description}}
+						</p>
+						<tr ng-repeat="c in controllisuggeriti | filter:tr.threat "><!-- style="border: 1px solid black;" -->
 							<td width="5%"><input type="checkbox"
 											ng-click="toggleSelection(c.control,c.controlname, component.id)" 
-											ng-checked="find(c.control, component.id)" >
+											ng-checked="find(c.control, component.id)" 
+											ng-hide="(variabile==true)&&(tr.riskNum<c.minrisk)">
+											
 							
 							</td><td>
-							<table style="border: 1px solid black;">
-								<tr><td><b>{{c.control}}&nbsp{{c.controlname}}</b></td></tr>
-								<tr><td>{{c.controldesc}}</td></tr>
+							<table style="border: 1px solid black;" ng-hide="(variabile==true)&&(tr.riskNum<c.minrisk)">
+								<tr><td><b>{{c.control}}&nbsp{{c.controlname}}</b>
+								<br>(Baseline Allocation: {{valoretestuale(c.minrisk)}})
+								  <span style="color:red" ng-show="tr.riskNum>=c.minrisk">Required!</span></td></tr>
+								<tr><td class="angular-with-newlines">{{c.controldesc}}</td></tr>
 							</table>
+							
 						</tr>
 					</table>
 	</td>
@@ -232,7 +259,7 @@ input[type=checkbox] {
 			<td width="5%"><input type="checkbox" ng-click="toggleSelection(control.controlID,control.controlName, component.id)" ng-checked="find(control.controlID, component.id)" ></td><td>
 			<table style="border: 1px solid black;">
 			<tr><td><b>{{control.controlID}}&nbsp{{control.controlName}}</b></td></tr>
-			<tr><td>{{control.desc}}</td></tr>
+			<tr><td class="angular-with-newlines">{{control.desc}}</td></tr>
 			</table>
 		</td></tr>
   	</table>
@@ -248,7 +275,7 @@ input[type=checkbox] {
 			<td width="5%"><input type="checkbox" ng-click="toggleSelection(control.controlID,control.controlName, component.id)" ng-checked="find(control.controlID, component.id)" ></td><td>
 			<table style="border: 1px solid black;">
 			<tr><td><b>{{control.controlID}}&nbsp{{control.controlName}}</b></td></tr>
-			<tr><td>{{control.desc}}</td></tr>
+			<tr><td class="angular-with-newlines">{{control.desc}}</td></tr>
 			</table>
 		</td></tr>
   	</table>
@@ -263,7 +290,7 @@ input[type=checkbox] {
 			<td width="5%"><input type="checkbox" ng-click="toggleSelection(control.controlID,control.controlName, component.id)" ng-checked="find(control.controlID, component.id)" ></td><td>
 			<table style="border: 1px solid black;">
 			<tr><td><b>{{control.controlID}}&nbsp{{control.controlName}}</b></td></tr>
-			<tr><td>{{control.desc}}</td></tr>
+			<tr><td class="angular-with-newlines">{{control.desc}}</td></tr>
 			</table>
 		</td></tr>
   	</table>
@@ -278,7 +305,7 @@ input[type=checkbox] {
 			<td width="5%"><input type="checkbox" ng-click="toggleSelection(control.controlID,control.controlName, component.id)" ng-checked="find(control.controlID, component.id)" ></td><td>
 			<table style="border: 1px solid black;">
 			<tr><td><b>{{control.controlID}}&nbsp{{control.controlName}}</b></td></tr>
-			<tr><td>{{control.desc}}</td></tr>
+			<tr><td class="angular-with-newlines">{{control.desc}}</td></tr>
 			</table>
 		</td></tr>
   	</table>
@@ -293,7 +320,7 @@ input[type=checkbox] {
 			<td width="5%"><input type="checkbox" ng-click="toggleSelection(control.controlID,control.controlName, component.id)" ng-checked="find(control.controlID, component.id)" ></td><td>
 			<table style="border: 1px solid black;">
 			<tr><td><b>{{control.controlID}}&nbsp{{control.controlName}}</b></td></tr>
-			<tr><td>{{control.desc}}</td></tr>
+			<tr><td class="angular-with-newlines">{{control.desc}}</td></tr>
 			</table>
 		</td></tr>
   	</table>
@@ -308,7 +335,7 @@ input[type=checkbox] {
 			<td width="5%"><input type="checkbox" ng-click="toggleSelection(control.controlID,control.controlName, component.id)" ng-checked="find(control.controlID, component.id)" ></td><td>
 			<table style="border: 1px solid black;">
 			<tr><td><b>{{control.controlID}}&nbsp{{control.controlName}}</b></td></tr>
-			<tr><td>{{control.desc}}</td></tr>
+			<tr><td class="angular-with-newlines">{{control.desc}}</td></tr>
 			</table>
 		</td></tr>
   	</table>
@@ -329,8 +356,8 @@ input[type=checkbox] {
   
   
   <!-- prova dati utente in cookie-->
-{{controlselection}}<br>
-
+<!-- {{controlselection}}<br>
+ -->
  
  <br>
 {{user_name}} {{user_surname}} {{user_id}}
