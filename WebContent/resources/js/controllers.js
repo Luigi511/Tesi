@@ -1013,7 +1013,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 	}
 	
 	//raccolgo i controlli di sicurezza selezionati
-	  $scope.toggleSelection = function toggleSelection(control,component) {
+	  $scope.toggleSelection = function toggleSelection(control,name,component) {
 		  	
 		  	var idx = arrayObjectIndexOf($scope.controlselection,control,'control',component,'component');
 	   		// is currently selected
@@ -1024,6 +1024,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 		    else {
 		    	$scope.controlselection.push(
 	   		    		   {	'control':control,
+	   		    			    'controlname':name,
 	   		    			   	'component':component,
 	   		    		});
 		    }
@@ -1090,19 +1091,24 @@ angular.module('SlaApp.negotiate.controllers', [])
 	   
 
 	   
-	   //per nascondere le tabelle e cambiare colore 
-	   $scope.toggleTable=function(component){
-	      if (document.getElementById(component).style.display == "table" ) {
-	          document.getElementById(component).style.display="none";
-
-	          
-
+	   //per nascondere le tab 1
+	   $scope.toggleTable1=function(component){
+	      if (document.getElementById(component+'tab1').style.display == "table" ) {
+	          document.getElementById(component+'tab1').style.display="none";
 	      } else {
-	         document.getElementById(component).style.display="table";
-
-
+	         document.getElementById(component+'tab1').style.display="table";
 	      }
 	   }
+	   //per nascondere le tab 2
+	   $scope.toggleTable2=function(component){
+	      if (document.getElementById(component+'tab2').style.display == "table" ) {
+	          document.getElementById(component+'tab2').style.display="none";
+	      } else {
+	         document.getElementById(component+'tab2').style.display="table";
+	      }
+	   }
+
+	   
 	   
 	   
 	   //all'avvio scarico la lista di tutti i controlli suggeriti
