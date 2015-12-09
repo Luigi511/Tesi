@@ -7,6 +7,7 @@ public class ControlliSuggeriti {
 	private String controlname;
 	private String controldesc;
 	private int minrisk;
+	private int threatid;
 	
 	private String threatname;
 	private String threatdescription;
@@ -21,6 +22,7 @@ public class ControlliSuggeriti {
 	public void setThreatDesc(String d){this.threatdescription=d;}
 	public void setStride(String s){this.stride=s;}
 	public void setMinrisk(int ni){this.minrisk=ni;}
+	public void setThreatID(int idt){this.threatid=idt;}
 	
 	
 	public String getControl(){return control;}
@@ -31,5 +33,6 @@ public class ControlliSuggeriti {
 	public String getthreatdesc(){return threatdescription;}
 	public String getStride(){return stride;}
 	public int getminrisk(){return minrisk;}
+	public int gethreatid(){return threatid;}
 
 }

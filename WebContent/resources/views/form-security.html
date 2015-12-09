@@ -155,6 +155,11 @@ input[type=checkbox] {
   <div class="panel-heading">
     <h2>Risk Rating Results</h2>
   </div>
+  <div class="panel-body ">
+  	<div class="well">
+  	In this table you can see the overall status of the system.<br> For each component it shows the level of overall 
+  	risk: an evaluation obtained by considering the risks associated with any threat previously chosen.
+  	</div>
   
    <div class="panel panel-default">
    <table class="CSSTableGenerator" border="1"; width=100%>
@@ -168,7 +173,7 @@ input[type=checkbox] {
    </table>		
 </div>
 </div>
-  
+</div>  
 <div class="panel panel-default">
   <div class="panel-heading">
     <h2>Security Controls Selection</h2>
@@ -214,7 +219,7 @@ input[type=checkbox] {
   
 <!--   tabella solo controlli suggeriti -->  
   <table style="width: 100%; display:table;"  id="{{component.name+'tab1'}}">
-  <tr ng-repeat="tr in selection | filter:component.id " style="border: 1px solid black;">
+  <tr ng-repeat="tr in selection | filter:{componentid:component.id}" style="border: 1px solid black;">
 					
 	<td>			<table>
 						<p><u>Suggested Controls for threat</u>: <b>{{tr.threat}}</b>
@@ -222,7 +227,7 @@ input[type=checkbox] {
 						<br><u>Stride</u>: <b>{{tr.stride}}</b> | <u>Risk</u>: <b>{{tr.risk}}</b>
 						<br><u>Description</u>: {{tr.description}}
 						</p>
-						<tr ng-repeat="c in controllisuggeriti | filter:tr.threat "><!-- style="border: 1px solid black;" -->
+						<tr ng-repeat="c in controllisuggeriti | filter:{threatname:tr.threat}"><!-- style="border: 1px solid black;" -->
 							<td width="5%"><input type="checkbox"
 											ng-click="toggleSelection(c.control,c.controlname, component.id)" 
 											ng-checked="find(c.control, component.id)" 
@@ -232,6 +237,7 @@ input[type=checkbox] {
 							</td><td>
 							<table style="border: 1px solid black;" ng-hide="(variabile==true)&&(tr.riskNum<c.minrisk)">
 								<tr><td><b>{{c.control}}&nbsp{{c.controlname}}</b>
+																
 								<br>(Baseline Allocation: {{valoretestuale(c.minrisk)}})
 								  <span style="color:red" ng-show="tr.riskNum>=c.minrisk">Required!</span></td></tr>
 								<tr><td class="angular-with-newlines">{{c.controldesc}}</td></tr>
