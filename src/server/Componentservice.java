@@ -355,7 +355,7 @@ public List<Photo> getallfoto() {
 	List<Photo> p = new ArrayList<Photo>();
 	
 	try {
-		  PreparedStatement preparedStatement = connection.prepareStatement("SELECT immagine FROM threatapplication.immagini");
+		  PreparedStatement preparedStatement = connection.prepareStatement("SELECT immagine FROM immagini");
 		  ResultSet rs = preparedStatement.executeQuery();
 		  while (rs.next()) {
 			  Photo pp=new Photo(rs.getBytes("immagine"));
