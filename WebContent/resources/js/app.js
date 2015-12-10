@@ -32,6 +32,12 @@ angular.module('SlaApp', [//'SlaApp.ranking',
             templateUrl: 'resources/views/welcome.html',
             controller: 'SlaCtrl'
         })
+        //pagina dettagli
+        .state('luigi', {
+            url: '/luigi',
+            templateUrl: 'resources/views/luigi.html',
+            controller: 'Luigi'
+        })
         
         //inizio wizard
         .state('negotiate', {
@@ -125,6 +131,8 @@ angular.module('SlaApp.negotiate', ['SlaApp.negotiate.controllers', 'SlaApp.nego
             templateUrl: 'resources/views/form-overview.html',
             controller: 'OverviewCtrl'
         })
+
+        
         
         /*        
         .state('negotiate.service', {

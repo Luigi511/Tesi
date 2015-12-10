@@ -351,6 +351,24 @@ public List<ControlliSuggeriti> getControlsSugg() {
 	}
 
 
+public List<Photo> getallfoto() {
+	List<Photo> p = new ArrayList<Photo>();
+	
+	try {
+		  PreparedStatement preparedStatement = connection.prepareStatement("SELECT immagine FROM threatapplication.immagini");
+		  ResultSet rs = preparedStatement.executeQuery();
+		  while (rs.next()) {
+			  Photo pp=new Photo(rs.getBytes("immagine"));
+			  p.add(pp);
+			  
+		  }
+	}catch (SQLException e) {
+		  e.printStackTrace();
+	}
+	return p;
+}
+
+
 
 
  

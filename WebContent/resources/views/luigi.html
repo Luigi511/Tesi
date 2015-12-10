@@ -1,0 +1,71 @@
+<!-- <div ng-include="'resources/views/navigator.html'"></div>
+ -->
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h2>Implementation Details</h2>
+  </div>
+  <div class="panel-body ">
+    <div class="well">
+	Here you can see the implementation details of this application.<br>
+	In order: <ul>
+	<li>Activity Diagram</li>
+	<li>Use Case Diagram</li>
+	<li>ER Diagram (Database)</li>
+	
+	</ul>
+    </div>
+    
+    <style>
+          table, th , td {
+            border: 1px solid grey;
+            border-collapse: collapse;
+            padding: 5px;
+            
+         }
+         
+		img	{
+			width:100%;
+		} 
+
+#changer {
+width: 300px;
+}
+#changer:focus {
+width: 100%;
+}
+
+</style>
+
+<div>
+<table style="align:center; width:100%" >
+	<tr><td id="changer" tabindex="0" ng-repeat="foto in fotolist"><img ng-src="data:image/jpeg;base64,{{foto.photo}}" ng-click="removefocus()"/></td></tr>
+</table>
+</div>
+
+	
+<br><br><br><br><br><br><br><br><br>
+
+
+
+
+    
+    
+</div></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+

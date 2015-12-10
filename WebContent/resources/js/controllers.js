@@ -38,6 +38,33 @@ angular.module('SlaApp.controllers', [])
   
 })
 
+//controller pagina dettagli implementazione
+.controller('Luigi', function ($scope, SecurityFactory, cfpLoadingBar, $tabActive, $http, $cookieStore, $location, $timeout) {
+	
+    if($location.$$host=='localhost'){
+    	var urlBase="http://localhost:8080/TESI";
+    }
+    else {
+    	var urlBase="https://threatapplication.herokuapp.com";
+    }
+	
+	//devo scaricare le foto dal db
+	$http.get(urlBase+"/rest/foto").
+	success(function(data) {
+		console.log("foto 1 scaricata");
+		$scope.fotolist=data;
+	});
+	
+
+	
+	
+})
+//fine controller mio
+
+
+
+
+////////////////////////////
 .controller('NegotiateCtrl', function ($scope, $location, $tabActive) {
   
   $scope.tabActive = function(viewLocation){
@@ -184,9 +211,12 @@ angular.module('SlaApp.controllers', [])
 angular.module('SlaApp.negotiate.controllers', [])
 
 /////////////////////////////////////////////////////////////////
+
+
 //controller pagina iniziale di registrazione (salvataggio cookie)
 
 .controller('StartCtrl', function ($scope, $rootScope, $cookieStore, $location, $http, $window) {
+	
 
 	//prelevo dati cookie; 
 	$scope.user_name=	$cookieStore.get('name');
@@ -197,26 +227,7 @@ angular.module('SlaApp.negotiate.controllers', [])
     else{$scope.boolean=		$cookieStore.get('pulsante');}
     
     
-  //cancello tutti i cookie per ricominciare la sessione... tasto al momento disabilitato
-/*    $scope.reset = function(){
-    	$cookieStore.remove('name');
-    	$cookieStore.remove('surname');
-    	$cookieStore.remove('id_utente');
-    	$cookieStore.remove('pulsante');
-    	$cookieStore.remove('check1');
-    	$cookieStore.remove('check2');
-    	$cookieStore.remove('check3');
-    	$cookieStore.remove('booleanthreat');
-    	$cookieStore.remove('done');
-    	//$cookieStore.remove('selection');
-    	$cookieStore.remove('buttonthreat');
-    	
-    	localStorage.removeItem('imgData');
-    	localStorage.removeItem('selection');
-    	console.log("cookie rimossi");
-    	//ricarico la pagina
-    	$window.location.reload();
-    }*/
+
 	
 	
     $scope.add_user = function () {
@@ -922,18 +933,7 @@ angular.module('SlaApp.negotiate.controllers', [])
     	return $scope.color;
     	}
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+  
 })//fine controller ranking
 
 

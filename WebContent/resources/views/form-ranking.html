@@ -7,12 +7,12 @@
             
          }
          
-         table tr:nth-child(odd) {
+.tabellaamostr table tr:nth-child(odd) {
             background-color: #f2f2f2;
             
          }
          
-         table tr:nth-child(even) {
+.tabellaamostr table tr:nth-child(even) {
             background-color: #ffffff;
          }
          textarea {
@@ -195,16 +195,17 @@ a.tip2:hover span {
     <h2>Risk Rating</h2>
   </div>
   <div class="panel-body ">
-    <div class="well" ng-hide="done">
-		By following the approach here, it is possible to estimate the severity of all of these risks to the business and make an informed decision about what to do about those risks. Having a system in place for rating risks will save time and eliminate arguing about priorities. This system will help to ensure that the business doesn't get distracted by minor risks while ignoring more serious risks that are less well understood.(The OWASP Risk Rating Methodology)
+    <div class="well">
+		By following the approach here, it is possible to estimate the severity of all of these risks to the business and make an informed decision about what to do about those risks. Having a system in place for rating risks will save time and eliminate arguing about priorities. <br>This system will help to ensure that the business doesn't get distracted by minor risks while ignoring more serious risks that are less well understood. (Reference: The OWASP Risk Rating Methodology)
     	<br><br>For each threat, insert the appropriate values to assess likelihood and impact overall system.
+    	<br>TIPS: if you hover the mouse over each field, you can view additional information!
     </div>
     
   <div class="panel panel-default" ng-repeat="component in ListComponentFromDB" ng-hide="vedirisultati">
   	<h3>{{component.name}} ({{component.type}})</h3>
-  	<table style="width: 100%; ">
+  	<table  style="width: 100%;border:1px solid grey;">
 
-  		<tr ng-repeat='threat in selection | filter:component.id'>
+  		<tr ng-repeat='threat in selection | filter:component.id' style="border:1px solid grey;">
   			<td width="10%"><a class="tip2">{{threat.threat}}<br>({{threat.stride}})<span>{{threat.description}}</span></a></td>
   			<td align="center"><b>OVERALL RISK SEVERITY = {{threat.risk}}</b>
   			

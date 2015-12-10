@@ -211,6 +211,14 @@ public class ServerREST {
 	  }
 	  
 	  
+	  //API dammi gli schemi implementativi
+	  @RequestMapping(value="/foto",method = RequestMethod.GET,headers="Accept=application/json")
+	  public List<Photo> getallfoto() throws ParseException {
+		List <Photo> p1=service.getallfoto();
+		return p1;
+	  }
+	  
+	  
 	  
 	  
 /*	  //prova
