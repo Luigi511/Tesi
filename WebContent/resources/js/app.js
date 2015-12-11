@@ -134,18 +134,7 @@ angular.module('SlaApp.negotiate', ['SlaApp.negotiate.controllers', 'SlaApp.nego
 
         
         
-        /*        
-        .state('negotiate.service', {
-            url: '/service',
-            templateUrl: 'resources/views/form-service.html',
-            controller: 'ServiceCtrl'
-        })
-        .state('negotiate.capability', {
-            url: '/capability',
-            templateUrl: 'resources/views/form-capability.html',
-            controller: 'CapabilityCtrl'
-        })
-*/
+
         
 });
 

@@ -23,6 +23,7 @@ angular.module('SlaApp.controllers', [])
 		//$cookieStore.remove('selection');
 		$cookieStore.remove('buttonthreat');
 		$cookieStore.remove('controls');
+		$cookieStore.remove('tastoselezionatutto');
 		
 		localStorage.removeItem('imgData');
 		localStorage.removeItem('selection');
@@ -701,6 +702,79 @@ angular.module('SlaApp.negotiate.controllers', [])
 		    }
 		   
 	   }
+	   
+	   
+	   //inizializzazione tasto
+	   if($cookieStore.get('tastoselezionatutto')==undefined){
+		   $scope.tastoselezione='Select All';
+	   }
+	   else{
+		   $scope.tastoselezione=$cookieStore.get('tastoselezionatutto');
+	   }
+	   
+	   
+	   
+	   //funzione tasto seleziona tutto
+	   $scope.all=function(){
+		   
+		   if($scope.tastoselezione=='Select All'){
+		   //devo prima resettare tutta la lista
+		   $scope.selection=[];
+		   
+		   angular.forEach($scope.ListComponentFromDB,function(comp,key1){
+			   //per ogni componente
+			   angular.forEach($scope.ThreatFromDB,function(threat,key2){
+				   //per ogni threat
+				   if(comp.type==threat.cat){
+					   
+					   $scope.selection.push(
+		   		    		   {	'component':comp.name,
+		   		    			   	'componentid':comp.id,
+		   		    			   	'threat':threat.name,
+		   		    			   	'threatid':threat.idThreat,
+		   		    			   	'stride':threat.stride,
+		   		    			   	'description':threat.descr,
+		   		    				
+		   		    			   	'skill':0,
+		   		    			   	'motive':0,
+		   		    			   	'opportunity':0,
+		   		    			   	'size':0,
+		   		    			   	'discover':0,
+		   		    			   	'ease':0,
+		   		    			   	'aware':0,
+		   		    			   	'id':0,
+		   					
+		   		    			   	//technical impacts
+		   		    			   	'confide':0,
+		   		    			   	'integri':0,
+		   		    			   	'avalai':0,
+		   		    			   	'accounta':0,
+		   					
+		   		    			   	//business impacts
+		   		    			   	'financial':0,
+		   		    			   	'reputation':0,
+		   		    			   	'noncompliance':0,
+		   		    			   	'privacy':0
+		   		    		   }
+		   		       );
+				   }
+				   
+			   });
+			   
+			   
+		   });
+		   
+		   $scope.tastoselezione='Clear all';
+		   $cookieStore.put('tastoselezionatutto',$scope.tastoselezione);
+		   }
+		   
+		   else if($scope.tastoselezione=='Clear all'){
+			   
+			   $scope.selection=[];
+			   $scope.tastoselezione='Select All';
+			   $cookieStore.put('tastoselezionatutto',$scope.tastoselezione);
+		   }
+	   }
 	   	
 
 
@@ -1077,6 +1151,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 			   console.log("salvato nel localstorage");
 		   
 			   angular.forEach($scope.controlselection,function(valore,chiave){
+				   //salvo associazione controllo- componente (id utente non necessario)
 			  
 				   $http.post(urlBase+'/rest/assocControl/'+valore.control+'/'+valore.component).
 		 	   		success(function(data) {
@@ -1150,130 +1225,12 @@ angular.module('SlaApp.negotiate.controllers', [])
 
 	
    
-/*  //Set Negotiate Tab on the SLA NavBar
-  $scope.$parent.tabActive = function(viewLocation){
-    return $tabActive.set(viewLocation, '/negotiate/start');
-  }
-  
-  $scope.alertMessage = "You did not select any capability, therefore no control is displayed.";
-  fillCapabilities();
-
-  if($scope.formData != null && $scope.formData.capabilities.length)
-  {
-       cfpLoadingBar.start();
-       SecurityFactory.submit($scope.formData)
-          .success(function (data, status, headers, config) {
-             //console.log(data);
-             //console.log(status);
-             if(data.length == 0)
-                $scope.alertMessage = "No data received from server.";
-             else{
-                $scope.capabilities = data.capabilities;
-                $scope.idsla = data.idsla;                  
-             }
-             cfpLoadingBar.complete();
-          })
-          .error(function (statusText) {
-             $scope.errorState = true;
-             $scope.errorMessage = (statusText == null) ? "Server Connection Error!" : "Server Connection Error! " + statusText;
-             // View error
-             console.log("Errore di connessione al server: " + statusText);
-             cfpLoadingBar.complete();
-          });
-
-  }
-   
-   
-  function fillCapabilities() {
-    
-    var capabilities = [];
-    for (item in $scope.formCapabilities) {
-       var tmpCap = {};
-       tmpCap.id = item;
-       capabilities.push(tmpCap);
-    }
-    $scope.formData.capabilities = capabilities;   
-  }
-
-*/})
+})
 
 
 
 
 //////////////////////////////////////////////////////////////////////////////////
-//pagina selezione controlli di sicurezza
-.controller('ServiceCtrl', function ($scope, $location, ServiceFactory, cfpLoadingBar, $tabActive, $http, $cookieStore) {
-	
-	
-
-  
-  //Set Negotiate Tab on the SLA NavBar
-  $scope.$parent.tabActive = function(viewLocation){
-    return $tabActive.set(viewLocation, '/negotiate/start');
-  }
-  
-  $scope.alertMessage = "Error: no service is displayed.";
-  cfpLoadingBar.start();
-  ServiceFactory.all()
-    .success(function (data, status, headers, config) {
-       //console.log(data);
-       //console.log(status);
-       if(data.length == 0)
-          $scope.alertMessage = "No data received from server.";
-       else {
-          $scope.services = data.services;
-          $scope.formData.idsla = data.idsla;
-       }
-       cfpLoadingBar.complete();
-    })
-    .error(function (statusText) {
-       $scope.errorState = true;
-       $scope.errorMessage = (statusText == null) ? "Server Connection Error!" : "Server Connection Error! " + statusText;
-       // View error
-       console.log("Errore di connessione al server: " + statusText);
-       cfpLoadingBar.complete();
-    });
-
-
-})
-
-.controller('CapabilityCtrl', function ($scope, CapabilityFactory, cfpLoadingBar, $tabActive) {
-  
-  //Set Negotiate Tab on the SLA NavBar
-  $scope.$parent.tabActive = function(viewLocation){
-    return $tabActive.set(viewLocation, '/negotiate/start');
-  }
-   
-  $scope.alertMessage = "You did not select any service, therefore no control is displayed.";
-
-  if($scope.formService.SDT_list != null)
-  {
-     cfpLoadingBar.start();
-     CapabilityFactory.get($scope.formService.SDT_list)
-       .success(function (data, status, headers, config) {
-          //console.log(data);
-          //console.log(status);
-          if(data.length == 0)
-             $scope.alertMessage = "No data received from server.";      
-          else {
-             $scope.capabilities = data.capabilities;
-             $scope.idsla = data.idsla;
-             $scope.formService.idsla = data.idsla;
-             $scope.formData.idsla = data.idsla;
-          }
-          cfpLoadingBar.complete();
-       })
-       .error(function (statusText) {
-          $scope.errorState = true;
-          $scope.errorMessage = (statusText == null) ? "Server Connection Error!" : "Server Connection Error! " + statusText;
-          // View error
-          console.log("Errore di connessione al server: " + statusText);
-          cfpLoadingBar.complete();
-       });
-  }
-
-})
-
 
 
 .controller('AgreementCtrl', function ($scope,AgreementFactory, cfpLoadingBar, $tabActive) {
@@ -1365,215 +1322,33 @@ angular.module('SlaApp.negotiate.controllers', [])
    
 })
 
-.controller('OverviewCtrl', function ($scope, OverviewFactory, _, $filter, cfpLoadingBar, $tabActive, $state) {
-   
-  //Set Negotiate Tab on the SLA NavBar
-  $scope.$parent.tabActive = function(viewLocation){
-    return $tabActive.set(viewLocation, '/negotiate/start');
-  }
 
-  $scope.alertMessage = "You did not select any control.";
-  fillMetrics();
-  $scope.offerSubmitted = false;
-  
-  $scope.submitSLA = function() {
-      
-      if($scope.formData != null)
-      {
-          cfpLoadingBar.start();
-          OverviewFactory.submit($scope.formData)
-            .success(function (data, status, headers, config) {
-                //console.log(data);
-               $scope.offers = data.offers;
-               $scope.idsla = data.idsla;
-               $scope.offerArr = [];
-               for(offer in $scope.offers)
-               {
-                 var offerObj = {};
-                 offerObj.id = $scope.offers[offer].id;
-                 offerObj.xml = "";
-                 offerObj.idsla = $scope.idsla;
-                 $scope.offerArr.push(offerObj);
-               }
-               cfpLoadingBar.complete();
-            })
-            .error(function (statusText) {
-               $scope.errorState = true;
-               $scope.errorMessage = (statusText == null) ? "Server Connection Error!" : "Server Connection Error! " + statusText;
-               // View error
-               console.log("Errore di connessione al server: " + statusText);
-               cfpLoadingBar.complete();
-            });      
-      }   
-   }
-   
-  function fillMetrics() {
-      
-    $scope.processCompleted = false;
-   
-    for (item in $scope.formAgreements) {
-      
-      var capabilityObj = new Object();
-      capabilityObj.id = item;
-      capabilityObj.frameworks = [];
-       
-      for (frm in $scope.formAgreements[item]){
-         
-        var frameworkObj = new Object();
-        frameworkObj.id = frm;
-        capabilityObj.frameworks.push(frameworkObj);
-        capabilityObj.frameworks[capabilityObj.frameworks.length-1].metrics = [];
-         
-        for (mctrl in $scope.formAgreements[item][frm]){
-         
-          var metricObj = new Object();
-          metricObj.id = mctrl;
-          //console.log("MetricId: " + metricObj.id);
-          metricObj.importance = $scope.formAgreementCtrl_Importance[mctrl];
-          if(metricObj.importance == null){
-            metricObj.importance = $scope.formAgreementCtrl_DefaultImportance[mctrl]; 
-          }
-          
-          //console.log("MetricImportance: " + metricObj.importance); 
-          metricObj.operator = $scope.formAgreementCtrl_Expression[mctrl];
-            
-          if(metricObj.operator == null)
-            metricObj.operator = $scope.formAgreementCtrl_DefaultExpression[mctrl];
-            
-          //console.log("MetricExpression: " + metricObj.operator);
-          metricObj.operand = $scope.formAgreementCtrl_Operand[mctrl];
-          //console.log("MetricExpValue: " + metricObj.operand);
-          metricObj.securityControls = $scope.formAgreementCtrl_SecurityControls[item][frm][mctrl];
-         
-          var targetMetricObj = new Object();
-          targetMetricObj.id = metricObj.id;
-          targetMetricObj.importance = metricObj.importance;
-          targetMetricObj.operator = metricObj.operator;
-          targetMetricObj.operand = metricObj.operand;
-          //console.log(metricObj.securityControls);
-          //console.log(JSON.stringify(targetMetricObj));
-          for (secCtrlID in metricObj.securityControls) {
-               
-            //console.log("===================================== Loop su securityControl ID =======================================================");   
-            var prop = 'id';
-		    var search_obj = {};
-		    search_obj[prop] = metricObj.securityControls[secCtrlID];
-            //console.log("SecurityControl ID letto dall'array dei SecurityControls");
-            var securityControlId = search_obj.id;
-            //console.log(securityControlId);
-            $scope.formData = bindMetricToSecurityControl(securityControlId, targetMetricObj, $scope.formData);  
-            
-          }
-        }
-      }
-    }   
-  }
-   
-  function bindMetricToSecurityControl(securityControlId, metricObj, targetObject) {
 
-    for(capabilityIterator in targetObject.capabilities){
-      for(frameworkIterator in targetObject.capabilities[capabilityIterator].frameworks){
-        for(securityControlIterator in targetObject.capabilities[capabilityIterator].frameworks[frameworkIterator].securityControls){
-                  
-          if(targetObject.capabilities[capabilityIterator].frameworks[frameworkIterator].securityControls[securityControlIterator].metrics == null)
-            targetObject.capabilities[capabilityIterator].frameworks[frameworkIterator].securityControls[securityControlIterator].metrics = [];
-                  
-          //console.log("LOOP"+ securityControlIterator + ": " + targetObject.capabilities[capabilityIterator].frameworks[frameworkIterator].securityControls[securityControlIterator].id);
-
-          if(securityControlId == targetObject.capabilities[capabilityIterator].frameworks[frameworkIterator].securityControls[securityControlIterator].id){
-            //console.log("ID TROVATO: " + targetObject.capabilities[capabilityIterator].frameworks[frameworkIterator].securityControls[securityControlIterator].id);
-            //console.log("securityControlIterator: " + securityControlIterator);
-            var len = targetObject.capabilities[capabilityIterator].frameworks[frameworkIterator].securityControls[securityControlIterator].metrics.length;
-                     
-            if(len == 0 || !$filter('isIdExisting')(metricObj, targetObject.capabilities[capabilityIterator].frameworks[frameworkIterator].securityControls[securityControlIterator].metrics)){
-              targetObject.capabilities[capabilityIterator].frameworks[frameworkIterator].securityControls[securityControlIterator].metrics.push(metricObj); 
-              //console.log("Metrica con id: " + metricObj.id + " inserita per securityControl: " + securityControlId);
-            }
-            //console.log("Numero elementi Array Metriche: " + targetObject.capabilities[capabilityIterator].frameworks[frameworkIterator].securityControls[securityControlIterator].metrics.length);
-            if(targetObject.capabilities[capabilityIterator].frameworks[frameworkIterator].securityControls[securityControlIterator].metrics.length > 0)
-              $scope.processCompleted = true;
-                     
-            break;
-          }
-        }
-      }  
+.controller('OverviewCtrl', function ($scope, $http, $cookieStore, $filter, $location, $timeout) {
+   
+	//prelevo dati cookie; 
+	$scope.user_name=		$cookieStore.get('name');
+    $scope.user_surname=	$cookieStore.get('surname');
+    $scope.user_id=			$cookieStore.get('id_utente');
+    $scope.controlselected=	$cookieStore.get('controls');
+    
+    $scope.selection=		JSON.parse(localStorage.getItem('selection'));
+    $scope.controlselection=JSON.parse(localStorage.getItem('controlselection'));
+    
+    
+    if($location.$$host=='localhost'){
+    	var urlBase="http://localhost:8080/TESI";
     }
-    //console.log("targetObject: ");
-    //console.log(targetObject);
-    return targetObject;
-  } 
-  
-  $scope.submitOffer = function() {
-
-    if($scope.formOverview.OfferList != null)
-    {
-       cfpLoadingBar.start();
-       var offerObj = {};
-       var index = _.findIndex($scope.offerArr, { id: $scope.formOverview.OfferList.id }); 
-       if(index >= 0){
-         offerObj = $scope.offerArr[index];
-         //console.log("offerObj");
-         //console.log(offerObj);
-       }
-
-       OverviewFactory.sendOffer(offerObj)
-          .success(function (data, status, headers, config) {
-             //console.log(data);
-             cfpLoadingBar.complete();
-             $scope.offerSubmitted = true;
-             goState('sign');
-          })
-          .error(function (statusText) {
-             $scope.errorState = true;
-             $scope.errorMessage = (statusText == null) ? "Server Connection Error!" : "Server Connection Error! " + statusText;
-             // View error
-             console.log("Errore di connessione al server: " + statusText);
-             cfpLoadingBar.complete();
-          });      
+    else {
+    	var urlBase="https://threatapplication.herokuapp.com";
     }
-  }
-  
-  $scope.showXMLOffer = function() {
-
-    if($scope.formOverview.OfferList != null)
-    {
-       if($scope.offerArr[_.findIndex($scope.offerArr, { id: $scope.formOverview.OfferList.id })].xml == "")
-       {
-         cfpLoadingBar.start();
-         var offerIdentifier = $scope.idsla + "/" + $scope.formOverview.OfferList.id;
-         OverviewFactory.get(offerIdentifier)
-            .success(function (data, status, headers, config) {
-               //console.log(data);
-               cfpLoadingBar.complete();
-                //Gestione popup per visualizzare xml
-                $scope.offerSubmitted = true;
-                $scope.formOverview_xml = LoadXMLString('XMLOffer',data);
-                $scope.offerArr[_.findIndex($scope.offerArr, { id: $scope.formOverview.OfferList.id })].xml = data;
-
-                //$scope.formOverview_xml = data;
-                //$scope.formPopup = LoadXMLString('popup',data);
-                //popupxml(data);
-                //alert(data);
-
-            })
-            .error(function (statusText) {
-               $scope.errorState = true;
-               $scope.errorMessage = (statusText == null) ? "Server Connection Error!" : "Server Connection Error! " + statusText;
-               // View error
-               console.log("Errore di connessione al server: " + statusText);
-               cfpLoadingBar.complete();
-            }); 
-       }
-       else{
-         $scope.formOverview_xml = LoadXMLString('XMLOffer',$scope.offerArr[_.findIndex($scope.offerArr, { id: $scope.formOverview.OfferList.id })].xml);
-       }
-    }
- }
-  
-  function goState(route){
-        $state.go(route);
-  }   
-
+    
+    
+	$scope.submitSLA=function(){
+		//niente al momento
+	}
+    
+	
 })
                
 ;

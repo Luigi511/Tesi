@@ -50,7 +50,7 @@
 		</tr>
 		<tr>
 		<td align="center">Description</td>
-		<td><textarea maxlength="50" rows="4" cols="150" ng-model="component.description" name='not defined'></textarea></td>
+		<td><textarea maxlength="600" rows="8" cols="150" ng-model="component.description" name='not defined'></textarea></td>
 		</tr><tr><td align="center"><button class="btn btn-primary" ng-click="add(component.name)">Add Component</button></td></tr>
 	</table>   	   
 	
@@ -61,18 +61,19 @@
     <div class="panel panel-default">
     <table style="width: 100%; ">
             <tr>
-            	<td>Id</td>
-                <td>Control Name</td>
-                <td>Description</td>
-                <td>Type</td>
+            	<td align="center">Id</td>
+                <td align="center">Control Name</td>
+                <td align="center">Type</td>
+                <td width='50%'>Description</td>
                 <td></td>
             </tr>
             <tr ng-repeat="component in ListComponentFromDB">
 <!--                 <td>{{$index+1}}</td>  
- -->            <td>{{component.id}}</td>  
-                <td>{{component.name}}</td>    
-                <td>{{component.description}}</td>
-                <td>{{component.type}}</td>
+ -->            <td align="center">{{component.id}}</td>  
+                <td align="center">{{component.name}}</td>
+                <td align="center">{{component.type}}</td>    
+                <td style="text-align: justify;text-justify: inter-word;">{{component.description}}</td>
+                
                 <td><input type="button" class="btn btn-primary" value="Delete" ng-click="remove($index,component.id,component.name,component.description)" /></td>
             </tr>
            

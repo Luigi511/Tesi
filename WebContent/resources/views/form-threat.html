@@ -77,12 +77,17 @@
  -->
  
  <table ng-hide="boolean1" style="width: 100%; ">
- <tr><td>Id</td><td>Component name</td><td>Type</td><td>Description</td></tr>
+ <tr>
+ 	<td align="center">Id</td>
+ 	<td align="center">Component name</td>
+ 	<td align="center">Type</td>
+ 	<td width='50%'>Description</td></tr>
+ 	
  <tr ng-repeat="component in ListComponentFromDB">
- 	<td>{{component.id}}</td>
- 	<td>{{component.name}}</td>
- 	<td>{{component.type}}</td>
- 	<td>{{component.description}}</td>
+ 	<td align="center">{{component.id}}</td>
+ 	<td align="center">{{component.name}}</td>
+ 	<td align="center">{{component.type}}</td>
+ 	<td style="text-align: justify;text-justify: inter-word;">{{component.description}}</td>
  </tr>
  </table>
  
@@ -97,10 +102,11 @@
   </div>
     <div class="panel-body ">
     <div class="well">
-    Below there is a list of threats chosen according to the type of the component that you entered.<br>
-      For each components select the appropriate threats.
-<!--     <button class="btn btn-primary pull-right" ng-click="resetSelection()">Reset</button>
- -->    </div>
+    Below there is a list of threats chosen according to the type of the component that you entered.<br><br>
+    
+    For each components select the appropriate threats.  <button  ng-click="all()">Select/Deselect All</button>
+     
+    </div>
   
   
   <div class="panel panel-default" ng-repeat="component in ListComponentFromDB">
@@ -121,14 +127,15 @@
   
   
 <br>
+
 <button class="btn btn-primary pull-left" ng-click="saveSelection()">Save</button>
 <a href="#/negotiate/ranking"><button class="btn btn-primary pull-right" ng-show="booleanthreat">Next</button></a>
   </div>
   
   
   <!-- prova dati utente in cookie-->
-<!-- {{selection}}<br>
- -->
+<!-- {{selection}}<br> -->
+
  <br>
 {{user_name}} {{user_surname}} {{user_id}}
   

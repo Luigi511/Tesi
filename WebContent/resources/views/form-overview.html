@@ -4,56 +4,26 @@
   </div>
   <div class="panel-body ">
     <div class="well">
-      A Security SLA has been built according to your choices during the negotiation process.
-      <br\> Check it and submit it in order to have it stored in your collection of negotiated SLAs.
-        <br\>
+      A Security SLA has been built according to your choices during the negotiation process.<br>
+      Check it and submit it in order to have it stored in your collection of negotiated SLAs.<br>
+      
           The next steps of the SPECS Application will enable you to sign and implement the SLA.
     </div>
+    
+    
+   <textarea style="width:100%; " rows="40" cols="150" disabled>
+   
+   </textarea><br><br>
+   <button class="btn btn-primary" ng-click="submitSLA()">REQUEST OFFERS</button>      
          
-   <button class="btn btn-primary" ng-click="submitSLA()" data-ng-disabled="!processCompleted">REQUEST OFFERS</button>      
-         
-    <div ng-show="offers">
-      <div class="panel panel-default">
-        <div class="panel-body">
-            
-          <table class="table">
 
-            <thead>
-              <tr>
-                <th>SLA Offer</th>
-                <th></th>
-                <th></th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr ng-repeat="offer in offers">
-                <td width="15%">{{offer.id}}</td>
-                <td width="20%">
-<!--                  <input type="radio" name="Offer_list" id="Offer_{{offer.id}}" value="{{offer.id}}" ng-model="formOverview.OfferList">-->
-                  <input type="radio" name="Offer_list" id="Offer_{{offer.id}}"  ng-value="offer" ng-model="formOverview.OfferList">
-                </td>  
-              </tr>
-            </tbody>
-
-          </table>
-        
-        </div>
-        <button class="btn btn-primary" ng-click="submitOffer()" data-ng-disabled="!formOverview.OfferList">SUBMIT OFFER</button>
-        <button class="btn btn-primary" ng-click="showXMLOffer()" data-ng-disabled="!formOverview.OfferList">SHOW OFFER</button>
-      </div>
-      <div class="well" style="overflow-y: auto; height:450px; " id='XMLOffer' ng-model='formOverview_xml' ng-show="offerSubmitted"></div>
-    </div>
         
         
         
   </div>
-</div>
 
-<div class="panel panel-primary" ng-show="errorState">
-   <div class="panel-body">{{errorMessage}}</div>
-</div>
-    
-<div class="panel panel-primary" ng-show="!processCompleted">
-   <div class="panel-body">{{alertMessage}}</div>
+{{controlselection}}   <br>
+  
+<!-- prova dati utente in cookie-->	
+{{user_name}} {{user_surname}} {{user_id}}   
 </div>
