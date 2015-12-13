@@ -1087,7 +1087,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 	}
 	
 	//raccolgo i controlli di sicurezza selezionati
-	  $scope.toggleSelection = function toggleSelection(control,name,component) {
+	  $scope.toggleSelection = function toggleSelection(control,name,component,desc) {
 		  	
 		  	var idx = arrayObjectIndexOf($scope.controlselection,control,'control',component,'component');
 	   		// is currently selected
@@ -1100,6 +1100,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 	   		    		   {	'control':control,
 	   		    			    'controlname':name,
 	   		    			   	'component':component,
+	   		    			   	'description':desc,
 	   		    		});
 		    }
 	  };//fine metodo
@@ -1324,7 +1325,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 
 
 
-.controller('OverviewCtrl', function ($scope, $http, $cookieStore, $filter, $location, $timeout) {
+.controller('OverviewCtrl', function ($scope, $http, $cookieStore, $filter, $location, $timeout, $parse) {
    
 	//prelevo dati cookie; 
 	$scope.user_name=		$cookieStore.get('name');
@@ -1342,6 +1343,78 @@ angular.module('SlaApp.negotiate.controllers', [])
     else {
     	var urlBase="https://threatapplication.herokuapp.com";
     }
+    
+    
+    //costruzione elementi sla
+    
+    //prelevo i componenti dell'utente
+	$scope.ListComponentFromDB = [];
+	$http.get(urlBase+"/rest/components/"+$scope.user_id).
+		success(function(data) {
+			$scope.ListComponentFromDB = data;
+			console.log('componenti utente prelevati');		
+	});
+	
+	$scope.capabilities='';
+	$scope.capability='';
+	
+	
+	
+	
+	$scope.getSLA=function(){
+		
+		angular.forEach($scope.ListComponentFromDB,function(valore,chiave){
+			
+			$scope.controlstring='';
+			var string='\n\n  <specs:capability name="'+valore.name+'" description="'+valore.description+'" >'+'\n'+
+			'    <specs:controlFramework id="NIST_800_53_r4" frameworkName="NIST Control framework 800-53 rev. 4">';
+			
+			angular.forEach($scope.controlselection,function(val,ch){
+				
+				//solo se l'associazione per il componente c'è
+				if(val.component==valore.id){
+					
+					//devo fare la get per ricavare le info aggiuntive del controllo
+					var family=val.control.charAt(0)+val.control.charAt(1);
+					
+					if(val.control.charAt(4)!='('){var cifra2=val.control.charAt(4);}else{var cifra2='';}
+					var code=val.control.charAt(3)+cifra2;
+					
+					
+					var temp='\n\n      <specs:securityControl nist:id="'+val.control+'"\n        nist:name="'+val.controlname+'"\n        nist:securityControl="'+code+'" nist:control_family="'+family+'>\n        <specs:description> ?????\n        </specs:description>\n        <specs:importance_weight> ????\n        </specs:importance_weight>\n      </specs:securityControl>';
+					$scope.controlstring=$scope.controlstring+temp;
+				}
+				else{
+					
+					$scope.controlstring=$scope.controlstring;
+				}
+			
+			});
+			
+			$scope.capability=$scope.capability+'\n'+string+$scope.controlstring+'\n    </specs:controlFramework>\n\n  </specs:capability>\n';
+		
+		});
+		$scope.capabilities=$scope.capability;
+
+	}
+	
+	$timeout($scope.getSLA,500);
+	
+	
+	
+	//funzione conversione testo
+
+
+	
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
 	$scope.submitSLA=function(){

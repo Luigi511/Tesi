@@ -72,7 +72,7 @@
  -->            <td align="center">{{component.id}}</td>  
                 <td align="center">{{component.name}}</td>
                 <td align="center">{{component.type}}</td>    
-                <td style="text-align: justify;text-justify: inter-word;">{{component.description}}</td>
+                <td style="text-align: justify;text-justify: inter-word;  display: inline-block; word-break: break-word;">{{component.description}}</td>
                 
                 <td><input type="button" class="btn btn-primary" value="Delete" ng-click="remove($index,component.id,component.name,component.description)" /></td>
             </tr>

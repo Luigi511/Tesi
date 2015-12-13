@@ -87,7 +87,7 @@
  	<td align="center">{{component.id}}</td>
  	<td align="center">{{component.name}}</td>
  	<td align="center">{{component.type}}</td>
- 	<td style="text-align: justify;text-justify: inter-word;">{{component.description}}</td>
+ 	<td style="text-align: justify;text-justify: inter-word; display: inline-block; word-break: break-word;">{{component.description}}</td>
  </tr>
  </table>
  
@@ -130,14 +130,22 @@
 
 <button class="btn btn-primary pull-left" ng-click="saveSelection()">Save</button>
 <a href="#/negotiate/ranking"><button class="btn btn-primary pull-right" ng-show="booleanthreat">Next</button></a>
-  </div>
-  
-  
+
+
+
+
   <!-- prova dati utente in cookie-->
 <!-- {{selection}}<br> -->
 
- <br>
+ <br><br><br>
 {{user_name}} {{user_surname}} {{user_id}}
+
+
+
+  </div>
+  
+  
+
   
   
 
