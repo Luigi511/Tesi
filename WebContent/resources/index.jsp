@@ -46,7 +46,7 @@
   <script src="https://code.angularjs.org/1.4.8/angular-cookies.js"></script>  
   <script src="https://code.angularjs.org/1.4.8/angular-animate.min.js"></script>
   <script src="https://code.angularjs.org/1.4.8/angular-touch.min.js"></script>
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.10.3/TweenMax.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.10.3/TweenMax.min.js"></script>
   
 	
 </head>
