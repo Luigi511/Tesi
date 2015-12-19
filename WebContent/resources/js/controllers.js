@@ -28,6 +28,7 @@ angular.module('SlaApp.controllers', [])
 		localStorage.removeItem('imgData');
 		localStorage.removeItem('selection');
 		localStorage.removeItem('controlselection');
+		localStorage.removeItem('SLA');
 		console.log("cookie rimossi");
 	  
 	  
@@ -1087,7 +1088,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 	}
 	
 	//raccolgo i controlli di sicurezza selezionati
-	  $scope.toggleSelection = function toggleSelection(control,name,component,desc) {
+	  $scope.toggleSelection = function toggleSelection(control,name,component,desc,threatid) {
 		  	
 		  	var idx = arrayObjectIndexOf($scope.controlselection,control,'control',component,'component');
 	   		// is currently selected
@@ -1101,6 +1102,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 	   		    			    'controlname':name,
 	   		    			   	'component':component,
 	   		    			   	'description':desc,
+	   		    			   	'tid':threatid,
 	   		    		});
 		    }
 	  };//fine metodo
@@ -1357,6 +1359,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 	
 	$scope.capabilities='';
 	$scope.capability='';
+	$scope.threatsss='';
 	
 	
 	
@@ -1366,39 +1369,55 @@ angular.module('SlaApp.negotiate.controllers', [])
 		angular.forEach($scope.ListComponentFromDB,function(valore,chiave){
 			
 			$scope.controlstring='';
-			var string='\n\n  <specs:capability name="'+valore.name+'" description="'+valore.description+'" >'+'\n'+
-			'    <specs:controlFramework id="NIST_800_53_r4" frameworkName="NIST Control framework 800-53 rev. 4">';
 			
-			angular.forEach($scope.controlselection,function(val,ch){
+			var stringacomp='<specs:COMPONENT name="'+valore.name+'" description="'+valore.description+'" >\n';
+			
+			angular.forEach($scope.selection,function(v,c){
 				
-				//solo se l'associazione per il componente c'è
-				if(val.component==valore.id){
+				if(v.componentid==valore.id){ //match idcomponente nelle 2 liste
 					
-					//devo fare la get per ricavare le info aggiuntive del controllo
-					var family=val.control.charAt(0)+val.control.charAt(1);
-					
-					if(val.control.charAt(4)!='('){var cifra2=val.control.charAt(4);}else{var cifra2='';}
-					var code=val.control.charAt(3)+cifra2;
-					
-					
-					var temp='\n\n      <specs:securityControl nist:id="'+val.control+'"\n        nist:name="'+val.controlname+'"\n        nist:securityControl="'+code+'" nist:control_family="'+family+'>\n        <specs:description> ?????\n        </specs:description>\n        <specs:importance_weight> ????\n        </specs:importance_weight>\n      </specs:securityControl>';
-					$scope.controlstring=$scope.controlstring+temp;
-				}
-				else{
-					
-					$scope.controlstring=$scope.controlstring;
-				}
+					var string='<specs:capability name="'+v.threat+'" description="'+v.description+'" >'+'\n'+
+					'<specs:controlFramework id="NIST_800_53_r4" frameworkName="NIST Control framework 800-53 rev. 4">';
 			
+					angular.forEach($scope.controlselection,function(val,ch){
+				
+						//solo se l'associazione per il componente c'è
+						if((val.tid==v.threatid)&&(val.component==valore.id)){
+					
+							//devo fare la get per ricavare le info aggiuntive del controllo
+							var family=val.control.charAt(0)+val.control.charAt(1);
+					
+							if(val.control.charAt(4)!='('){var cifra2=val.control.charAt(4);}else{var cifra2='';}
+							var code=val.control.charAt(3)+cifra2;
+					
+					
+							var temp='\n\n<specs:securityControl nist:id="'+val.control+'"\nnist:name="'+val.controlname+'"\nnist:securityControl="'+code+'"nist:control_family="'+family+'>\n<specs:description> '+val.description+'\n</specs:description>\n<specs:importance_weight> '+v.risk+' </specs:importance_weight>\n</specs:securityControl>';
+							$scope.controlstring=$scope.controlstring+temp;
+						}
+						else{
+					
+							$scope.controlstring=$scope.controlstring;
+						}
+			
+					});
+					
+					$scope.threatsss=$scope.threatsss+'\n'+string+$scope.controlstring+'\n</specs:controlFramework>\n</specs:capability>\n';
+					$scope.controlstring=''; temp='';
+				}
 			});
-			
-			$scope.capability=$scope.capability+'\n'+string+$scope.controlstring+'\n    </specs:controlFramework>\n\n  </specs:capability>\n';
+					
+			$scope.capability=$scope.capability+stringacomp+$scope.threatsss+'\n</specs:COMPONENT>\n\n\n\n\n';
+			$scope.threatsss='';
 		
 		});
-		$scope.capabilities=$scope.capability;
+		$scope.capabilities=$scope.capability+'\n';
+		
+		//salvo lo SLA nel localstorage
+		localStorage.setItem("SLA", JSON.stringify($scope.capabilities));
 
 	}
 	
-	$timeout($scope.getSLA,500);
+	$timeout($scope.getSLA,200);
 	
 	
 	
