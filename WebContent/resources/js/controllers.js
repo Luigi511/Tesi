@@ -1417,6 +1417,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 
 	}
 	
+	//da spostare nella pagina delle metriche....
 	$timeout($scope.getSLA,200);
 	
 	
