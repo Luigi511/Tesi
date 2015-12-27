@@ -369,6 +369,39 @@ public List<Photo> getallfoto() {
 }
 
 
+public List<Metric> getAllMetrics() {
+	List<Metric> m = new ArrayList<Metric>();
+	System.out.println("prova");
+	
+	try {
+		  PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM metrics");
+		  ResultSet rs = preparedStatement.executeQuery();
+		  while (rs.next()) {
+			  Metric mm=new Metric();
+			  mm.setid(rs.getInt("idmetrics"));
+			  mm.setname(rs.getString("metricname"));
+			  mm.setdes(rs.getString("metricdescr"));
+			  mm.setformula(rs.getString("formula"));
+			  mm.setinput1(rs.getString("input1"));
+			  mm.setinput2(rs.getString("input2"));
+			  mm.setvalue(rs.getString("value"));
+			  mm.setunit(rs.getString("unit"));
+			  mm.setdefault(rs.getString("defaultt"));
+			  mm.setmin(rs.getString("min"));
+			  mm.setmax(rs.getString("max"));
+			  mm.setope(rs.getString("operator"));
+			  mm.setnist(rs.getString("nistcontrol"));
+
+			  m.add(mm);
+			  
+		  }
+	}catch (SQLException e) {
+		  e.printStackTrace();
+	}
+	return m;
+}
+
+
 
 
  

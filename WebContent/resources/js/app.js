@@ -121,10 +121,10 @@ angular.module('SlaApp.negotiate', ['SlaApp.negotiate.controllers', 'SlaApp.nego
             templateUrl: 'resources/views/form-security.html',
             controller: 'SecurityCtrl'
         })
-        .state('negotiate.agreement', {
-            url: '/agreement',
-            templateUrl: 'resources/views/form-agreement.html',
-            controller: 'AgreementCtrl'
+        .state('negotiate.metrics', {
+            url: '/metrics',
+            templateUrl: 'resources/views/form-metrics.html',
+            controller: 'MetricsCtrl'
         })
         .state('negotiate.overview', {
             url: '/overview',

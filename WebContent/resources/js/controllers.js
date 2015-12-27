@@ -24,11 +24,13 @@ angular.module('SlaApp.controllers', [])
 		$cookieStore.remove('buttonthreat');
 		$cookieStore.remove('controls');
 		$cookieStore.remove('tastoselezionatutto');
+		$cookieStore.remove('finitometriche');
 		
 		localStorage.removeItem('imgData');
 		localStorage.removeItem('selection');
 		localStorage.removeItem('controlselection');
 		localStorage.removeItem('SLA');
+		localStorage.removeItem('metriche');
 		console.log("cookie rimossi");
 	  
 	  
@@ -1236,94 +1238,238 @@ angular.module('SlaApp.negotiate.controllers', [])
 //////////////////////////////////////////////////////////////////////////////////
 
 
-.controller('AgreementCtrl', function ($scope,AgreementFactory, cfpLoadingBar, $tabActive) {
+.controller('MetricsCtrl', function ($scope, $http, $cookieStore, $filter, $location, $timeout, $parse) {
   
-  //Set Negotiate Tab on the SLA NavBar
-  $scope.$parent.tabActive = function(viewLocation){
-    return $tabActive.set(viewLocation, '/negotiate/start');
-  }
-
-  $scope.alertMessage = "You did not select any security control, therefore no control is displayed.";
-  $scope.operators = getSLOexpOperators();
-  fillSecurityControls();
-
-  if($scope.formData != null && $scope.formData.capabilities.length) {
-       cfpLoadingBar.start();
-       AgreementFactory.submit($scope.formData)
-          .success(function (data, status, headers, config) {
-             if(data.length == 0)
-                $scope.alertMessage = "No data received from server.";
-             else {
-                $scope.capabilities = data.capabilities;
-                $scope.idsla = data.idsla;                  
-             }
-             cfpLoadingBar.complete();
-          })
-          .error(function (statusText) {
-             $scope.errorState = true;
-             $scope.errorMessage = (statusText == null) ? "Server Connection Error!" : "Server Connection Error! " + statusText;
-             // View error
-             console.log("Errore di connessione al server: " + statusText);
-             cfpLoadingBar.complete();
-          });
+	//prelevo dati cookie; 
+	$scope.user_name=		$cookieStore.get('name');
+    $scope.user_surname=	$cookieStore.get('surname');
+    $scope.user_id=			$cookieStore.get('id_utente');
+    $scope.controlselected=	$cookieStore.get('controls');
+    $scope.finito= 			$cookieStore.get('finitometriche');
     
-  }
-   
-
-  function getSLOexpOperators() {
-    return [{
-       name: 'equal',
-       value: 'eq'
-       }, {
-       name: 'less than',
-       value: 'lt'
-       }, {
-       name: 'greater than',
-       value: 'gt'
-       }, {
-       name: 'less or equal than',
-       value: 'le'
-       }, {
-       name: 'greater or equal than',
-       value: 'ge'
-       }
-    ];
-  }
-   
-  function fillSecurityControls() {
-      
-    var capabilities = [];
-    for (item in $scope.formSecurities) {
-
-      var tmpCap = {};
-      tmpCap.id = item;
-      tmpCap.frameworks = [];
-
-      for (frm in $scope.formSecurities[item]){
-
-        var tmpFrm = {};
-        tmpFrm.id = frm;
-        tmpCap.frameworks.push(tmpFrm);
-        tmpCap.frameworks[tmpCap.frameworks.length-1].securityControls = [];
-
-        for (sctrl in $scope.formSecurities[item][frm]){
-
-          var tmpSctrl = {};
-          tmpSctrl.id = sctrl;
-          tmpSctrl.weight = $scope.formSecurityCtrl_SecurityControlWeight[sctrl];
-
-          if(tmpSctrl.weight == null)
-            tmpSctrl.weight = $scope.formSecurityCtrl_DefaultSecurityControlWeight[sctrl];
-
-          tmpCap.frameworks[tmpCap.frameworks.length-1].securityControls.push(tmpSctrl);
-        }
-      }
-      capabilities.push(tmpCap);
+    $scope.selection=		JSON.parse(localStorage.getItem('selection'));
+    $scope.controlselection=JSON.parse(localStorage.getItem('controlselection'));
+    $scope.metricheassociate=JSON.parse(localStorage.getItem('metriche'));
+    
+    if($scope.metricheassociate==null){
+    	$scope.metricheassociate=[];
     }
-    $scope.formData.capabilities = capabilities;
-  }
-   
-})
+    
+    
+    if($location.$$host=='localhost'){
+    	var urlBase="http://localhost:8080/TESI";
+    }
+    else {
+    	var urlBase="https://threatapplication.herokuapp.com";
+    }
+
+
+    //prelevo i componenti dell'utente
+	$scope.ListComponentFromDB = [];
+	$http.get(urlBase+"/rest/components/"+$scope.user_id).
+		success(function(data) {
+			$scope.ListComponentFromDB = data;
+			console.log('componenti utente prelevati');		
+	});
+	
+	$scope.getcompname= function(idcomponente){
+		
+		angular.forEach($scope.ListComponentFromDB,function(valore,chiave){
+			
+			if(valore.id==idcomponente){
+				$scope.nomecomp=valore.name;
+			}
+		});
+		return $scope.nomecomp;
+	}
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	$scope.inizializza=function(listametriche){
+		
+	var elenco=[];
+	//inizializzazione dati metriche in tabella
+	angular.forEach($scope.controlselection,function(val,ch){
+		
+		var temp;//ricavo la metrica associata
+		
+		angular.forEach(listametriche,function(v,c){
+			if(v.nist==val.control){
+				temp=v;
+
+				
+				if(temp.value=='yes / no'){ //tipo 1
+			
+					if((temp.def=='yes')||(temp.def=='no')){
+						temp.outputYES_NO=temp.def;}
+					}
+		
+					if((temp.value=='integer')&&(temp.unit=='%')){ //tipo 2
+						temp.N=0;
+						temp.T=0;
+					}
+		
+					if((temp.value=='integer')&&(temp.unit=='number')){ //tipo 3
+			
+						if(temp.def!='n/a'){temp.N=parseInt(temp.def, 10);}
+					}
+					
+					if((temp.value=='integer')&&(temp.unit=='levels')){ //tipo 4
+						
+						if(temp.def!='n/a'){temp.N=parseInt(temp.def, 10);}
+					}
+				
+				elenco.push(temp);
+			}
+		});
+		
+	});
+	elenco=_.uniq(elenco, JSON.stringify);
+	console.log(elenco);
+	return elenco;
+	}
+	
+	
+	
+    //prelevo le metriche
+	$scope.ListMetrics = [];
+	$http.get(urlBase+"/rest/metrics").
+		success(function(dat) {
+			$scope.ListMetrics = dat;
+			console.log('metriche prelevate');
+			if($scope.finito!=true){
+				$scope.metricheassociate=$scope.inizializza($scope.ListMetrics); //inizializzo e filtro
+				console.log('metriche inizializzate');
+			}
+	});
+	
+	
+	//mi restituisce la metrica associata al controllo di sicurezza
+	$scope.getmetric= function(controllo){
+		angular.forEach($scope.metricheassociate,function(val,ch){
+			if(val.nist==controllo){
+				$scope.metrica=val;
+			}
+		});
+		return $scope.metrica;
+	}
+	
+	
+	$scope.savemetrics=function(){
+		
+		angular.forEach($scope.metricheassociate,function(val,ch){
+			//calcolo le percentuali
+			if((val.N!=undefined)&&(val.T!=undefined)){
+				val.Percent=(val.N/val.T)*100;
+				val.Percent=Math.round(val.Percent*100)/100;
+			}
+		});
+		
+		//salvataggio nel localstorage
+		localStorage.setItem("metriche", JSON.stringify($scope.metricheassociate));
+		console.log("metriche salvate nel localstorage");
+		$scope.finito=true;
+		$cookieStore.put('finitometriche',$scope.finito);
+		
+		//costruisco lo sla
+		$scope.capabilities='';
+		$scope.capability='';
+		$scope.threatsss='';
+		
+		$scope.getSLA=function(){
+			
+			angular.forEach($scope.ListComponentFromDB,function(valore,chiave){
+				
+				$scope.controlstring='';$scope.controlstring2='';
+				var i=0;
+				
+				var stringacomp='<specs:COMPONENT name="'+valore.name+'" description="'+valore.description+'" >\n';
+				
+				angular.forEach($scope.selection,function(v,c){
+					//per ogni threat
+					
+					
+					if(v.componentid==valore.id){ //match idcomponente nelle 2 liste
+						
+						var string='<specs:capability name="'+v.threat+'" description="'+v.description+'" >'+'\n'+
+						'<specs:controlFramework id="NIST_800_53_r4" frameworkName="NIST Control framework 800-53 rev. 4">';
+				
+						angular.forEach($scope.controlselection,function(val,ch){
+							
+					
+							//solo se l'associazione per il componente c'è
+							if((val.tid==v.threatid)&&(val.component==valore.id)){
+						
+								//devo fare la get per ricavare le info aggiuntive del controllo
+								var family=val.control.charAt(0)+val.control.charAt(1);
+						
+								if(val.control.charAt(4)!='('){var cifra2=val.control.charAt(4);}else{var cifra2='';}
+								var code=val.control.charAt(3)+cifra2;
+						
+						
+								var temp='\n\n<specs:securityControl nist:id="'+val.control+'"\nnist:name="'+val.controlname+'"\nnist:securityControl="'+code+'"nist:control_family="'+family+'>\n<specs:description> '+val.description+'\n</specs:description>\n<specs:importance_weight> '+v.risk+' </specs:importance_weight>\n</specs:securityControl>';
+								$scope.controlstring=$scope.controlstring+temp;
+							}
+							else{
+								
+								//gli altri controlli non associati ad un threat specifico
+								if((val.tid==undefined)&&(val.component==valore.id)&&(i==0)){
+							
+									//devo fare la get per ricavare le info aggiuntive del controllo
+									var family=val.control.charAt(0)+val.control.charAt(1);
+							
+									if(val.control.charAt(4)!='('){var cifra2=val.control.charAt(4);}else{var cifra2='';}
+									var code=val.control.charAt(3)+cifra2;
+							
+							
+									var temp2='\n\n<specs:securityControl nist:id="'+val.control+'"\nnist:name="'+val.controlname+'"\nnist:securityControl="'+code+'"nist:control_family="'+family+'>\n<specs:description> '+val.description+'\n</specs:description>\n</specs:securityControl>';
+									$scope.controlstring2=$scope.controlstring2+temp2;
+								}
+								
+								$scope.controlstring=$scope.controlstring;
+							}
+				
+						});i++; //mi serve per scaricarmi i controlli aggiuntivi solo una volta!
+						
+
+						
+						
+						
+						$scope.threatsss=$scope.threatsss+'\n'+string+$scope.controlstring+'\n</specs:controlFramework>\n</specs:capability>\n';
+						$scope.controlstring=''; temp='';
+					}
+				});
+						
+				$scope.capability=$scope.capability+stringacomp+$scope.threatsss+'\n\n<!-- Other Controls selected-->\n<specs:controlFramework id="NIST_800_53_r4" frameworkName="NIST Control framework 800-53 rev. 4">'+$scope.controlstring2+'\n\n</specs:controlFramework>\n</specs:COMPONENT>\n\n\n\n\n';
+				$scope.threatsss='';$scope.controlstring2='';temp2='';
+			
+			});
+			$scope.capabilities=$scope.capability+'\n';
+			
+			//salvo lo SLA nel localstorage
+			localStorage.setItem("SLA", JSON.stringify($scope.capabilities));
+
+		}
+
+		$scope.getSLA();
+		console.log('SLA costruito e salvato nel localstorage')
+	}
+	
+	
+	
+	
+	
+})//fine controller metriche
 
 
 
@@ -1338,6 +1484,9 @@ angular.module('SlaApp.negotiate.controllers', [])
     $scope.selection=		JSON.parse(localStorage.getItem('selection'));
     $scope.controlselection=JSON.parse(localStorage.getItem('controlselection'));
     
+    //recupero lo SLA
+    $scope.capabilities=JSON.parse(localStorage.getItem('SLA'));
+    
     
     if($location.$$host=='localhost'){
     	var urlBase="http://localhost:8080/TESI";
@@ -1347,104 +1496,19 @@ angular.module('SlaApp.negotiate.controllers', [])
     }
     
     
-    //costruzione elementi sla
-    
-    //prelevo i componenti dell'utente
-	$scope.ListComponentFromDB = [];
-	$http.get(urlBase+"/rest/components/"+$scope.user_id).
-		success(function(data) {
-			$scope.ListComponentFromDB = data;
-			console.log('componenti utente prelevati');		
-	});
-	
-	$scope.capabilities='';
-	$scope.capability='';
-	$scope.threatsss='';
-	
-	
-	
-	
-	$scope.getSLA=function(){
-		
-		angular.forEach($scope.ListComponentFromDB,function(valore,chiave){
-			
-			$scope.controlstring='';
-			
-			var stringacomp='<specs:COMPONENT name="'+valore.name+'" description="'+valore.description+'" >\n';
-			
-			angular.forEach($scope.selection,function(v,c){
-				
-				if(v.componentid==valore.id){ //match idcomponente nelle 2 liste
-					
-					var string='<specs:capability name="'+v.threat+'" description="'+v.description+'" >'+'\n'+
-					'<specs:controlFramework id="NIST_800_53_r4" frameworkName="NIST Control framework 800-53 rev. 4">';
-			
-					angular.forEach($scope.controlselection,function(val,ch){
-				
-						//solo se l'associazione per il componente c'è
-						if((val.tid==v.threatid)&&(val.component==valore.id)){
-					
-							//devo fare la get per ricavare le info aggiuntive del controllo
-							var family=val.control.charAt(0)+val.control.charAt(1);
-					
-							if(val.control.charAt(4)!='('){var cifra2=val.control.charAt(4);}else{var cifra2='';}
-							var code=val.control.charAt(3)+cifra2;
-					
-					
-							var temp='\n\n<specs:securityControl nist:id="'+val.control+'"\nnist:name="'+val.controlname+'"\nnist:securityControl="'+code+'"nist:control_family="'+family+'>\n<specs:description> '+val.description+'\n</specs:description>\n<specs:importance_weight> '+v.risk+' </specs:importance_weight>\n</specs:securityControl>';
-							$scope.controlstring=$scope.controlstring+temp;
-						}
-						else{
-					
-							$scope.controlstring=$scope.controlstring;
-						}
-			
-					});
-					
-					$scope.threatsss=$scope.threatsss+'\n'+string+$scope.controlstring+'\n</specs:controlFramework>\n</specs:capability>\n';
-					$scope.controlstring=''; temp='';
-				}
-			});
-					
-			$scope.capability=$scope.capability+stringacomp+$scope.threatsss+'\n</specs:COMPONENT>\n\n\n\n\n';
-			$scope.threatsss='';
-		
-		});
-		$scope.capabilities=$scope.capability+'\n';
-		
-		//salvo lo SLA nel localstorage
-		localStorage.setItem("SLA", JSON.stringify($scope.capabilities));
 
-	}
-	
-	//da spostare nella pagina delle metriche....
-	$timeout($scope.getSLA,200);
-	
-	
-	
-	//funzione conversione testo
-
-
-	
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 	$scope.submitSLA=function(){
 		//niente al momento
 	}
-    
 	
-})
-               
-;
+	
+	
+	
+
+    
+
+	
+});//fine controller
 
 
 

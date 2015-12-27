@@ -220,33 +220,13 @@ public class ServerREST {
 	  
 	  
 	  
-	  
-/*	  //prova
-	  @RequestMapping(value="/hello/{Name}/{Desc}")
-	  public void hello(@PathVariable String Name,@PathVariable String Desc) throws ParseException{
-		  System.out.println("hello");
-		  Component cp = new Component();
-		  cp.setName(Name);
-		  cp.setDescription(Desc);
-		  service.addComponent(cp);
-	  }*/
-	  
- 
- //API RICHIESTA ELENCO COMPONENTI
-/*  @RequestMapping(value="/tasks",method = RequestMethod.GET,headers="Accept=application/json")
-  public List<task> getAllTasks() {  
-   List<task> tasks=taskmanagerservice.getAllTasks();
-   return tasks;
-  }*/
- 
-
- 
- 
-/*  @RequestMapping(value="/tasks/{taskId}/{taskStatus}",method = RequestMethod.POST,headers="Accept=application/json")
-  public List<task> changeTaskStatus(@PathVariable int taskId,@PathVariable String taskStatus) throws ParseException { 
-   taskmanagerservice.changeTaskStatus(taskId,taskStatus);   
-   return taskmanagerservice.getAllTasks();
-  }*/
+	  //API tutte le metriche
+	  @RequestMapping(value="/metrics",method = RequestMethod.GET,headers="Accept=application/json")
+	  public List<Metric> getMetrics() throws ParseException { 
+		  
+		  List<Metric> m=service.getAllMetrics();
+		  return m;
+	  }
  
  
          

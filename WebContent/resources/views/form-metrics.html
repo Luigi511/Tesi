@@ -1,0 +1,141 @@
+<style>
+         table, th , td {
+            /* border: 0px solid grey; */
+            border-collapse: collapse;
+            padding: 2px;  
+         }
+         
+         .tabella_scomparsa table, th , td {
+            border: 0px solid grey;
+            border-collapse: collapse;
+            padding: 2px;  
+         }
+
+</style>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h2>Security Metrics Selection</h2>
+  </div>
+  <div class="panel-body ">
+    <div class="well">
+      In the table below you can see all the Security Controls that you have selected.
+    </div>
+    <table>
+    <tr>
+    	<td style="width: 9%; ">ID</td><td>Name</td><td align="center" style="width: 20%;">Component</td>
+    </tr>
+    <tr ng-repeat="ctr in controlselection ">
+    	<td valign="top">{{ctr.control}}</td><td>{{ctr.controlname}}</td><td valign="top" align="center">{{getcompname(ctr.component)}}</td>
+    </tr>
+    </table>
+    
+    
+  </div>
+  
+  <div class="panel-body ">
+    <div class="well">
+      Now you must choose the Metrics for Security Controls selected on the previous page.
+    </div>
+
+
+<table ng-repeat="met in metricheassociate" border="0">
+
+ <tr><td>
+
+    	<!-- tabella tipo1 (yes/no) -->
+    	<table class="tabella_scomparsa" ng-show="met.value=='yes / no'" border="1">
+    	<tr>
+    		<td width="50px"><b>{{met.nist}}</b></td>
+    		<td width="15%">{{met.metricname}}</td>
+    		<td>{{met.metricdescr}}<br><br>DO YOU WANT THIS METRIC? 
+    			<select id="mySelect" ng-model="met.outputYES_NO">
+    				<option value="yes">Yes</option>
+      				<option value="no">No</option>
+      			</select>
+    		
+    		</td>
+    		
+    	</tr>
+    	</table>
+    	
+    </td></tr>
+    <tr><td>
+    	<!-- tabella tipo2 (%) -->
+    	<table class="tabella_scomparsa" ng-show="(met.value=='integer')&&(met.unit=='%')"  border="1">
+    	<tr>
+    		<td width="50px"><b>{{met.nist}}</b></td>
+    		<td width="15%">{{met.metricname}}<br>{{(met.N)/(met.T)*100 | number:2}} %</td>
+    		<td>{{met.metricdescr}}<br><br>INPUT VALUES:<br>
+    		{{met.input1}}<br>{{met.input2}}
+    		<br>
+    		<table>
+    				
+    				<tr><td>N= 
+    				<input type="number" ng-model="met.N" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
+    				</td>
+    				<td>T= 
+    				<input type="number" ng-model="met.T" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
+    				</td>
+    				</tr>
+    				</table>
+    		</td>
+    		
+
+    	</tr>
+    	</table>
+    </td></tr>
+    
+    <tr><td>
+    	<!-- tabella tipo3 (numero semplice) -->
+    	<table class="tabella_scomparsa" ng-show="(met.value=='integer')&&(met.unit=='number')"  border="1">
+    	<tr>
+    		<td width="50px"><b>{{met.nist}}</b></td>
+    		<td width="15%">{{met.metricname}}</td>
+    		<td>{{met.metricdescr}}<br><br>PLEASE ENTER THE PARAMETER: 
+    			<input type="number" ng-model="met.N" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
+    		</td>
+    		
+    		
+    				
+    	</tr>
+    	</table>
+    </td></tr>
+    
+        <tr><td>
+    	<!-- tabella tipo4 (livelli) -->
+    	<table class="tabella_scomparsa" ng-show="(met.value=='integer')&&(met.unit=='levels')"  border="1">
+    	<tr>
+    		<td width="50px"><b>{{met.nist}}</b></td>
+    		<td width="15%">{{met.metricname}}</td>
+    		<td>{{met.metricdescr}}<br><br><span style="white-space:pre-line;">{{met.formula}}</span><br><br>CHOOSE A LEVEL: 
+    		   <input type="number" ng-model="met.N" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
+    		</td>
+
+    				
+    	</tr>
+    	</table>
+    </td></tr>
+    
+    
+    </table>
+  
+
+     
+       
+<br>       
+<button class="btn btn-primary pull-left" ng-click="savemetrics()">Save</button>
+<a href="#/negotiate/overview"><button class="btn btn-primary pull-right" ng-show="finito">Next</button></a>
+<br><br><br>    
+       
+       
+       
+
+  
+<!-- prova dati utente in cookie-->	
+{{user_name}} {{user_surname}} {{user_id}}          
+  </div>
+
+ 
+</div>
+    
