@@ -1373,6 +1373,9 @@ angular.module('SlaApp.negotiate.controllers', [])
 				val.Percent=(val.N/val.T)*100;
 				val.Percent=Math.round(val.Percent*100)/100;
 			}
+			if((val.N==0)&&(val.T==0)){
+				val.Percent=0;
+			}
 		});
 		
 		//salvataggio nel localstorage

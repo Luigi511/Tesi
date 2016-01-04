@@ -78,10 +78,10 @@
  
  <table ng-hide="boolean1" style="width: 100%; ">
  <tr>
- 	<td align="center">Id</td>
- 	<td align="center">Component name</td>
- 	<td align="center">Type</td>
- 	<td width='50%'>Description</td></tr>
+ 	<td align="center"><b>Id</b></td>
+ 	<td align="center"><b>Component name</b></td>
+ 	<td align="center"><b>Type</b></td>
+ 	<td width='50%'><b>Description</b></td></tr>
  	
  <tr ng-repeat="component in ListComponentFromDB">
  	<td align="center">{{component.id}}</td>
@@ -110,7 +110,7 @@
   
   
   <div class="panel panel-default" ng-repeat="component in ListComponentFromDB">
-  <h3>{{component.name}} ({{component.type}})</h3>
+  <h3 align="center">{{component.name}} ({{component.type}})</h3>
   <table style="width: 100%; ">
   	<tr ng-repeat="threat in ThreatFromDB | filter:component.type">
   		<td width="50"><input id="{{threat.name}}" type="checkbox" value="{{threat.name}}" 

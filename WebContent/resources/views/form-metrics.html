@@ -24,10 +24,10 @@
     </div>
     <table style="width:100%;">
     <tr>
-    	<td style="width: 9%; " align="center"><b>ID</b></td><td><b>Name</b></td><td align="center" style="width: 20%;"><b>Component</b></td>
+    	<td style="width: 9%; " ><b>ID</b></td><td><b>Name</b></td><td align="center" style="width: 20%;"><b>Component</b></td>
     </tr>
     <tr ng-repeat="ctr in controlselection ">
-    	<td valign="top">{{ctr.control}}</td><td>{{ctr.controlname}}</td><td valign="top" align="center">{{getcompname(ctr.component)}}</td>
+    	<td valign="top" >{{ctr.control}}</td><td>{{ctr.controlname}}</td><td valign="top" align="center">{{getcompname(ctr.component)}}</td>
     </tr>
     </table>
     
@@ -36,7 +36,7 @@
   
   <div class="panel-body ">
     <div class="well">
-      Now you must choose the Metrics for Security Controls selected on the previous page.
+      If there are associated metrics with your chosen Controls, now you must enter the appropriate parameters for each Security Metric.
     </div>
 
 
