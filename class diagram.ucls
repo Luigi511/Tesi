@@ -3,7 +3,7 @@
   realizations="true" associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
   <class id="1" language="java" name="server.Threat" project="threatapplication" 
     file="/threatapplication/src/server/Threat.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="358" width="200" x="1208" y="209"/>    
+    <position height="358" width="200" x="1357" y="27"/>    
     <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -12,7 +12,7 @@
   </class>  
   <class id="2" language="java" name="server.User" project="threatapplication" 
     file="/threatapplication/src/server/User.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1264" y="710"/>    
+    <position height="-1" width="-1" x="1428" y="721"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -21,7 +21,7 @@
   </class>  
   <class id="3" language="java" name="server.Photo" project="threatapplication" 
     file="/threatapplication/src/server/Photo.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1501" y="1048"/>    
+    <position height="-1" width="-1" x="1472" y="1071"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -30,7 +30,7 @@
   </class>  
   <class id="4" language="java" name="server.Controls" project="threatapplication" 
     file="/threatapplication/src/server/Controls.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="2136" y="411"/>    
+    <position height="-1" width="-1" x="2066" y="298"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -39,7 +39,7 @@
   </class>  
   <class id="5" language="java" name="server.ControlliSuggeriti" project="threatapplication" 
     file="/threatapplication/src/server/ControlliSuggeriti.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="2135" y="1095"/>    
+    <position height="-1" width="-1" x="2118" y="920"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -57,7 +57,7 @@
   </class>  
   <class id="7" language="java" name="server.Component" project="threatapplication" 
     file="/threatapplication/src/server/Component.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1695" y="1196"/>    
+    <position height="-1" width="-1" x="1304" y="1026"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -66,7 +66,7 @@
   </class>  
   <class id="8" language="java" name="server.AssociationControl" project="threatapplication" 
     file="/threatapplication/src/server/AssociationControl.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1912" y="1132"/>    
+    <position height="-1" width="-1" x="1899" y="1109"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -75,7 +75,7 @@
   </class>  
   <class id="9" language="java" name="server.Association" project="threatapplication" 
     file="/threatapplication/src/server/Association.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1304" y="1003"/>    
+    <position height="-1" width="-1" x="1681" y="1098"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -91,49 +91,62 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <dependency id="11">    
+  <class id="11" language="java" name="server.Metric" project="threatapplication" 
+    file="/threatapplication/src/server/Metric.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1224" y="424"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <dependency id="12">    
     <end type="SOURCE" refId="6"/>    
     <end type="TARGET" refId="5"/>  
   </dependency>  
-  <dependency id="12">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="7"/>  
-  </dependency>  
   <dependency id="13">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="1"/>  
-  </dependency>  
-  <dependency id="14">    
     <end type="SOURCE" refId="6"/>    
     <end type="TARGET" refId="4"/>  
   </dependency>  
+  <dependency id="14">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
   <dependency id="15">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <dependency id="16">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="9"/>  
+  </dependency>  
+  <dependency id="17">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="8"/>  
+  </dependency>  
+  <dependency id="18">    
     <end type="SOURCE" refId="6"/>    
     <end type="TARGET" refId="3"/>  
   </dependency>  
-  <association id="16">    
+  <dependency id="19">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="11"/>  
+  </dependency>  
+  <association id="20">    
     <end type="SOURCE" refId="10" navigable="false">      
-      <attribute id="17" name="service">        
+      <attribute id="21" name="service">        
         <position height="20" width="52" x="1699" y="402"/>      
       </attribute>      
-      <multiplicity id="18" minimum="0" maximum="1">        
+      <multiplicity id="22" minimum="0" maximum="1">        
         <position height="18" width="27" x="1757" y="404"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="6" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <dependency id="19">    
+  <dependency id="23">    
     <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="9"/>  
-  </dependency>  
-  <dependency id="20">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="8"/>  
-  </dependency>  
-  <dependency id="21">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="2"/>  
+    <end type="TARGET" refId="7"/>  
   </dependency>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
