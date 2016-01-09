@@ -1384,6 +1384,9 @@ angular.module('SlaApp.negotiate.controllers', [])
 		$scope.finito=true;
 		$cookieStore.put('finitometriche',$scope.finito);
 		
+		
+		
+		
 		//costruisco lo sla
 		$scope.capabilities='';
 		$scope.capability='';
@@ -1396,7 +1399,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 				$scope.controlstring='';$scope.controlstring2='';
 				var i=0;
 				
-				var stringacomp='<specs:COMPONENT name="'+valore.name+'" description="'+valore.description+'" >\n';
+				var stringacomp='\n<!-- COMPONENT name="'+valore.name+'" description="'+valore.description+'" -->\n';
 				
 				angular.forEach($scope.selection,function(v,c){
 					//per ogni threat
@@ -1453,11 +1456,59 @@ angular.module('SlaApp.negotiate.controllers', [])
 					}
 				});
 						
-				$scope.capability=$scope.capability+stringacomp+$scope.threatsss+'\n\n<!-- Other Controls selected-->\n<specs:controlFramework id="NIST_800_53_r4" frameworkName="NIST Control framework 800-53 rev. 4">'+$scope.controlstring2+'\n\n</specs:controlFramework>\n</specs:COMPONENT>\n\n\n\n\n';
+				$scope.capability=$scope.capability+stringacomp+$scope.threatsss+'\n\n<!-- Other Controls selected-->\n<specs:controlFramework id="NIST_800_53_r4" frameworkName="NIST Control framework 800-53 rev. 4">'+$scope.controlstring2+'\n\n</specs:controlFramework>\n\n\n';
 				$scope.threatsss='';$scope.controlstring2='';temp2='';
+				
+				
 			
 			});
-			$scope.capabilities=$scope.capability+'\n';
+			
+			//costruzione parte metriche
+			$scope.SLA_metriche='<specs:security_metrics>\n';
+			$scope.tempmet='';
+			
+			angular.forEach($scope.metricheassociate,function(val,ch){
+				
+				var start='\n\n<specs:Metric name="'+val.metricname+'">\n<specs:MetricDefinition>\n<specs:definition>'+val.metricdescr+'</specs:definition>\n';
+				var metric='';
+				var param='';
+				
+				//gestisco le 4 tipologie
+				switch(true){
+				
+				case(val.value=='yes / no'): 									
+					metric='<specs:expression></specs:expression>\n<specs:unit>\n<specs:intervalUnit>\n<intervalItemsType>'+val.value+'</intervalItemsType>\n<intervalItemStart></intervalItemStart>\n<intervalItemStop></intervalItemStop>\n<intervalItemStep></intervalItemStep>\n</specs:intervalUnit>\n</specs:unit>';
+					param='<specs:MetricParameters>\n<specs:MetricParameter>\n<specs:parameterDefinitionId></specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.outputYES_NO+'</specs:value>\n</specs:MetricParameter>\n</specs:MetricParameters>\n';
+					break;
+				
+				case((val.value=='integer')&&(val.unit=='%')):
+					metric='<specs:expression>'+val.formula+'</specs:expression>\n<specs:unit>\n<specs:intervalUnit>\n<intervalItemsType>'+val.value+'</intervalItemsType>\n<intervalItemStart>'+val.def+'</intervalItemStart>\n<intervalItemStop></intervalItemStop>\n<intervalItemStep></intervalItemStep>\n</specs:intervalUnit>\n</specs:unit>';
+					param='<specs:MetricParameters>\n<specs:MetricParameter>\n<specs:parameterDefinitionId>'+val.input1+'</specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.N+'</specs:value>\n</specs:MetricParameter>\n<specs:MetricParameter>\n<specs:parameterDefinitionId>'+val.input2+'</specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.T+'</specs:value>\n</specs:MetricParameter>\n<specs:MetricParameter>\n<specs:parameterDefinitionId>Result(%)</specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.Percent+'</specs:value>\n</specs:MetricParameter></specs:MetricParameters>\n';
+					break;
+				
+				case((val.value=='integer')&&(val.unit=='number')):
+					metric='<specs:unit>\n<specs:intervalUnit>\n<intervalItemsType>'+val.value+'</intervalItemsType>\n<intervalItemStart>'+val.def+'</intervalItemStart>\n<intervalItemStop></intervalItemStop>\n<intervalItemStep></intervalItemStep>\n</specs:intervalUnit>\n</specs:unit>';
+					param='<specs:MetricParameters>\n<specs:MetricParameter>\n<specs:parameterDefinitionId></specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.N+'</specs:value>\n</specs:MetricParameter>\n</specs:MetricParameters>\n';
+					break;
+					
+				case((val.value=='integer')&&(val.unit=='levels')): 			
+					metric='<specs:expression>\n'+val.formula+'</specs:expression>\n<specs:unit>\n<specs:intervalUnit>\n<intervalItemsType>'+val.value+'</intervalItemsType>\n<intervalItemStart>'+val.def+'</intervalItemStart>\n<intervalItemStop></intervalItemStop>\n<intervalItemStep></intervalItemStep>\n</specs:intervalUnit>\n</specs:unit>';
+					param='<specs:MetricParameters>\n<specs:MetricParameter>\n<specs:parameterDefinitionId></specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.N+'</specs:value>\n</specs:MetricParameter>\n</specs:MetricParameters>\n';
+					break;
+				
+				}
+				
+				var end=start+metric+'\n</specs:MetricDefinition>\n'+param+'</specs:Metric>\n\n';
+				$scope.tempmet=$scope.tempmet+end;
+				
+				
+			});
+			$scope.SLA_metriche=$scope.SLA_metriche+$scope.tempmet+'\n</specs:security_metrics>';
+			
+			
+			
+			//risultato finale
+			$scope.capabilities='\n<specs:capabilities>'+$scope.capability+'\n</specs:capabilities>\n\n'+$scope.SLA_metriche+'\n';
 			
 			//salvo lo SLA nel localstorage
 			localStorage.setItem("SLA", JSON.stringify($scope.capabilities));
@@ -1498,6 +1549,9 @@ angular.module('SlaApp.negotiate.controllers', [])
     	var urlBase="https://threatapplication.herokuapp.com";
     }
     
+    
+    $scope.stringa_template_pre='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<wsag:AgreementOffer xmlns:specs="http://specs-project.eu/schemas/SLAtemplate" xmlns:wsag="http://schemas.ggf.org/graap/2007/03/ws-agreement" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:nist="http://specs-project.eu/schemas/nist">\n    <wsag:Name>SPECS_TEMPLATE_NIST</wsag:Name>\n<wsag:Context>\n<wsag:AgreementInitiator>$SPECS-CUSTOMER</wsag:AgreementInitiator>\n<wsag:AgreementResponder>$SPECS-APPLICATION</wsag:AgreementResponder>\n<wsag:ServiceProvider>AgreementResponder</wsag:ServiceProvider>\n<wsag:ExpirationTime>2014-02-02T07:00:00+01:00</wsag:ExpirationTime>\n<wsag:TemplateName>SPECS_TEMPLATE_v1</wsag:TemplateName>\n</wsag:Context>\n<wsag:Terms>\n<wsag:All>\n<wsag:ServiceDescriptionTerm>\n<specs:serviceDescription>';
+    $scope.stringa_template_post='\n</specs:serviceDescription>\n</wsag:ServiceDescriptionTerm>\n</wsag:All>\n</wsag:Terms>\n</wsag:AgreementOffer>';
     
 
 	$scope.submitSLA=function(){
