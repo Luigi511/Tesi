@@ -227,7 +227,7 @@ input[type=checkbox] {
 						<br><u>Stride</u>: <b>{{tr.stride}}</b> | <u>Risk</u>: <b>{{tr.risk}}</b>
 						<br><u>Description</u>: {{tr.description}}
 						</p>
-						<tr ng-repeat="c in controllisuggeriti | filter:{threatname:tr.threat}"><!-- style="border: 1px solid black;" -->
+						<tr ng-repeat="c in controllisuggeriti | filter:{hreatid:tr.threatid} | filter:{threatname:tr.threat}"><!-- style="border: 1px solid black;" -->
 							<td width="5%"><input type="checkbox"
 											ng-click="toggleSelection(c.control,c.controlname, component.id, c.controldesc,tr.threatid)" 
 											ng-checked="find(c.control, component.id)" 
