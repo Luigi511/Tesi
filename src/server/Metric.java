@@ -15,6 +15,7 @@ public class Metric {
 	private String max;
 	private String operator;
 	private String nistcontrol;
+	private String componente_id;
 	
 	public void setid(int m){this.idmetrics=m;}
 	public void setname(String n){this.metricname=n;}
@@ -29,6 +30,7 @@ public class Metric {
 	public void setmax(String ma){this.max=ma;}
 	public void setope(String op){this.operator=op;}
 	public void setnist(String ni){this.nistcontrol=ni;}
+	public void setcomponenteid(String cid){this.componente_id=cid;}
 	
 	
 	public int getid(){return idmetrics;}
@@ -44,6 +46,7 @@ public class Metric {
 	public String getmax(){return max;}
 	public String getop(){return operator;}
 	public String getnist(){return nistcontrol;}
+	public String getcomponenteid(){return componente_id;}
 	
 
 }

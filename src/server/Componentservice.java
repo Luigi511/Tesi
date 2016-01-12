@@ -376,7 +376,7 @@ public List<Metric> getAllMetrics() {
 	System.out.println("prova");
 	
 	try {
-		  PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM metrics");
+		  PreparedStatement preparedStatement = connection.prepareStatement("SELECT metrics.*,controls_selected_by_users.componente_id FROM metrics,controls_selected_by_users where metrics.nistcontrol=controls_selected_by_users.controlloscelto_id");
 		  ResultSet rs = preparedStatement.executeQuery();
 		  while (rs.next()) {
 			  Metric mm=new Metric();
@@ -393,6 +393,7 @@ public List<Metric> getAllMetrics() {
 			  mm.setmax(rs.getString("max"));
 			  mm.setope(rs.getString("operator"));
 			  mm.setnist(rs.getString("nistcontrol"));
+			  mm.setcomponenteid(rs.getString("componente_id"));
 
 			  m.add(mm);
 			  

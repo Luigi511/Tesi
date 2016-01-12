@@ -1358,72 +1358,63 @@ angular.module('SlaApp.negotiate.controllers', [])
 	});
 	
 	$scope.getcompname= function(idcomponente){
-		
+		$scope.nomecomp='';
 		angular.forEach($scope.ListComponentFromDB,function(valore,chiave){
-			
+
 			if(valore.id==idcomponente){
 				$scope.nomecomp=valore.name;
 			}
-		});
+		});		
 		return $scope.nomecomp;
 	}
 	
 	
 	
-    //prelevo le metriche
+    //prelevo le metriche già associate agli utenti (non l'elenco completo).....poi devi filtrare per componente
 	$scope.ListMetrics = [];
 	$http.get(urlBase+"/rest/metrics").
 		success(function(dat) {
 			$scope.ListMetrics = dat;
 			console.log('metriche prelevate');
 			if($scope.finito!=true){
-				
-					$scope.metricheassociate=[];
 					//inizializzazione dati metriche in tabella
-					angular.forEach($scope.controlselection,function(val,ch){
-						
-						angular.forEach($scope.ListMetrics,function(temp,c){
-							
-							if(temp.nist==val.control){
-								//solo se c'è matching allora inizializzo e poi inserisco nell'elenco
+					angular.forEach($scope.ListMetrics,function(temp,c){
 
-									if(temp.value=='yes / no'){ //tipo 1
+								switch(true){
+								case(temp.value=='yes / no'): //tipo 1
 							
 										if((temp.def=='yes')||(temp.def=='no')){
 										temp.outputYES_NO=temp.def;}
-									}
+										break;
+									
 						
-									if((temp.value=='integer')&&(temp.unit=='%')){ //tipo 2
+								case((temp.value=='integer')&&(temp.unit=='%')): //tipo 2
 										temp.N=0;
 										temp.T=0;
-									}
+										break;
+								
 						
-									if((temp.value=='integer')&&(temp.unit=='number')){ //tipo 3
+								case((temp.value=='integer')&&(temp.unit=='number')): //tipo 3
 							
 										if(temp.def!='n/a'){temp.N=parseInt(temp.def, 10);}
-									}
+										break;
 									
-									if((temp.value=='integer')&&(temp.unit=='levels')){ //tipo 4
+								case((temp.value=='integer')&&(temp.unit=='levels')): //tipo 4
 										
 										if(temp.def!='n/a'){temp.N=parseInt(temp.def, 10);}
-									}
+										break;
 								
-									
-									
-								$scope.metricheassociate.push({
-									'componente':val.component,
-									'metrica':temp,
-								});
-								
-							}
-						});
+								}	
+	
 					});
 					//elenco=_.uniq(elenco, JSON.stringify); //provo ad ignorare i duplicati
 					//console.log(elenco);
 
 					console.log('metriche inizializzate');
+					$scope.metricheassociate=$scope.ListMetrics;
 			}
 	});
+	
 	
 	
 	//mi restituisce la metrica associata al controllo di sicurezza
@@ -1441,12 +1432,12 @@ angular.module('SlaApp.negotiate.controllers', [])
 		
 		angular.forEach($scope.metricheassociate,function(val,ch){
 			//calcolo le percentuali
-			if((val.metrica.N!=undefined)&&(val.metrica.T!=undefined)){
-				val.metrica.Percent=(val.metrica.N/val.metrica.T)*100;
-				val.metrica.Percent=Math.round(val.metrica.Percent*100)/100;
+			if((val.N!=undefined)&&(val.T!=undefined)){
+				val.Percent=(val.N/val.T)*100;
+				val.Percent=Math.round(val.Percent*100)/100;
 			}
-			if((val.metrica.N==0)&&(val.metrica.T==0)){
-				val.metrica.Percent=0;
+			if((val.N==0)&&(val.T==0)){
+				val.Percent=0;
 			}
 		});
 		
@@ -1545,33 +1536,33 @@ angular.module('SlaApp.negotiate.controllers', [])
 					
 				angular.forEach($scope.metricheassociate,function(val,ch2){
 				//verifico se la metrica è associata al componente		
-				if(val.componente==valore.id){
+				if(val.componenteid==valore.id){
 					
-					var start='\n\n<specs:Metric name="'+val.metrica.metricname+'">\n<specs:MetricDefinition>\n<specs:definition>'+val.metrica.metricdescr+'</specs:definition>\n';
+					var start='\n\n<specs:Metric name="'+val.metricname+'">\n<specs:MetricDefinition>\n<specs:definition>'+val.metricdescr+'</specs:definition>\n';
 					var metric='';
 					var param='';
 					
 					//gestisco le 4 tipologie
 					switch(true){
 					
-					case(val.metrica.value=='yes / no'): 									
-						metric='<specs:expression></specs:expression>\n<specs:unit>\n<specs:intervalUnit>\n<intervalItemsType>'+val.metrica.value+'</intervalItemsType>\n<intervalItemStart></intervalItemStart>\n<intervalItemStop></intervalItemStop>\n<intervalItemStep></intervalItemStep>\n</specs:intervalUnit>\n</specs:unit>';
-						param='<specs:MetricParameters>\n<specs:MetricParameter>\n<specs:parameterDefinitionId></specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.metrica.outputYES_NO+'</specs:value>\n</specs:MetricParameter>\n</specs:MetricParameters>\n';
+					case(val.value=='yes / no'): 									
+						metric='<specs:expression></specs:expression>\n<specs:unit>\n<specs:intervalUnit>\n<intervalItemsType>'+val.value+'</intervalItemsType>\n<intervalItemStart></intervalItemStart>\n<intervalItemStop></intervalItemStop>\n<intervalItemStep></intervalItemStep>\n</specs:intervalUnit>\n</specs:unit>';
+						param='<specs:MetricParameters>\n<specs:MetricParameter>\n<specs:parameterDefinitionId></specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.outputYES_NO+'</specs:value>\n</specs:MetricParameter>\n</specs:MetricParameters>\n';
 						break;
 					
-					case((val.metrica.value=='integer')&&(val.metrica.unit=='%')):
-						metric='<specs:expression>'+val.metrica.formula+'</specs:expression>\n<specs:unit>\n<specs:intervalUnit>\n<intervalItemsType>'+val.metrica.value+'</intervalItemsType>\n<intervalItemStart>'+val.metrica.def+'</intervalItemStart>\n<intervalItemStop></intervalItemStop>\n<intervalItemStep></intervalItemStep>\n</specs:intervalUnit>\n</specs:unit>';
-						param='<specs:MetricParameters>\n<specs:MetricParameter>\n<specs:parameterDefinitionId>'+val.metrica.input1+'</specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.metrica.N+'</specs:value>\n</specs:MetricParameter>\n<specs:MetricParameter>\n<specs:parameterDefinitionId>'+val.metrica.input2+'</specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.metrica.T+'</specs:value>\n</specs:MetricParameter>\n<specs:MetricParameter>\n<specs:parameterDefinitionId>Result(%)</specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.metrica.Percent+'</specs:value>\n</specs:MetricParameter></specs:MetricParameters>\n';
+					case((val.value=='integer')&&(val.unit=='%')):
+						metric='<specs:expression>'+val.formula+'</specs:expression>\n<specs:unit>\n<specs:intervalUnit>\n<intervalItemsType>'+val.value+'</intervalItemsType>\n<intervalItemStart>'+val.def+'</intervalItemStart>\n<intervalItemStop></intervalItemStop>\n<intervalItemStep></intervalItemStep>\n</specs:intervalUnit>\n</specs:unit>';
+						param='<specs:MetricParameters>\n<specs:MetricParameter>\n<specs:parameterDefinitionId>'+val.input1+'</specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.N+'</specs:value>\n</specs:MetricParameter>\n<specs:MetricParameter>\n<specs:parameterDefinitionId>'+val.input2+'</specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.T+'</specs:value>\n</specs:MetricParameter>\n<specs:MetricParameter>\n<specs:parameterDefinitionId>Result(%)</specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.Percent+'</specs:value>\n</specs:MetricParameter></specs:MetricParameters>\n';
 						break;
 					
-					case((val.metrica.value=='integer')&&(val.metrica.unit=='number')):
-						metric='<specs:unit>\n<specs:intervalUnit>\n<intervalItemsType>'+val.metrica.value+'</intervalItemsType>\n<intervalItemStart>'+val.metrica.def+'</intervalItemStart>\n<intervalItemStop></intervalItemStop>\n<intervalItemStep></intervalItemStep>\n</specs:intervalUnit>\n</specs:unit>';
-						param='<specs:MetricParameters>\n<specs:MetricParameter>\n<specs:parameterDefinitionId></specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.metrica.N+'</specs:value>\n</specs:MetricParameter>\n</specs:MetricParameters>\n';
+					case((val.value=='integer')&&(val.unit=='number')):
+						metric='<specs:unit>\n<specs:intervalUnit>\n<intervalItemsType>'+val.value+'</intervalItemsType>\n<intervalItemStart>'+val.def+'</intervalItemStart>\n<intervalItemStop></intervalItemStop>\n<intervalItemStep></intervalItemStep>\n</specs:intervalUnit>\n</specs:unit>';
+						param='<specs:MetricParameters>\n<specs:MetricParameter>\n<specs:parameterDefinitionId></specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.N+'</specs:value>\n</specs:MetricParameter>\n</specs:MetricParameters>\n';
 						break;
 						
-					case((val.metrica.value=='integer')&&(val.metrica.unit=='levels')): 			
-						metric='<specs:expression>\n'+val.metrica.formula+'</specs:expression>\n<specs:unit>\n<specs:intervalUnit>\n<intervalItemsType>'+val.metrica.value+'</intervalItemsType>\n<intervalItemStart>'+val.metrica.def+'</intervalItemStart>\n<intervalItemStop></intervalItemStop>\n<intervalItemStep></intervalItemStep>\n</specs:intervalUnit>\n</specs:unit>';
-						param='<specs:MetricParameters>\n<specs:MetricParameter>\n<specs:parameterDefinitionId></specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.metrica.N+'</specs:value>\n</specs:MetricParameter>\n</specs:MetricParameters>\n';
+					case((val.value=='integer')&&(val.unit=='levels')): 			
+						metric='<specs:expression>\n'+val.formula+'</specs:expression>\n<specs:unit>\n<specs:intervalUnit>\n<intervalItemsType>'+val.value+'</intervalItemsType>\n<intervalItemStart>'+val.def+'</intervalItemStart>\n<intervalItemStop></intervalItemStop>\n<intervalItemStep></intervalItemStep>\n</specs:intervalUnit>\n</specs:unit>';
+						param='<specs:MetricParameters>\n<specs:MetricParameter>\n<specs:parameterDefinitionId></specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.N+'</specs:value>\n</specs:MetricParameter>\n</specs:MetricParameters>\n';
 						break;
 					
 					}
