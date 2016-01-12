@@ -206,7 +206,7 @@ a.tip2:hover span {
   	<h3 align="center">{{component.name}} ({{component.type}})</h3><br>
   	<table  style="width: 100%;border:1px solid grey;">
 
-  		<tr ng-repeat='threat in selection | filter:component.id' style="border:1px solid grey;">
+  		<tr ng-repeat='threat in selection | filter:{componentid:component.id}' style="border:1px solid grey;">
   			<td width="10%"><a class="tip2">{{threat.threat}}<br>({{threat.stride}})<span>{{threat.description}}</span></a></td>
   			<td align="center"><b>OVERALL RISK SEVERITY = {{threat.risk}}</b>
   			

@@ -25,12 +25,14 @@ angular.module('SlaApp.controllers', [])
 		$cookieStore.remove('controls');
 		$cookieStore.remove('tastoselezionatutto');
 		$cookieStore.remove('finitometriche');
+		$cookieStore.remove('questionario');
 		
 		localStorage.removeItem('imgData');
 		localStorage.removeItem('selection');
 		localStorage.removeItem('controlselection');
 		localStorage.removeItem('SLA');
 		localStorage.removeItem('metriche');
+		localStorage.removeItem('threatlist');
 		console.log("cookie rimossi");
 	  
 	  
@@ -526,6 +528,7 @@ angular.module('SlaApp.negotiate.controllers', [])
     $scope.user_id=			$cookieStore.get('id_utente');
     $scope.boolean1=		$cookieStore.get('check1'); //se la foto c'è allora è true
     $scope.booleanthreat=	$cookieStore.get('buttonthreat');
+    $scope.questionario=	$cookieStore.get('questionario');
     
     if($location.$$host=='localhost'){
     	var urlBase="http://localhost:8080/TESI";
@@ -537,14 +540,14 @@ angular.module('SlaApp.negotiate.controllers', [])
     
     //$scope.selection=$cookieStore.get('selection');
     $scope.selection=JSON.parse(localStorage.getItem('selection'));
+    $scope.ThreatFromDB=JSON.parse(localStorage.getItem('threatlist'));
+    
     
     if($scope.selection==null){
     	$scope.selection=[];
     }
    
-   
-    
-    
+
     console.log("utente="+$scope.user_name+" "+$scope.user_surname+" id= "+$scope.user_id);
     
     //recupero la foto dal localstorage (invece che dal db)
@@ -553,14 +556,45 @@ angular.module('SlaApp.negotiate.controllers', [])
     bannerImg.src = "data:image/png;base64," + dataImage;
     
     
+    $scope.options = [{ label: 'NO', val: false }, { label: 'YES', val: true }];
+    
     //prevelo tutti i threats
     $scope.getThreats = function() {
     	$http.get(urlBase+"/rest/threats").
     		success(function(result) {
     			$scope.ThreatFromDB = result;
-    			console.log('threat prelevati');		    			
+    			console.log('threat prelevati');
+    			//inizializzazione parametri di visualizzazione
+    			angular.forEach($scope.ThreatFromDB,function(value,key){
+    				value.show='true';
+    			});
     		});
     };
+    
+    $scope.mostraThreat= function(valore){
+    	if(valore=='true'){
+    		return true;
+    	}
+    	else {
+    		return false;
+    	}
+    }
+    
+    $scope.nonMostrareALL=function(valore){
+    	if(valore=='all'){
+    		return true;
+    	}else {return false;}
+    }
+    
+    $scope.sendquestionnaire=function(){
+    	$scope.questionario=true;
+    	$cookieStore.put('questionario',$scope.questionario);
+	   	//salvo anche i threat con il questionario nel localstorage
+	   	localStorage.setItem("threatlist", JSON.stringify($scope.ThreatFromDB));
+    	
+    	$window.location.reload();
+    	
+    }
     
     
   //prelevo i componenti dell'utente
@@ -576,8 +610,11 @@ angular.module('SlaApp.negotiate.controllers', [])
 			//ho deciso di prelevarli tutti direttamente per poi filtrarli (più semplice)		
 	});
 	
-
-	$scope.getThreats(); //carico tutti i threats
+	//se non sono nel localstorage allora li carico dal db
+    if($scope.ThreatFromDB==null){
+    	$scope.getThreats(); //carico tutti i threats
+    }
+	
 	
 	//$scope.selection = [];
 	//funzione ricerca doppia
@@ -589,7 +626,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 	}
 	
 	//raccolgo i threat selezionati
-	  $scope.toggleSelection = function toggleSelection(componentName,componentid,threatName,threatid,stride,descr) {
+	  $scope.toggleSelection = function toggleSelection(componentName,componentid,threatName,threatid,stride,descr,sourc) {
 		  	
 		  	var idx = arrayObjectIndexOf($scope.selection,componentName,'component',threatName,'threat');
 	   		// is currently selected
@@ -605,6 +642,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 	   		    			   	'threatid':threatid,
 	   		    			   	'stride':stride,
 	   		    			   	'description':descr,
+	   		    			   	'source':sourc,
 	   		    				
 	   		    			   	'skill':0,
 	   		    			   	'motive':0,
@@ -667,6 +705,9 @@ angular.module('SlaApp.negotiate.controllers', [])
 	   
 	   
 	   function saveSelection2(){
+		   	
+		   	//salvo anche i threat con il questionario nel localstorage
+		   	localStorage.setItem("threatlist", JSON.stringify($scope.ThreatFromDB));
 		   
 			   localStorage.setItem("selection", JSON.stringify($scope.selection));
 			   localStorage.removeItem('controlselection'); //pulizia per dopo...
@@ -728,7 +769,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 			   //per ogni componente
 			   angular.forEach($scope.ThreatFromDB,function(threat,key2){
 				   //per ogni threat
-				   if(comp.type==threat.cat){
+				   if((comp.type==threat.cat)&&(threat.show=='true')){
 					   
 					   $scope.selection.push(
 		   		    		   {	'component':comp.name,
@@ -737,6 +778,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 		   		    			   	'threatid':threat.idThreat,
 		   		    			   	'stride':threat.stride,
 		   		    			   	'description':threat.descr,
+		   		    			   	'source':threat.source,
 		   		    				
 		   		    			   	'skill':0,
 		   		    			   	'motive':0,
@@ -1229,6 +1271,45 @@ angular.module('SlaApp.negotiate.controllers', [])
 		}
 
 	
+		
+		//funzione di selezione di tutti i controlli required
+		$scope.selezionatuttiRequired= function(){
+			angular.forEach($scope.ListComponentFromDB, function(componente, key1){
+				
+				angular.forEach($scope.selection, function(threat, key2){
+					
+					if(threat.componentid==componente.id){
+					angular.forEach($scope.controllisuggeriti, function(controllo, key3){
+						
+						if(controllo.hreatid==threat.threatid){
+							
+							if(threat.riskNum>=controllo.minrisk){
+								
+								//devo selezionarlo
+								$scope.toggleSelection(controllo.control,controllo.controlname, componente.id, controllo.controldesc,threat.threatid);
+							}
+							
+						}
+						
+					});
+					}
+				});
+			});
+	
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
    
 })
 
@@ -1264,6 +1345,10 @@ angular.module('SlaApp.negotiate.controllers', [])
     }
 
 
+    $scope.SLAs=[];
+    
+    
+    
     //prelevo i componenti dell'utente
 	$scope.ListComponentFromDB = [];
 	$http.get(urlBase+"/rest/components/"+$scope.user_id).
@@ -1285,62 +1370,6 @@ angular.module('SlaApp.negotiate.controllers', [])
 	
 	
 	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	$scope.inizializza=function(listametriche){
-		
-	var elenco=[];
-	//inizializzazione dati metriche in tabella
-	angular.forEach($scope.controlselection,function(val,ch){
-		
-		var temp;//ricavo la metrica associata
-		
-		angular.forEach(listametriche,function(v,c){
-			if(v.nist==val.control){
-				temp=v;
-
-				
-				if(temp.value=='yes / no'){ //tipo 1
-			
-					if((temp.def=='yes')||(temp.def=='no')){
-						temp.outputYES_NO=temp.def;}
-					}
-		
-					if((temp.value=='integer')&&(temp.unit=='%')){ //tipo 2
-						temp.N=0;
-						temp.T=0;
-					}
-		
-					if((temp.value=='integer')&&(temp.unit=='number')){ //tipo 3
-			
-						if(temp.def!='n/a'){temp.N=parseInt(temp.def, 10);}
-					}
-					
-					if((temp.value=='integer')&&(temp.unit=='levels')){ //tipo 4
-						
-						if(temp.def!='n/a'){temp.N=parseInt(temp.def, 10);}
-					}
-				
-				elenco.push(temp);
-			}
-		});
-		
-	});
-	elenco=_.uniq(elenco, JSON.stringify);
-	console.log(elenco);
-	return elenco;
-	}
-	
-	
-	
     //prelevo le metriche
 	$scope.ListMetrics = [];
 	$http.get(urlBase+"/rest/metrics").
@@ -1348,8 +1377,51 @@ angular.module('SlaApp.negotiate.controllers', [])
 			$scope.ListMetrics = dat;
 			console.log('metriche prelevate');
 			if($scope.finito!=true){
-				$scope.metricheassociate=$scope.inizializza($scope.ListMetrics); //inizializzo e filtro
-				console.log('metriche inizializzate');
+				
+					$scope.metricheassociate=[];
+					//inizializzazione dati metriche in tabella
+					angular.forEach($scope.controlselection,function(val,ch){
+						
+						angular.forEach($scope.ListMetrics,function(temp,c){
+							
+							if(temp.nist==val.control){
+								//solo se c'è matching allora inizializzo e poi inserisco nell'elenco
+
+									if(temp.value=='yes / no'){ //tipo 1
+							
+										if((temp.def=='yes')||(temp.def=='no')){
+										temp.outputYES_NO=temp.def;}
+									}
+						
+									if((temp.value=='integer')&&(temp.unit=='%')){ //tipo 2
+										temp.N=0;
+										temp.T=0;
+									}
+						
+									if((temp.value=='integer')&&(temp.unit=='number')){ //tipo 3
+							
+										if(temp.def!='n/a'){temp.N=parseInt(temp.def, 10);}
+									}
+									
+									if((temp.value=='integer')&&(temp.unit=='levels')){ //tipo 4
+										
+										if(temp.def!='n/a'){temp.N=parseInt(temp.def, 10);}
+									}
+								
+									
+									
+								$scope.metricheassociate.push({
+									'componente':val.component,
+									'metrica':temp,
+								});
+								
+							}
+						});
+					});
+					//elenco=_.uniq(elenco, JSON.stringify); //provo ad ignorare i duplicati
+					//console.log(elenco);
+
+					console.log('metriche inizializzate');
 			}
 	});
 	
@@ -1357,8 +1429,8 @@ angular.module('SlaApp.negotiate.controllers', [])
 	//mi restituisce la metrica associata al controllo di sicurezza
 	$scope.getmetric= function(controllo){
 		angular.forEach($scope.metricheassociate,function(val,ch){
-			if(val.nist==controllo){
-				$scope.metrica=val;
+			if(val.metrica.nist==controllo){
+				$scope.metrica=val.metrica;
 			}
 		});
 		return $scope.metrica;
@@ -1369,12 +1441,12 @@ angular.module('SlaApp.negotiate.controllers', [])
 		
 		angular.forEach($scope.metricheassociate,function(val,ch){
 			//calcolo le percentuali
-			if((val.N!=undefined)&&(val.T!=undefined)){
-				val.Percent=(val.N/val.T)*100;
-				val.Percent=Math.round(val.Percent*100)/100;
+			if((val.metrica.N!=undefined)&&(val.metrica.T!=undefined)){
+				val.metrica.Percent=(val.metrica.N/val.metrica.T)*100;
+				val.metrica.Percent=Math.round(val.metrica.Percent*100)/100;
 			}
-			if((val.N==0)&&(val.T==0)){
-				val.Percent=0;
+			if((val.metrica.N==0)&&(val.metrica.T==0)){
+				val.metrica.Percent=0;
 			}
 		});
 		
@@ -1383,23 +1455,23 @@ angular.module('SlaApp.negotiate.controllers', [])
 		console.log("metriche salvate nel localstorage");
 		$scope.finito=true;
 		$cookieStore.put('finitometriche',$scope.finito);
-		
-		
-		
+	
+
 		
 		//costruisco lo sla
 		$scope.capabilities='';
 		$scope.capability='';
 		$scope.threatsss='';
+		$scope.musaThreat='';
 		
-		$scope.getSLA=function(){
+		
 			
 			angular.forEach($scope.ListComponentFromDB,function(valore,chiave){
 				
-				$scope.controlstring='';$scope.controlstring2='';
+				$scope.controlstring='';$scope.controlstring2='';$scope.musaThreat='';
 				var i=0;
 				
-				var stringacomp='\n<!-- COMPONENT name="'+valore.name+'" description="'+valore.description+'" -->\n';
+				
 				
 				angular.forEach($scope.selection,function(v,c){
 					//per ogni threat
@@ -1407,9 +1479,14 @@ angular.module('SlaApp.negotiate.controllers', [])
 					
 					if(v.componentid==valore.id){ //match idcomponente nelle 2 liste
 						
-						var string='<specs:capability name="'+v.threat+'" description="'+v.description+'" >'+'\n'+
+						/*var string='<specs:capability name="'+v.threat+'" description="'+v.description+'" >'+'\n'+
+						'<specs:controlFramework id="NIST_800_53_r4" frameworkName="NIST Control framework 800-53 rev. 4">';*/
+						
+						$scope.stringcapability='<specs:capability name="'+'" description="'+'" >'+'\n'+
 						'<specs:controlFramework id="NIST_800_53_r4" frameworkName="NIST Control framework 800-53 rev. 4">';
-				
+						
+						$scope.musaThreat=$scope.musaThreat+'<MUSA:Threat name="'+v.threat+'" source="'+v.source+'"/>\n';
+						
 						angular.forEach($scope.controlselection,function(val,ch){
 							
 					
@@ -1423,7 +1500,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 								var code=val.control.charAt(3)+cifra2;
 						
 						
-								var temp='\n\n<specs:securityControl nist:id="'+val.control+'"\nnist:name="'+val.controlname+'"\nnist:securityControl="'+code+'"nist:control_family="'+family+'>\n<specs:description> '+val.description+'\n</specs:description>\n<specs:importance_weight> '+v.risk+' </specs:importance_weight>\n</specs:securityControl>';
+								var temp='\n<specs:securityControl nist:id="'+val.control+'"\nnist:name="'+val.controlname+'"\nnist:securityControl="'+code+'"nist:control_family="'+family+'>\n<specs:description> '+val.description+'\n</specs:description>\n<specs:importance_weight> '+v.risk+' </specs:importance_weight>\n</specs:securityControl>';
 								$scope.controlstring=$scope.controlstring+temp;
 							}
 							else{
@@ -1438,7 +1515,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 									var code=val.control.charAt(3)+cifra2;
 							
 							
-									var temp2='\n\n<specs:securityControl nist:id="'+val.control+'"\nnist:name="'+val.controlname+'"\nnist:securityControl="'+code+'"nist:control_family="'+family+'>\n<specs:description> '+val.description+'\n</specs:description>\n</specs:securityControl>';
+									var temp2='\n<specs:securityControl nist:id="'+val.control+'"\nnist:name="'+val.controlname+'"\nnist:securityControl="'+code+'"nist:control_family="'+family+'>\n<specs:description> '+val.description+'\n</specs:description>\n</specs:securityControl>';
 									$scope.controlstring2=$scope.controlstring2+temp2;
 								}
 								
@@ -1448,76 +1525,94 @@ angular.module('SlaApp.negotiate.controllers', [])
 						});i++; //mi serve per scaricarmi i controlli aggiuntivi solo una volta!
 						
 
+
 						
 						
 						
-						$scope.threatsss=$scope.threatsss+'\n'+string+$scope.controlstring+'\n</specs:controlFramework>\n</specs:capability>\n';
+						
+						$scope.threatsss=$scope.threatsss+'\n'+$scope.controlstring+'\n';
 						$scope.controlstring=''; temp='';
 					}
 				});
 						
-				$scope.capability=$scope.capability+stringacomp+$scope.threatsss+'\n\n<!-- Other Controls selected-->\n<specs:controlFramework id="NIST_800_53_r4" frameworkName="NIST Control framework 800-53 rev. 4">'+$scope.controlstring2+'\n\n</specs:controlFramework>\n\n\n';
+				$scope.capability=$scope.threatsss+'<!-- Other Controls selected-->\n'+$scope.controlstring2+'\n\n</specs:controlFramework>\n</specs:capability>\n\n';
 				$scope.threatsss='';$scope.controlstring2='';temp2='';
 				
 				
-			
-			});
-			
-			//costruzione parte metriche
-			$scope.SLA_metriche='<specs:security_metrics>\n';
-			$scope.tempmet='';
-			
-			angular.forEach($scope.metricheassociate,function(val,ch){
-				
-				var start='\n\n<specs:Metric name="'+val.metricname+'">\n<specs:MetricDefinition>\n<specs:definition>'+val.metricdescr+'</specs:definition>\n';
-				var metric='';
-				var param='';
-				
-				//gestisco le 4 tipologie
-				switch(true){
-				
-				case(val.value=='yes / no'): 									
-					metric='<specs:expression></specs:expression>\n<specs:unit>\n<specs:intervalUnit>\n<intervalItemsType>'+val.value+'</intervalItemsType>\n<intervalItemStart></intervalItemStart>\n<intervalItemStop></intervalItemStop>\n<intervalItemStep></intervalItemStep>\n</specs:intervalUnit>\n</specs:unit>';
-					param='<specs:MetricParameters>\n<specs:MetricParameter>\n<specs:parameterDefinitionId></specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.outputYES_NO+'</specs:value>\n</specs:MetricParameter>\n</specs:MetricParameters>\n';
-					break;
-				
-				case((val.value=='integer')&&(val.unit=='%')):
-					metric='<specs:expression>'+val.formula+'</specs:expression>\n<specs:unit>\n<specs:intervalUnit>\n<intervalItemsType>'+val.value+'</intervalItemsType>\n<intervalItemStart>'+val.def+'</intervalItemStart>\n<intervalItemStop></intervalItemStop>\n<intervalItemStep></intervalItemStep>\n</specs:intervalUnit>\n</specs:unit>';
-					param='<specs:MetricParameters>\n<specs:MetricParameter>\n<specs:parameterDefinitionId>'+val.input1+'</specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.N+'</specs:value>\n</specs:MetricParameter>\n<specs:MetricParameter>\n<specs:parameterDefinitionId>'+val.input2+'</specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.T+'</specs:value>\n</specs:MetricParameter>\n<specs:MetricParameter>\n<specs:parameterDefinitionId>Result(%)</specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.Percent+'</specs:value>\n</specs:MetricParameter></specs:MetricParameters>\n';
-					break;
-				
-				case((val.value=='integer')&&(val.unit=='number')):
-					metric='<specs:unit>\n<specs:intervalUnit>\n<intervalItemsType>'+val.value+'</intervalItemsType>\n<intervalItemStart>'+val.def+'</intervalItemStart>\n<intervalItemStop></intervalItemStop>\n<intervalItemStep></intervalItemStep>\n</specs:intervalUnit>\n</specs:unit>';
-					param='<specs:MetricParameters>\n<specs:MetricParameter>\n<specs:parameterDefinitionId></specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.N+'</specs:value>\n</specs:MetricParameter>\n</specs:MetricParameters>\n';
-					break;
+				//costruzione parte metriche
+				$scope.SLA_metriche='<specs:security_metrics>\n';
+				$scope.tempmet='';
 					
-				case((val.value=='integer')&&(val.unit=='levels')): 			
-					metric='<specs:expression>\n'+val.formula+'</specs:expression>\n<specs:unit>\n<specs:intervalUnit>\n<intervalItemsType>'+val.value+'</intervalItemsType>\n<intervalItemStart>'+val.def+'</intervalItemStart>\n<intervalItemStop></intervalItemStop>\n<intervalItemStep></intervalItemStep>\n</specs:intervalUnit>\n</specs:unit>';
-					param='<specs:MetricParameters>\n<specs:MetricParameter>\n<specs:parameterDefinitionId></specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.N+'</specs:value>\n</specs:MetricParameter>\n</specs:MetricParameters>\n';
-					break;
+				angular.forEach($scope.metricheassociate,function(val,ch2){
+				//verifico se la metrica è associata al componente		
+				if(val.componente==valore.id){
+					
+					var start='\n\n<specs:Metric name="'+val.metrica.metricname+'">\n<specs:MetricDefinition>\n<specs:definition>'+val.metrica.metricdescr+'</specs:definition>\n';
+					var metric='';
+					var param='';
+					
+					//gestisco le 4 tipologie
+					switch(true){
+					
+					case(val.metrica.value=='yes / no'): 									
+						metric='<specs:expression></specs:expression>\n<specs:unit>\n<specs:intervalUnit>\n<intervalItemsType>'+val.metrica.value+'</intervalItemsType>\n<intervalItemStart></intervalItemStart>\n<intervalItemStop></intervalItemStop>\n<intervalItemStep></intervalItemStep>\n</specs:intervalUnit>\n</specs:unit>';
+						param='<specs:MetricParameters>\n<specs:MetricParameter>\n<specs:parameterDefinitionId></specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.metrica.outputYES_NO+'</specs:value>\n</specs:MetricParameter>\n</specs:MetricParameters>\n';
+						break;
+					
+					case((val.metrica.value=='integer')&&(val.metrica.unit=='%')):
+						metric='<specs:expression>'+val.metrica.formula+'</specs:expression>\n<specs:unit>\n<specs:intervalUnit>\n<intervalItemsType>'+val.metrica.value+'</intervalItemsType>\n<intervalItemStart>'+val.metrica.def+'</intervalItemStart>\n<intervalItemStop></intervalItemStop>\n<intervalItemStep></intervalItemStep>\n</specs:intervalUnit>\n</specs:unit>';
+						param='<specs:MetricParameters>\n<specs:MetricParameter>\n<specs:parameterDefinitionId>'+val.metrica.input1+'</specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.metrica.N+'</specs:value>\n</specs:MetricParameter>\n<specs:MetricParameter>\n<specs:parameterDefinitionId>'+val.metrica.input2+'</specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.metrica.T+'</specs:value>\n</specs:MetricParameter>\n<specs:MetricParameter>\n<specs:parameterDefinitionId>Result(%)</specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.metrica.Percent+'</specs:value>\n</specs:MetricParameter></specs:MetricParameters>\n';
+						break;
+					
+					case((val.metrica.value=='integer')&&(val.metrica.unit=='number')):
+						metric='<specs:unit>\n<specs:intervalUnit>\n<intervalItemsType>'+val.metrica.value+'</intervalItemsType>\n<intervalItemStart>'+val.metrica.def+'</intervalItemStart>\n<intervalItemStop></intervalItemStop>\n<intervalItemStep></intervalItemStep>\n</specs:intervalUnit>\n</specs:unit>';
+						param='<specs:MetricParameters>\n<specs:MetricParameter>\n<specs:parameterDefinitionId></specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.metrica.N+'</specs:value>\n</specs:MetricParameter>\n</specs:MetricParameters>\n';
+						break;
+						
+					case((val.metrica.value=='integer')&&(val.metrica.unit=='levels')): 			
+						metric='<specs:expression>\n'+val.metrica.formula+'</specs:expression>\n<specs:unit>\n<specs:intervalUnit>\n<intervalItemsType>'+val.metrica.value+'</intervalItemsType>\n<intervalItemStart>'+val.metrica.def+'</intervalItemStart>\n<intervalItemStop></intervalItemStop>\n<intervalItemStep></intervalItemStep>\n</specs:intervalUnit>\n</specs:unit>';
+						param='<specs:MetricParameters>\n<specs:MetricParameter>\n<specs:parameterDefinitionId></specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.metrica.N+'</specs:value>\n</specs:MetricParameter>\n</specs:MetricParameters>\n';
+						break;
+					
+					}
+					
+					var end=start+metric+'\n</specs:MetricDefinition>\n'+param+'</specs:Metric>\n\n';
+					$scope.tempmet=$scope.tempmet+end;
 				
-				}
+				}//fine if interno
+				});//fine loop metricheassociate
+					
 				
-				var end=start+metric+'\n</specs:MetricDefinition>\n'+param+'</specs:Metric>\n\n';
-				$scope.tempmet=$scope.tempmet+end;
+				
+				$scope.SLA_metriche=$scope.SLA_metriche+$scope.tempmet+'\n</specs:security_metrics>';
+				
+				$scope.musa='<MUSA:Components>\n<MUSA:Component name="'+valore.name+'" type="'+valore.type+'">\n<MUSA:ComponentProperty name="'+valore.name+'"/>\n<MUSA:Description>'+valore.description+'</MUSA:Description>\n';
+				$scope.musaThreatPRE='<MUSA:Threats>\n';
+				$scope.musaThreatPOST='</MUSA:Threats>\n</MUSA:Component>\n</MUSA:Components>\n';
+				
+				//risultato finale
+				$scope.capabilities='\n'+$scope.musa+''+$scope.musaThreatPRE+$scope.musaThreat+$scope.musaThreatPOST+'\n<specs:capabilities>'+$scope.stringcapability+'\n'+$scope.capability+'\n</specs:capabilities>\n\n'+$scope.SLA_metriche+'\n';
 				
 				
-			});
-			$scope.SLA_metriche=$scope.SLA_metriche+$scope.tempmet+'\n</specs:security_metrics>';
+				$scope.SLAs.push({	'component'	:valore.name,
+									'sla'		:$scope.capabilities,
+									'comptype'	:valore.type,
+				});
+				
+				
+				
+				
+				
+			});//fine loop componente
 			
 			
 			
-			//risultato finale
-			$scope.capabilities='\n<specs:capabilities>'+$scope.capability+'\n</specs:capabilities>\n\n'+$scope.SLA_metriche+'\n';
-			
-			//salvo lo SLA nel localstorage
-			localStorage.setItem("SLA", JSON.stringify($scope.capabilities));
-
-		}
-
-		$scope.getSLA();
-		console.log('SLA costruito e salvato nel localstorage')
-	}
+			//salvo gli SLA nel localstorage
+			localStorage.setItem("SLA", JSON.stringify($scope.SLAs));
+		
+		
+		console.log('SLA costruito e salvato nel localstorage');
+	}//fine savemetrics
 	
 	
 	
@@ -1542,6 +1637,15 @@ angular.module('SlaApp.negotiate.controllers', [])
     $scope.capabilities=JSON.parse(localStorage.getItem('SLA'));
     
     
+/*    //prelevo i componenti dell'utente
+	$scope.ListComponentFromDB = [];
+	$http.get(urlBase+"/rest/components/"+$scope.user_id).
+		success(function(data) {
+			$scope.ListComponentFromDB = data;
+			console.log('componenti utente prelevati');		
+	});*/
+    
+    
     if($location.$$host=='localhost'){
     	var urlBase="http://localhost:8080/TESI";
     }
@@ -1550,13 +1654,25 @@ angular.module('SlaApp.negotiate.controllers', [])
     }
     
     
-    $scope.stringa_template_pre='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<wsag:AgreementOffer xmlns:specs="http://specs-project.eu/schemas/SLAtemplate" xmlns:wsag="http://schemas.ggf.org/graap/2007/03/ws-agreement" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:nist="http://specs-project.eu/schemas/nist">\n    <wsag:Name>SPECS_TEMPLATE_NIST</wsag:Name>\n<wsag:Context>\n<wsag:AgreementInitiator>$SPECS-CUSTOMER</wsag:AgreementInitiator>\n<wsag:AgreementResponder>$SPECS-APPLICATION</wsag:AgreementResponder>\n<wsag:ServiceProvider>AgreementResponder</wsag:ServiceProvider>\n<wsag:ExpirationTime>2014-02-02T07:00:00+01:00</wsag:ExpirationTime>\n<wsag:TemplateName>SPECS_TEMPLATE_v1</wsag:TemplateName>\n</wsag:Context>\n<wsag:Terms>\n<wsag:All>\n<wsag:ServiceDescriptionTerm>\n<specs:serviceDescription>';
+    $scope.stringa_template_pre='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<wsag:AgreementOffer xmlns:specs="http://specs-project.eu/schemas/SLAtemplate" xmlns:wsag="http://schemas.ggf.org/graap/2007/03/ws-agreement" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:nist="http://specs-project.eu/schemas/nist">\n    <wsag:Name>MUSA_SLA_TEMPLATE</wsag:Name>\n<wsag:Context>\n<wsag:AgreementInitiator>$SPECS-CUSTOMER</wsag:AgreementInitiator>\n<wsag:AgreementResponder>$SPECS-APPLICATION</wsag:AgreementResponder>\n<wsag:ServiceProvider>AgreementResponder</wsag:ServiceProvider>\n<wsag:ExpirationTime>2014-02-02T07:00:00+01:00</wsag:ExpirationTime>\n<wsag:TemplateName></wsag:TemplateName>\n</wsag:Context>\n<wsag:Terms>\n<wsag:All>\n<wsag:ServiceDescriptionTerm wsag:Name="';
+    $scope.stringa_template_pre2='" wsag:ServiceName="';
+    $scope.stringa_template_pre3='">\n<specs:serviceDescription>';
     $scope.stringa_template_post='\n</specs:serviceDescription>\n</wsag:ServiceDescriptionTerm>\n</wsag:All>\n</wsag:Terms>\n</wsag:AgreementOffer>';
     
 
 	$scope.submitSLA=function(){
 		//niente al momento
 	}
+	
+	
+	   //per nascondere gli sla
+	   $scope.toggleTable=function(component){
+	      if (document.getElementById(component).style.display == "block") {
+	          document.getElementById(component).style.display="none";
+	      } else {
+	         document.getElementById(component).style.display="block";
+	      }
+	   }
 	
 	
 	

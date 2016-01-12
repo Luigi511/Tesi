@@ -180,6 +180,8 @@ public List<Threat> getAllThreats() {
 			  t.setdescr(rs.getString("threatdescription"));
 			  t.setCat(rs.getString("threatcat"));
 			  t.setSTRIDE(rs.getString("stride"));
+			  t.setquestion(rs.getString("question"));
+			  t.setsource(rs.getString("source"));
 			  
 			  ts.add(t);
 			  System.out.println("prelevato threat= "+rs.getString("threatname")+" id="+rs.getInt("idthreats")+" STRIDE= "+rs.getString("stride"));
@@ -406,92 +408,7 @@ public List<Metric> getAllMetrics() {
 
  
  
-/* public void archiveTask(int taskId) {
-  try {
-   PreparedStatement preparedStatement = connection
-     .prepareStatement("update task_list set task_archived=true where task_id=?");
-   // Parameters start with 1
-   preparedStatement.setInt(1, taskId);
-   preparedStatement.executeUpdate();
-  } catch (SQLException e) {
-   e.printStackTrace();
-  }
- }*/
- 
- 
- 
-/* public void updateTask(Component comp) throws ParseException {
-  try {
-   PreparedStatement preparedStatement = connection
-     .prepareStatement("update Components set comp_name=?, comp_description=?, comp_image=?" +
-       "where comp_id=?");
-   preparedStatement.setString(1, comp.getName());
-   preparedStatement.setString(2, comp.getDescription());
-   InputStream inputStream= null;
-   //preparedStatement.setBinaryStream(3, (InputStream) inputStream, (int) (comp.getImage().length()));
-   preparedStatement.executeUpdate();
-  } catch (SQLException e) {
-   e.printStackTrace();
-  }
- }*/
 
-
-
- 
-/* 
- public void changeTaskStatus(int taskId,String status) throws ParseException {
-   try {
-    PreparedStatement preparedStatement = connection
-      .prepareStatement("update task_list set task_status=? where task_id=?");
-    preparedStatement.setString(1,status);
-    preparedStatement.setInt(2, taskId);
-    preparedStatement.executeUpdate();
-   } catch (SQLException e) {
-    e.printStackTrace();
-   }
-  }*/
- 
- 
-/* public List<Task> getAllTasks() {
-  List<Task> tasks = new ArrayList<Task>();
-  try {
-   Statement statement = connection.createStatement();
-   ResultSet rs = statement.executeQuery("select * from task_list where task_archived=0");
-   while (rs.next()) {
-    Task task = new Task();
-    task.setTaskId(rs.getInt("task_id"));
-    task.setTaskName(rs.getString("task_name"));
-    task.setTaskDescription(rs.getString("task_description"));    
-    task.setTaskPriority(rs.getString("task_priority"));
-    task.setTaskStatus(rs.getString("task_status"));
-    tasks.add(task);
-   }
-  } catch (SQLException e) {
-   e.printStackTrace();
-  }
-  return tasks;
- }*/
- 
- 
-/* public Task getTaskById(int taskId) {
-  Task task = new Task();
-  try {
-   PreparedStatement preparedStatement = connection.
-     prepareStatement("select * from task_list where task_id=?");
-   preparedStatement.setInt(1, taskId);
-   ResultSet rs = preparedStatement.executeQuery();
-   if (rs.next()) {
-     task.setTaskId(rs.getInt("task_id"));
-     task.setTaskName(rs.getString("task_name"));
-     task.setTaskDescription(rs.getString("task_description"));    
-     task.setTaskPriority(rs.getString("task_priority"));
-     task.setTaskStatus(rs.getString("task_status"));
-   }
-  } catch (SQLException e) {
-   e.printStackTrace();
-  }
-  return task;
- }*/
  
  
 }

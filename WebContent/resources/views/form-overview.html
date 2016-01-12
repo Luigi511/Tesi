@@ -15,15 +15,16 @@
           The next steps of the SPECS Application will enable you to sign and implement the SLA.
     </div>
     
-    
-   <textarea style="width:100%; white-space: pre-line; " rows="40" cols="150" disabled>
-   {{stringa_template_pre}}
-   {{capabilities}}
+ <div class="panel panel-default" ng-repeat="sla in capabilities">
+ 	<h4 align="center"><b>SLA Component {{sla.component}}           </b><button ng-click="toggleTable(sla.component)">Show/Hide</button></h2>
+   <textarea style="width:100%; display:none; white-space: pre-line; " rows="40" cols="150" disabled id="{{sla.component}}">
+   {{stringa_template_pre}}{{sla.component}}{{stringa_template_pre2}}{{sla.comptype}}{{stringa_template_pre3}}
+   {{sla.sla}} 
    {{stringa_template_post}}
    
    </textarea><br><br>
    <!-- <button class="btn btn-primary" ng-click="submitSLA()">REQUEST OFFERS</button><br><br><br>  -->     
-         
+    </div>     
 
         
         
