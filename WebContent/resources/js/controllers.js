@@ -26,6 +26,7 @@ angular.module('SlaApp.controllers', [])
 		$cookieStore.remove('tastoselezionatutto');
 		$cookieStore.remove('finitometriche');
 		$cookieStore.remove('questionario');
+		$cookieStore.remove('tastoselezionatutti');
 		
 		localStorage.removeItem('imgData');
 		localStorage.removeItem('selection');
@@ -1066,6 +1067,7 @@ angular.module('SlaApp.negotiate.controllers', [])
     $scope.user_id=			$cookieStore.get('id_utente');
     $scope.selection=		JSON.parse(localStorage.getItem('selection'));
     $scope.controlselected=	$cookieStore.get('controls');
+    $scope.selezionatitutti=$cookieStore.get('tastoselezionatutti');
     
     
     
@@ -1131,13 +1133,21 @@ angular.module('SlaApp.negotiate.controllers', [])
 	    return -1;
 	}
 	
-	//raccolgo i controlli di sicurezza selezionati
-	  $scope.toggleSelection = function toggleSelection(control,name,component,desc,threatid) {
+	//funzione di inserimento di tutti i controlli suggeriti
+	  $scope.toggleSelectionALL = function toggleSelection(control,name,component,desc,threatid) {
+		  
+		  //gestisco selezione e deselezione indipendentemente con la variabile booleana nei cookie
+		  if($scope.selezionatitutti!=true){
+			  //cioè devo solo aggiungerli tutti
 		  	
 		  	var idx = arrayObjectIndexOf($scope.controlselection,control,'control',component,'component');
 	   		// is currently selected
 		    if (idx > -1) {
-		       $scope.controlselection.splice(idx, 1);
+		    	
+		    	//$scope.controlselection.splice(idx, 1);
+		    	//non faccio nulla altrimenti in caso di duplicati la spunta viene tolta quando premo select all
+		    	//ATTENZIONE COSì se 2 threat dello stesso comp hanno anche lo stesso controllo associato, allora
+		    	//mi seleziono il controllo una sola volta(giusto) ma per i diversi tid (mi porto avanti solo il primo!)
 		    }
 		    // is newly selected
 		    else {
@@ -1149,6 +1159,55 @@ angular.module('SlaApp.negotiate.controllers', [])
 	   		    			   	'tid':threatid,
 	   		    		});
 		    }
+		  }else{
+			  
+			  //devo solo eliminarli tutti
+			  var idx = arrayObjectIndexOf($scope.controlselection,control,'control',component,'component');
+		   		// is currently selected
+			    if (idx > -1) {
+			    	
+			    	$scope.controlselection.splice(idx, 1);
+
+			    }
+			    // is newly selected
+			    else {
+			    	//non posso aggiungerlo se non l'ho trovato
+			    	/*
+			    	$scope.controlselection.push(
+		   		    		   {	'control':control,
+		   		    			    'controlname':name,
+		   		    			   	'component':component,
+		   		    			   	'description':desc,
+		   		    			   	'tid':threatid,
+		   		    		});*/
+			    }
+			  
+		  }
+	  };//fine metodo
+	  
+	  
+	  
+	//funzione di inserimento del controllo selezionato con la spunta
+	  $scope.toggleSelection = function toggleSelection(control,name,component,desc,threatid) {
+		  
+		  	var idx = arrayObjectIndexOf($scope.controlselection,control,'control',component,'component');
+	   		// is currently selected
+		    if (idx > -1) {
+		    	
+		    	$scope.controlselection.splice(idx, 1);
+
+		    }
+		    // is newly selected
+		    else {
+		    	$scope.controlselection.push(
+	   		    		   {	'control':control,
+	   		    			    'controlname':name,
+	   		    			   	'component':component,
+	   		    			   	'description':desc,
+	   		    			   	'tid':threatid,
+	   		    		});
+		    }
+
 	  };//fine metodo
 	
 	  
@@ -1170,6 +1229,9 @@ angular.module('SlaApp.negotiate.controllers', [])
 	   
 	   //funzione salvataggio dati
 	   $scope.saveSelection = function(){
+		   
+		   //se sono tornato indietro devo resettare le metriche associate
+		   $cookieStore.remove('finitometriche');
 		   
 		   if($scope.controlselected==true){
 		   		//salvo di nuovo quindi pulisco prima TUTTO
@@ -1270,9 +1332,10 @@ angular.module('SlaApp.negotiate.controllers', [])
 		return string;	
 		}
 
-	
+		
 		
 		//funzione di selezione di tutti i controlli required
+		//provo a farla lavorare sulla lista dei controlli suggeriti senza duplicati
 		$scope.selezionatuttiRequired= function(){
 			angular.forEach($scope.ListComponentFromDB, function(componente, key1){
 				
@@ -1286,7 +1349,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 							if(threat.riskNum>=controllo.minrisk){
 								
 								//devo selezionarlo
-								$scope.toggleSelection(controllo.control,controllo.controlname, componente.id, controllo.controldesc,threat.threatid);
+								$scope.toggleSelectionALL(controllo.control,controllo.controlname, componente.id, controllo.controldesc,threat.threatid);
 							}
 							
 						}
@@ -1295,8 +1358,15 @@ angular.module('SlaApp.negotiate.controllers', [])
 					}
 				});
 			});
-	
-		}
+			
+			//switch pressione tasto
+			if($scope.selezionatitutti==true){
+				$scope.selezionatitutti=false;
+			}else{$scope.selezionatitutti=true;}
+			
+			$cookieStore.put('tastoselezionatutti',$scope.selezionatitutti);
+			
+		}//fine funzione
 		
 		
 		
