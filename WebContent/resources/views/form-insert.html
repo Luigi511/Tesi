@@ -32,6 +32,38 @@
 		img	{
 			width:100%;
 		}
+		
+.black_overlay{
+	display: none;
+	position: fixed;
+	top: 0%;
+	left: 0%;
+	width: 100%;
+	height: 100%;
+	background-color: black;
+	z-index:1001;
+	-moz-opacity: 0.8;
+	opacity:.80;
+	filter: alpha(opacity=80);
+}
+
+.white_content {
+	display: none;
+	position: fixed;
+	top: 10%;
+	left: 15%;
+	right: 15%;
+	
+	bottom:5%;
+	padding: 16px;
+	border: 5px solid grey;
+	background-color: white;
+	z-index:1002;
+	overflow: auto;
+}
+		
+		
+		
 
     </style>
 
@@ -51,7 +83,8 @@
 		<tr>
 		<td align="center">Description</td>
 		<td><textarea maxlength="600" rows="8" cols="150" ng-model="component.description" name='not defined'></textarea></td>
-		</tr><tr><td align="center"><button class="btn btn-primary" ng-click="add(component.name)">Add Component</button></td></tr>
+		</tr>
+		<tr><td align="center"><button class="btn btn-primary" ng-click="add2()">Add Component</button></td></tr>
 	</table>   	   
 	
     </div>
@@ -65,7 +98,7 @@
                 <td align="center"><b>Component Name</b></td>
                 <td align="center"><b>Type</b></td>
                 <td width='50%'><b>Description</b></td>
-                <td></td>
+                <td></td><td></td>
             </tr>
             <tr ng-repeat="component in ListComponentFromDB">
 <!--                 <td>{{$index+1}}</td>  
@@ -74,12 +107,14 @@
                 <td align="center">{{component.type}}</td>    
                 <td style="text-align: justify;text-justify: inter-word;  display: inline-block; word-break: break-word;">{{component.description}}</td>
                 
+                <td><input type="button" class="btn btn-primary" value="Properties" ng-click="add3(component.id)"/></td>
                 <td><input type="button" class="btn btn-primary" value="Delete" ng-click="remove($index,component.id,component.name,component.description)" /></td>
+                
             </tr>
            
         </table>
 		<br><br>
-        <h5 align="center">NOTE: If you can not delete a component you must first remove the association with the threats on the next page. <br>(remember to click the Save button)</h5>
+        <h5 align="center" ng-show="alert">NOTE: If you can not delete a component you must first remove the association with the threats (and controls) in the following pages!</h5>
 
     </div>
     
@@ -125,9 +160,40 @@
 </div>
 
 
+<!-- def. popup 1 inserimento-->
+<div id="light" class="white_content"><h3>To better characterize your component, please answer the questionnaire below.</h3>
+
+  			<table style="width: 100%; ">
+  			
+  				<tr ng-repeat="threat in ThreatFromDB  |filter:{componentid:idcomponente} track by $index" ng-hide="nonMostrareALL(threat.question)">
+  					<td>{{threat.question}}</td>
+  					<td><select ng-model="threat.show">	<option value="true">Yes</option>
+  														<option value="false">No</option>
+  					</select>
+  					</td>
+    			</tr>
+    		</table>
+    		
+	<h2><a href = "javascript:void(0)" ng-click="add()">Close</a></h2>
+</div>
 
 
+<!-- def. popup 2 lettura e modifica-->
+<div id="light2" class="white_content"><h3>To better characterize your component, please answer the questionnaire below.</h3>
 
+  			<table style="width: 100%; ">
+  				<tr ng-repeat="threat in ThreatFromDB  |filter:{componentid:component.id} track by $index" ng-hide="nonMostrareALL(threat.question)">
+  					<td>{{threat.question}}</td>
+  					<td><select ng-model="threat.show">	<option value="true">Yes</option>
+  														<option value="false">No</option>
+  					</select>
+  					</td>
+    			</tr>
+    		</table>
+    		
+	<h2><a href = "javascript:void(0)" ng-click="close3()">Close</a></h2>
+</div>
+<div id="fade" class="black_overlay"></div>
 
 
 

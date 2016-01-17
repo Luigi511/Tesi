@@ -83,10 +83,24 @@ public class ServerREST {
 		  return cp;
 	  }
 	  
+	  //API id componente dell'utente
+	  @RequestMapping(value="/compid/{name}/{id}",method = RequestMethod.GET,headers="Accept=application/json")
+	  public int getComponentID(@PathVariable String name, @PathVariable int id) throws ParseException { 
+		  int i=service.getComponentID(name,id);
+		  return i;
+	  }
+	  
 	  //API tutti i threats
 	  @RequestMapping(value="/threats",method = RequestMethod.GET,headers="Accept=application/json")
 	  public List<Threat> getThreats() throws ParseException { 
 		  List<Threat> cp=service.getAllThreats();
+		  return cp;
+	  }
+	  
+	  //API tutti i threats per categoria componente
+	  @RequestMapping(value="/threats/{cat}",method = RequestMethod.GET,headers="Accept=application/json")
+	  public List<Threat> getThreatsxCAT(@PathVariable String cat) throws ParseException { 
+		  List<Threat> cp=service.getThreatsxCAT(cat);
 		  return cp;
 	  }
 	  

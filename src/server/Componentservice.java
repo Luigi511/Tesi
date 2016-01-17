@@ -405,6 +405,62 @@ public List<Metric> getAllMetrics() {
 }
 
 
+public List<Threat> getThreatsxCAT(String cat) {
+	List<Threat> ts = new ArrayList<Threat>();
+	  try {
+		  PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM threats WHERE threatcat=?");
+		  preparedStatement.setString(1, cat);
+		  ResultSet rs = preparedStatement.executeQuery();
+		  while (rs.next()) {
+			  Threat t = new Threat();
+			  t.setid(rs.getInt("idthreats"));
+			  t.setname(rs.getString("threatname"));
+			  t.setdescr(rs.getString("threatdescription"));
+			  t.setCat(rs.getString("threatcat"));
+			  t.setSTRIDE(rs.getString("stride"));
+			  t.setquestion(rs.getString("question"));
+			  t.setsource(rs.getString("source"));
+			  
+			  ts.add(t);
+			  System.out.println("prelevato threat= "+rs.getString("threatname")+" id="+rs.getInt("idthreats")+" STRIDE= "+rs.getString("stride"));
+			  //System.out.println("inoltro componente= "+c.getName()+c.getDescription()+" id="+c.getId()+" categoria="+c.getType());
+
+		  }
+	  } catch (SQLException e) {
+		  e.printStackTrace();
+	  }
+	  return ts;
+}
+
+
+public int getComponentID(String name, int idd) {
+		int i = 0;
+		  try {
+			  PreparedStatement preparedStatement = connection.prepareStatement("select * from components where name=? AND id_utente=?");
+			  preparedStatement.setString(1, name);
+			  preparedStatement.setInt(2, idd);
+			  ResultSet rs = preparedStatement.executeQuery();
+			  while (rs.next()) {
+				  Component c = new Component();
+				  c.setId(rs.getInt("idcomponents"));
+				  c.setName(rs.getString("name"));
+				  c.setDescription(rs.getString("description"));
+				  c.setIDUser(rs.getInt("id_utente"));
+				  c.setType(rs.getString("componentcat"));
+				  
+				  
+				  i=c.getId();
+				  System.out.println("prelevato componente= "+rs.getString("name")+rs.getString("description")+" id="+rs.getInt("idcomponents")+" categoria="+rs.getString("componentcat"));
+				  //System.out.println("inoltro componente= "+c.getName()+c.getDescription()+" id="+c.getId()+" categoria="+c.getType());
+
+			  }
+		  } catch (SQLException e) {
+			  e.printStackTrace();
+		  }
+		  return i;
+	}
+
+
 
 
  

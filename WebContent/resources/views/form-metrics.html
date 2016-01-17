@@ -21,9 +21,9 @@
   </div>
   <div class="panel-body ">
     <div class="well">
-      In the table below you can see all the Security Controls that you have selected.
+      <a ng-click="mostralistacontrolli()">Click here</a> to show/hide all the Security Controls that you have selected.
     </div>
-    <table style="width:100%;">
+    <table style="width:100%;" ng-show="listacontrolli">
     <tr>
     	<td style="width: 9%; " ><b>ID</b></td><td><b>Name</b></td><td align="center" style="width: 20%;"><b>Component</b></td>
     </tr>
@@ -69,19 +69,24 @@
     	<table class="tabella_scomparsa" ng-show="(met.value=='integer')&&(met.unit=='%')"  border="1" style="width:100%;">
     	<tr>
     		<td width="10%"><b>{{met.nist}}</b></td>
-    		<td width="15%">{{met.metricname}}<br>{{(met.N)/(met.T)*100 | number:2}} %</td>
+    		<td width="15%">{{met.metricname}}</td>
     		<td width="75%"><b>Valid for Component: {{getcompname(met.componenteid)}}</b><br>{{met.metricdescr}}<br><br>INPUT VALUES:<br>
     		{{met.input1}}<br>{{met.input2}}
     		<br>
     		<table>
     				
-    				<tr><td>N= 
-    				<input type="number" ng-model="met.N" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
-    				</td>
+    				<tr>
     				<td>T= 
     				<input type="number" ng-model="met.T" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
     				</td>
+    				<td>N= 
+    				<input type="number" ng-model="met.N" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
+    				</td>
+
+    				<td>RESULT:</td>
+    				<td>{{met.op}} {{(met.N)/(met.T)*100 | number:2}} %</td>
     				</tr>
+
     				</table>
     		</td>
     		

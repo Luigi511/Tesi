@@ -291,6 +291,10 @@ angular.module('SlaApp.negotiate.controllers', [])
 .controller("InsertCtrl",function($scope,$http,$cookieStore,$location,$window,$timeout) {
 	
 	
+
+	
+	
+	
 	//prelevo dati cookie; 
 	$scope.user_name=	$cookieStore.get('name');
     $scope.user_surname=$cookieStore.get('surname');
@@ -298,7 +302,17 @@ angular.module('SlaApp.negotiate.controllers', [])
     $scope.boolean1=	$cookieStore.get('check1'); //gestisce pressione upload
     $scope.boolean2=	$cookieStore.get('check2'); //gestisce inserimento pezzi
     $scope.boolean3=	$cookieStore.get('check3'); //gestisce pressione next
-
+    
+    
+    $scope.alert=false;
+    
+    $scope.ThreatFromDB=JSON.parse(localStorage.getItem('threatlist'));
+    
+    if($scope.ThreatFromDB==null){
+    	$scope.ThreatFromDB=[];
+    }
+    
+    
         
     if($location.$$host=='localhost'){
     	var urlBase="http://localhost:8080/TESI";
@@ -323,8 +337,8 @@ angular.module('SlaApp.negotiate.controllers', [])
             console.log("categorie prelevate correttamente");
        });
     
-    
-    
+
+
     
     //funzione di aggiornamento tabella dei componenti
     $scope.updateOnScreen = function() {
@@ -341,6 +355,7 @@ angular.module('SlaApp.negotiate.controllers', [])
     	        }
     				    			
     		});
+    
     };
     
     //all'avvio carico tutto dopodichè ricarico quando aggiungo/rimuovo
@@ -420,69 +435,150 @@ angular.module('SlaApp.negotiate.controllers', [])
     $scope.componentList = [];
     
 
-
     
-    //funzione aggiungi in tabella (e in db)
-    $scope.add = function(){
+    //funzione invocata quando aggiungo il componente
+    $scope.add2=function(){
     	
     	$scope.error_name=false;
-    	
     	//validazione
     	console.log($scope.component.name);
     	console.log($scope.component.description);
     	console.log($scope.component.category);
-    	
     	//verifico che il nome non sia già presente
     	angular.forEach($scope.ListComponentFromDB,function(value,key){
     		console.log("verifico match nome: inserito="+$scope.component.name+" in tabella="+value.name);
     		if(value.name==$scope.component.name){
     			$scope.error_name=true;
     		}
-
     	});
-    	$timeout(1000);
-    	
-    	
-/*    	if($scope.component.description==""){
-    		$scope.component.description="not defined";	
-    	}*/
-    	
     	if(($scope.component.name!=undefined)&&($scope.component.category!=undefined)&&($scope.error_name!=true)){
-    	
-    	$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+    		
+        	$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
 
-        var data = {};
-       data.name = $scope.component.name;
-       data.dept = $scope.component.description;
-       data.type = $scope.component.category;
-       
-       $scope.componentList.push(data); //aggiorno la tabella a schermo
-	   console.log("inserisco nella tabella url:"+urlBase + '/rest/components/' +data.name+'/'+data.dept+'/'+$scope.user_id+'/'+data.type);
+            var data = {};
+           data.name = $scope.component.name;
+           data.dept = $scope.component.description;
+           data.type = $scope.component.category; 
+           
+           $scope.componentList.push(data); //aggiorno la tabella a schermo
+    	   console.log("inserisco nella tabella url:"+urlBase + '/rest/components/' +data.name+'/'+data.dept+'/'+$scope.user_id+'/'+data.type);
 
-       //invio al server i dati da archiviare nel dbms
-       $http.post(urlBase + '/rest/components/' +data.name+'/'+data.dept+'/'+$scope.user_id+'/'+data.type).
-       success(function(data) {
-    	   console.log("inserimento riuscito");
-    	 //aggiorno i componenti a schermo
-           $scope.updateOnScreen();
-           $scope.boolean2=true;
-           $cookieStore.put('check2',$scope.boolean2);
-       });
-       //resetto i campi
-       $scope.component = {};
-       
-       
-    	}//fine if 
+           //invio al server i dati da archiviare nel dbms
+           $http.post(urlBase + '/rest/components/' +data.name+'/'+data.dept+'/'+$scope.user_id+'/'+data.type).
+           success(function(data) {
+        	   console.log("inserimento riuscito");
+        	 //aggiorno i componenti a schermo
+               $scope.updateOnScreen();
+               $scope.boolean2=true;
+               $cookieStore.put('check2',$scope.boolean2);
+               
+               //prova
+               //ricavo id componente dal db
+               $http.get(urlBase+"/rest/compid/"+$scope.component.name+'/'+$scope.user_id).
+    	    	success(function(result) {
+    	    		$scope.idcomponente=result;
+    	    		console.log($scope.idcomponente);
+    	    		//prevelo tutti i threats associati alla categoria componente
+            	    $http.get(urlBase+"/rest/threats/"+$scope.component.category).
+            	    	success(function(result) {
+            	    		
+            	    		//inizializzazione parametri di visualizzazione
+            	    		angular.forEach(result,function(value,key){
+            	    			value.show='true';
+            	    			value.componentid=$scope.idcomponente;
+            	    			value.componentname=$scope.component.name;
+            	    			value.user=$scope.user_id;
+            	    		});
+            	    		$scope.ThreatFromDB=$scope.ThreatFromDB.concat(result);
+            	    		//faccio visualizzare il questionario 
+                    		document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block';
+		
+            	    });
+	
+    	    	});
+  
+           });
+           
+           
+           /*//ricavo id componente dal db
+           $http.get(urlBase+"/rest/compid/"+$scope.component.name+'/'+$scope.user_id).
+	    	success(function(result) {
+	    		$scope.idcomponente=result;
+	    		console.log($scope.idcomponente);
+	    	});
 
-       
-    }
+    	    //prevelo tutti i threats associati alla categoria componente
+    	    $http.get(urlBase+"/rest/threats/"+$scope.component.category).
+    	    	success(function(result) {
+    	    		
+    	    		//inizializzazione parametri di visualizzazione
+    	    		angular.forEach(result,function(value,key){
+    	    			value.show='true';
+    	    			value.componentid=$scope.idcomponente;
+    	    			value.user=$scope.user_id;
+    	    		});
+    	    		$scope.ThreatFromDB=$scope.ThreatFromDB.concat(result);
+    	    });
+    	    
+    	    $timeout(200);
+    		//faccio visualizzare il questionario 
+    		document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block';*/
+           
+    	}//fine if di validazione
+        
+    }//fine metodo add2
     
-    ///////////////////////////////////////////////////////////////////
+    
+    //funzione aggiungi in tabella (e in db)
+    $scope.add = function(){
+        //resetto i campi
+        $scope.component = {};
+        
+    	localStorage.setItem("threatlist", JSON.stringify($scope.ThreatFromDB));
+    	document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none';
+    }//fine metodo add
+    
+    
+    $scope.add3=function(componente){
+    	$scope.component.id=componente;
+        //prima faccio visualizzare il questionario e blocco tutto con una variabile booleana
+        document.getElementById('light2').style.display='block';document.getElementById('fade').style.display='block';
+    }//fine metodo add3
+    
+    $scope.close3=function(){
+    	//salvo e chiudo
+    	localStorage.setItem("threatlist", JSON.stringify($scope.ThreatFromDB));
+    	$scope.component={};//resetto
+    	document.getElementById('light2').style.display='none';document.getElementById('fade').style.display='none';
+    }//fine metodo close3
+    
+    
+
+    
+
+    
+    
+    //funzione di ricerca di un elemento nella lista
+	function arrayObjectIndexOf(myArray, searchTerm1, property1) {
+	    for(var i = 0, len = myArray.length; i < len; i++) {
+	        if (myArray[i][property1] === searchTerm1) return i;
+	    }
+	    return -1;
+	}
+    
+    
+    
     //funzione rimuovi da tabella
     $scope.remove = function(obj,id,name,description){
     	
+    	$scope.alert=true;
     	//per cancellare un componente devi prima rimuovere l'associazione con i threat!!
-    	
+    	for(var i = $scope.ThreatFromDB.length - 1; i >= 0; i--) {
+    	    if($scope.ThreatFromDB[i].componentid === id) {
+    	    	$scope.ThreatFromDB.splice(i, 1);
+    	    }
+    	}
+        
     	//rimuovo da db
         console.log(urlBase + '/rest/delete/'+id);
         $http.post(urlBase + '/rest/delete/'+id).
@@ -491,18 +587,20 @@ angular.module('SlaApp.negotiate.controllers', [])
             if(obj != -1) {
     	    $scope.componentList.splice(obj, 1);
             }
-        }).error(function() {
+        }).error(function(data) {
         	
         	//in caso di errore mando un alert perchè probabilmente sto cercando di cancellare
-        	//senza aver cancellato prima le associazioni!        	
-        	});
+        	//senza aver cancellato prima le associazioni!
+        	
+        });
         
         
       //aggiorno i componenti dell'utente
         $scope.updateOnScreen();
-        
 
-    }
+    }//fine metodo remove
+    
+
 
     
     $scope.next = function(){
@@ -510,6 +608,12 @@ angular.module('SlaApp.negotiate.controllers', [])
     	$scope.boolean3=true;
     	$cookieStore.put('check3',$scope.boolean3);
     	
+    }
+    
+    $scope.nonMostrareALL=function(valore){
+    	if(valore=='all'){
+    		return true;
+    	}else {return false;}
     }
     
     
@@ -765,16 +869,14 @@ angular.module('SlaApp.negotiate.controllers', [])
 		   if($scope.tastoselezione=='Select All'){
 		   //devo prima resettare tutta la lista
 		   $scope.selection=[];
-		   
-		   angular.forEach($scope.ListComponentFromDB,function(comp,key1){
-			   //per ogni componente
+
 			   angular.forEach($scope.ThreatFromDB,function(threat,key2){
 				   //per ogni threat
-				   if((comp.type==threat.cat)&&(threat.show=='true')){
+				   if(threat.show=='true'){
 					   
 					   $scope.selection.push(
-		   		    		   {	'component':comp.name,
-		   		    			   	'componentid':comp.id,
+		   		    		   {	'component':threat.componentname,
+		   		    			   	'componentid':threat.componentid,
 		   		    			   	'threat':threat.name,
 		   		    			   	'threatid':threat.idThreat,
 		   		    			   	'stride':threat.stride,
@@ -808,7 +910,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 			   });
 			   
 			   
-		   });
+		  
 		   
 		   $scope.tastoselezione='Clear all';
 		   $cookieStore.put('tastoselezionatutto',$scope.tastoselezione);
@@ -1068,8 +1170,7 @@ angular.module('SlaApp.negotiate.controllers', [])
     $scope.selection=		JSON.parse(localStorage.getItem('selection'));
     $scope.controlselected=	$cookieStore.get('controls');
     $scope.selezionatitutti=$cookieStore.get('tastoselezionatutti');
-    
-    
+ 
     
     if($location.$$host=='localhost'){
     	var urlBase="http://localhost:8080/TESI";
@@ -1402,6 +1503,12 @@ angular.module('SlaApp.negotiate.controllers', [])
     $scope.controlselection=JSON.parse(localStorage.getItem('controlselection'));
     $scope.metricheassociate=JSON.parse(localStorage.getItem('metriche'));
     
+    $scope.listacontrolli=false;
+    $scope.mostralistacontrolli=function(){
+    	if($scope.listacontrolli==false){$scope.listacontrolli=true;}
+    	else{$scope.listacontrolli=false;}
+    }
+    
     if($scope.metricheassociate==null){
     	$scope.metricheassociate=[];
     }
@@ -1525,14 +1632,16 @@ angular.module('SlaApp.negotiate.controllers', [])
 		$scope.threatsss='';
 		$scope.musaThreat='';
 		
+		$scope.j=0;
 		
 			
 			angular.forEach($scope.ListComponentFromDB,function(valore,chiave){
 				
-				$scope.controlstring='';$scope.controlstring2='';$scope.musaThreat='';
+				$scope.controlstring='';$scope.controlstring2='';$scope.musaThreat='';$scope.SLO='';
 				var i=0;
 				
 				
+				$scope.inizioGaranteeTerm='\n</specs:serviceDescription>\n</wsag:ServiceDescriptionTerm>\n\n<wsag:GuaranteeTerm wsag:Name="//specs:capability[@name="'+valore.name+'"]" wsag:Obligated="">\n<wsag:QualifyingCondition>false</wsag:QualifyingCondition>\n<wsag:ServiceLevelObjective>\n<wsag:CustomServiceLevel>\n<specs:objectiveList>\n';
 				
 				angular.forEach($scope.selection,function(v,c){
 					//per ogni threat
@@ -1543,7 +1652,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 						/*var string='<specs:capability name="'+v.threat+'" description="'+v.description+'" >'+'\n'+
 						'<specs:controlFramework id="NIST_800_53_r4" frameworkName="NIST Control framework 800-53 rev. 4">';*/
 						
-						$scope.stringcapability='<specs:capability name="'+'" description="'+'" >'+'\n'+
+						$scope.stringcapability='<specs:capability id="" name="Requested capability for component '+valore.name+'" description="'+'"  mandatory="">'+'\n'+
 						'<specs:controlFramework id="NIST_800_53_r4" frameworkName="NIST Control framework 800-53 rev. 4">';
 						
 						$scope.musaThreat=$scope.musaThreat+'<MUSA:Threat name="'+v.threat+'" source="'+v.source+'"/>\n';
@@ -1584,13 +1693,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 							}
 				
 						});i++; //mi serve per scaricarmi i controlli aggiuntivi solo una volta!
-						
 
-
-						
-						
-						
-						
 						$scope.threatsss=$scope.threatsss+'\n'+$scope.controlstring+'\n';
 						$scope.controlstring=''; temp='';
 					}
@@ -1603,14 +1706,17 @@ angular.module('SlaApp.negotiate.controllers', [])
 				//costruzione parte metriche
 				$scope.SLA_metriche='<specs:security_metrics>\n';
 				$scope.tempmet='';
-					
+				
+				
 				angular.forEach($scope.metricheassociate,function(val,ch2){
+					
 				//verifico se la metrica è associata al componente		
 				if(val.componenteid==valore.id){
-					
+
 					var start='\n\n<specs:Metric name="'+val.metricname+'">\n<specs:MetricDefinition>\n<specs:definition>'+val.metricdescr+'</specs:definition>\n';
 					var metric='';
 					var param='';
+					var SLO='';
 					
 					//gestisco le 4 tipologie
 					switch(true){
@@ -1618,28 +1724,32 @@ angular.module('SlaApp.negotiate.controllers', [])
 					case(val.value=='yes / no'): 									
 						metric='<specs:expression></specs:expression>\n<specs:unit>\n<specs:intervalUnit>\n<intervalItemsType>'+val.value+'</intervalItemsType>\n<intervalItemStart></intervalItemStart>\n<intervalItemStop></intervalItemStop>\n<intervalItemStep></intervalItemStep>\n</specs:intervalUnit>\n</specs:unit>';
 						param='<specs:MetricParameters>\n<specs:MetricParameter>\n<specs:parameterDefinitionId></specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.outputYES_NO+'</specs:value>\n</specs:MetricParameter>\n</specs:MetricParameters>\n';
+						SLO='\n<specs:SLO SLO_ID="'+$scope.j+'">\n<specs:MetricREF>'+val.metricname+'</specs:MetricREF>\n<specs:SLOexpression>\n<specs:oneOpExpression operator="'+val.op+'" operand="'+val.outputYES_NO+'"/>\n</specs:SLOexpression>\n<specs:importance_weight>MEDIUM</specs:importance_weight>\n</specs:SLO>\n';
 						break;
 					
 					case((val.value=='integer')&&(val.unit=='%')):
 						metric='<specs:expression>'+val.formula+'</specs:expression>\n<specs:unit>\n<specs:intervalUnit>\n<intervalItemsType>'+val.value+'</intervalItemsType>\n<intervalItemStart>'+val.def+'</intervalItemStart>\n<intervalItemStop></intervalItemStop>\n<intervalItemStep></intervalItemStep>\n</specs:intervalUnit>\n</specs:unit>';
 						param='<specs:MetricParameters>\n<specs:MetricParameter>\n<specs:parameterDefinitionId>'+val.input1+'</specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.N+'</specs:value>\n</specs:MetricParameter>\n<specs:MetricParameter>\n<specs:parameterDefinitionId>'+val.input2+'</specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.T+'</specs:value>\n</specs:MetricParameter>\n<specs:MetricParameter>\n<specs:parameterDefinitionId>Result(%)</specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.Percent+'</specs:value>\n</specs:MetricParameter></specs:MetricParameters>\n';
+						SLO='\n<specs:SLO SLO_ID="'+$scope.j+'">\n<specs:MetricREF>'+val.metricname+'</specs:MetricREF>\n<specs:SLOexpression>\n<specs:oneOpExpression operator="'+val.op+'" operand="'+val.Percent+'"/>\n</specs:SLOexpression>\n<specs:importance_weight>MEDIUM</specs:importance_weight>\n</specs:SLO>\n';
 						break;
 					
 					case((val.value=='integer')&&(val.unit=='number')):
 						metric='<specs:unit>\n<specs:intervalUnit>\n<intervalItemsType>'+val.value+'</intervalItemsType>\n<intervalItemStart>'+val.def+'</intervalItemStart>\n<intervalItemStop></intervalItemStop>\n<intervalItemStep></intervalItemStep>\n</specs:intervalUnit>\n</specs:unit>';
 						param='<specs:MetricParameters>\n<specs:MetricParameter>\n<specs:parameterDefinitionId></specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.N+'</specs:value>\n</specs:MetricParameter>\n</specs:MetricParameters>\n';
+						SLO='\n<specs:SLO SLO_ID="'+$scope.j+'">\n<specs:MetricREF>'+val.metricname+'</specs:MetricREF>\n<specs:SLOexpression>\n<specs:oneOpExpression operator="'+val.op+'" operand="'+val.N+'"/>\n</specs:SLOexpression>\n<specs:importance_weight>MEDIUM</specs:importance_weight>\n</specs:SLO>\n';
 						break;
 						
 					case((val.value=='integer')&&(val.unit=='levels')): 			
 						metric='<specs:expression>\n'+val.formula+'</specs:expression>\n<specs:unit>\n<specs:intervalUnit>\n<intervalItemsType>'+val.value+'</intervalItemsType>\n<intervalItemStart>'+val.def+'</intervalItemStart>\n<intervalItemStop></intervalItemStop>\n<intervalItemStep></intervalItemStep>\n</specs:intervalUnit>\n</specs:unit>';
 						param='<specs:MetricParameters>\n<specs:MetricParameter>\n<specs:parameterDefinitionId></specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.N+'</specs:value>\n</specs:MetricParameter>\n</specs:MetricParameters>\n';
+						SLO='<specs:SLO SLO_ID="'+$scope.j+'">\n<specs:MetricREF>'+val.metricname+'</specs:MetricREF>\n<specs:SLOexpression>\n<specs:oneOpExpression operator="'+val.op+'" operand="'+val.N+'"/>\n</specs:SLOexpression>\n<specs:importance_weight>MEDIUM</specs:importance_weight>\n</specs:SLO>\n';
 						break;
-					
 					}
 					
 					var end=start+metric+'\n</specs:MetricDefinition>\n'+param+'</specs:Metric>\n\n';
 					$scope.tempmet=$scope.tempmet+end;
-				
+					$scope.SLO=$scope.SLO+SLO;
+					$scope.j++;
 				}//fine if interno
 				});//fine loop metricheassociate
 					
@@ -1652,7 +1762,10 @@ angular.module('SlaApp.negotiate.controllers', [])
 				$scope.musaThreatPOST='</MUSA:Threats>\n</MUSA:Component>\n</MUSA:Components>\n';
 				
 				//risultato finale
-				$scope.capabilities='\n'+$scope.musa+''+$scope.musaThreatPRE+$scope.musaThreat+$scope.musaThreatPOST+'\n<specs:capabilities>'+$scope.stringcapability+'\n'+$scope.capability+'\n</specs:capabilities>\n\n'+$scope.SLA_metriche+'\n';
+				$scope.capabilities='\n'+$scope.musa+''+$scope.musaThreatPRE+$scope.musaThreat+$scope.musaThreatPOST+'\n<specs:capabilities>\n'+$scope.stringcapability+'\n'+$scope.capability+'\n</specs:capabilities>\n\n'+$scope.SLA_metriche+'\n';
+				
+				
+				$scope.capabilities=$scope.capabilities+$scope.inizioGaranteeTerm+$scope.SLO+'</specs:objectiveList>\n</wsag:CustomServiceLevel>\n</wsag:ServiceLevelObjective>\n</wsag:GuaranteeTerm>';
 				
 				
 				$scope.SLAs.push({	'component'	:valore.name,
@@ -1718,7 +1831,7 @@ angular.module('SlaApp.negotiate.controllers', [])
     $scope.stringa_template_pre='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<wsag:AgreementOffer xmlns:specs="http://specs-project.eu/schemas/SLAtemplate" xmlns:wsag="http://schemas.ggf.org/graap/2007/03/ws-agreement" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:nist="http://specs-project.eu/schemas/nist">\n    <wsag:Name>MUSA_SLA_TEMPLATE</wsag:Name>\n<wsag:Context>\n<wsag:AgreementInitiator>$SPECS-CUSTOMER</wsag:AgreementInitiator>\n<wsag:AgreementResponder>$SPECS-APPLICATION</wsag:AgreementResponder>\n<wsag:ServiceProvider>AgreementResponder</wsag:ServiceProvider>\n<wsag:ExpirationTime>2014-02-02T07:00:00+01:00</wsag:ExpirationTime>\n<wsag:TemplateName></wsag:TemplateName>\n</wsag:Context>\n<wsag:Terms>\n<wsag:All>\n<wsag:ServiceDescriptionTerm wsag:Name="';
     $scope.stringa_template_pre2='" wsag:ServiceName="';
     $scope.stringa_template_pre3='">\n<specs:serviceDescription>';
-    $scope.stringa_template_post='\n</specs:serviceDescription>\n</wsag:ServiceDescriptionTerm>\n</wsag:All>\n</wsag:Terms>\n</wsag:AgreementOffer>';
+    $scope.stringa_template_post='</wsag:All>\n</wsag:Terms>\n</wsag:AgreementOffer>';
     
 
 	$scope.submitSLA=function(){

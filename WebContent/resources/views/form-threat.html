@@ -98,7 +98,7 @@
 </div>
 
 <!-- questionario -->
-<div class="panel panel-default" ng-hide="{{questionario}}">
+<!-- <div class="panel panel-default" ng-hide="{{questionario}}">
 <div class="panel-heading" ng-hide="{{questionario}}">
     <h2>Preliminary questionnaire</h2>
 </div>
@@ -118,18 +118,18 @@
     		</tr>
     	</table>
     </div>
-  </div>
+  </div> 
  
   
-	
+<!-- 	
     <h4 align="center" ng-hide="{{questionario}}"><button ng-click="sendquestionnaire()">Send Questionnaire</button></h1>
 	
 	
   
-</div>
+</div> -->
 
 <!-- lista dei threat -->
-<div class="panel panel-default" ng-show="{{questionario}}">
+<div class="panel panel-default"> <!-- ng-show="{{questionario}}"> -->
   <div class="panel-heading">
     <h2>Threat Selection</h2>
   </div>
@@ -145,7 +145,7 @@
   <div class="panel panel-default" ng-repeat="component in ListComponentFromDB">
   <h3 align="center">{{component.name}} ({{component.type}})</h3>
   <table style="width: 100%; ">
-  	<tr ng-repeat="threat in ThreatFromDB | filter:component.type" ng-show="mostraThreat(threat.show)">
+  	<tr ng-repeat="threat in ThreatFromDB | filter:{componentid:component.id}" ng-show="mostraThreat(threat.show)">
   		<td width="50"><input id="{{threat.name}}" type="checkbox" value="{{threat.name}}" 
   		ng-checked="find(component.name,threat.name)" 
   		ng-click="toggleSelection(component.name,component.id,threat.name,threat.idThreat,threat.stride,threat.descr,threat.source)" name="optionb" id="optb" class="paddingClass" /></td>
