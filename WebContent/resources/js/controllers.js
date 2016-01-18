@@ -52,7 +52,8 @@ angular.module('SlaApp.controllers', [])
     	var urlBase="http://localhost:8080/TESI";
     }
     else {
-    	var urlBase="https://threatapplication.herokuapp.com";
+    	//var urlBase="https://threatapplication.herokuapp.com";
+    	var urlBase="http://37.48.247.125/TESI-0.0.1-SNAPSHOT";
     }
 	
 	//devo scaricare le foto dal db
@@ -255,7 +256,8 @@ angular.module('SlaApp.negotiate.controllers', [])
         	var urlBase="http://localhost:8080/TESI";
         }
         else {
-        	var urlBase="https://threatapplication.herokuapp.com";
+        	//var urlBase="https://threatapplication.herokuapp.com";
+        	var urlBase="http://37.48.247.125/TESI-0.0.1-SNAPSHOT";
         }
 
  	   	console.log("inserito nella tabella url:"+urlBase + '/rest/user/' +$scope.user_name+'/'+$scope.user_surname)
@@ -318,7 +320,8 @@ angular.module('SlaApp.negotiate.controllers', [])
     	var urlBase="http://localhost:8080/TESI";
     }
     else {
-    	var urlBase="https://threatapplication.herokuapp.com";
+    	//var urlBase="https://threatapplication.herokuapp.com";
+    	var urlBase="http://37.48.247.125/TESI-0.0.1-SNAPSHOT";
     }
     
     //recupero la foto dal localstorage
@@ -639,8 +642,8 @@ angular.module('SlaApp.negotiate.controllers', [])
     	var urlBase="http://localhost:8080/TESI";
     }
     else {
-    	var urlBase="https://threatapplication.herokuapp.com";
-
+    	//var urlBase="https://threatapplication.herokuapp.com";
+    	var urlBase="http://37.48.247.125/TESI-0.0.1-SNAPSHOT";
     }
     
     //$scope.selection=$cookieStore.get('selection');
@@ -946,8 +949,8 @@ angular.module('SlaApp.negotiate.controllers', [])
     	var urlBase="http://localhost:8080/TESI";
     }
     else {
-    	var urlBase="https://threatapplication.herokuapp.com";
-
+    	//var urlBase="https://threatapplication.herokuapp.com";
+    	var urlBase="http://37.48.247.125/TESI-0.0.1-SNAPSHOT";
     }
     
     //prelevo i componenti dell'utente
@@ -1176,7 +1179,8 @@ angular.module('SlaApp.negotiate.controllers', [])
     	var urlBase="http://localhost:8080/TESI";
     }
     else {
-    	var urlBase="https://threatapplication.herokuapp.com";
+    	//var urlBase="https://threatapplication.herokuapp.com";
+    	var urlBase="http://37.48.247.125/TESI-0.0.1-SNAPSHOT";
     }
     
     $scope.controlselection=JSON.parse(localStorage.getItem('controlselection'));
@@ -1518,7 +1522,8 @@ angular.module('SlaApp.negotiate.controllers', [])
     	var urlBase="http://localhost:8080/TESI";
     }
     else {
-    	var urlBase="https://threatapplication.herokuapp.com";
+    	//var urlBase="https://threatapplication.herokuapp.com";
+    	var urlBase="http://37.48.247.125/TESI-0.0.1-SNAPSHOT";
     }
 
 
@@ -1824,7 +1829,8 @@ angular.module('SlaApp.negotiate.controllers', [])
     	var urlBase="http://localhost:8080/TESI";
     }
     else {
-    	var urlBase="https://threatapplication.herokuapp.com";
+    	//var urlBase="https://threatapplication.herokuapp.com";
+    	var urlBase="http://37.48.247.125/TESI-0.0.1-SNAPSHOT";
     }
     
     
