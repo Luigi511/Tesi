@@ -1,18 +1,18 @@
 //db in locale
 driver=com.mysql.jdbc.Driver
-url=jdbc:mysql://localhost:3306/threatapplication?autoreconnect=true
+url=jdbc:mysql://localhost:3306/threatapplication
 user=root
 password=root
 
 
 //db in remoto (JAWSDB)
 driver=com.mysql.jdbc.Driver
-url=jdbc:mysql://z12itfj4c1vgopf8.cbetxkdyhwsb.us-east-1.rds.amazonaws.com/sn0bj6h8md16rbf0?autoreconnect=true
+url=jdbc:mysql://z12itfj4c1vgopf8.cbetxkdyhwsb.us-east-1.rds.amazonaws.com/sn0bj6h8md16rbf0
 user=j29n3qwzi13zfqob
 password=j15adqeo5dmli97j
 
 //db in locale (OPENSTACK)
 driver=com.mysql.jdbc.Driver
-url=jdbc:mysql://localhost:3306/SLAEDITOR?autoreconnect=true
+url=jdbc:mysql://localhost:3306/SLAEDITOR
 user=root
 password=root

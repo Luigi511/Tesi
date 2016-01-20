@@ -23,6 +23,8 @@ public class DBUtility {
                 String driver = prop.getProperty("driver");
                 String url = prop.getProperty("url");
                 
+
+                
                 //per openshift
                 /*String host = System.getenv("OPENSHIFT_MYSQL_DB_HOST");
                 String port = System.getenv("OPENSHIFT_MYSQL_DB_PORT");
@@ -38,12 +40,16 @@ public class DBUtility {
             
               catch (ClassNotFoundException e) {
                 e.printStackTrace();
+                
             } catch (SQLException e) {
                 e.printStackTrace();
+                
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
+                
             } catch (IOException e) {
                 e.printStackTrace();
+                
             }
             return connection;
         }
