@@ -371,16 +371,17 @@ public List<Photo> getallfoto() {
 }
 
 
-public List<Metric> getAllMetrics() {
+public List<Metric> getAllMetrics(int id_comp) {
 	List<Metric> m = new ArrayList<Metric>();
 	System.out.println("prova");
 	
 	try {
-		  PreparedStatement preparedStatement = connection.prepareStatement("SELECT metrics.*,controls_selected_by_users.componente_id FROM metrics,controls_selected_by_users where metrics.nistcontrol=controls_selected_by_users.controlloscelto_id");
+		  PreparedStatement preparedStatement = connection.prepareStatement("SELECT DISTINCT metrics.metricname, metrics.metricdescr,metrics.formula,metrics.input1,metrics.input2,metrics.value,metrics.unit,metrics.defaultt,metrics.min,metrics.max,metrics.operator,controls_selected_by_users.componente_id FROM metrics,controls_selected_by_users where metrics.nistcontrol=controls_selected_by_users.controlloscelto_id and controls_selected_by_users.componente_id=?");
+		  preparedStatement.setInt(1, id_comp);
 		  ResultSet rs = preparedStatement.executeQuery();
 		  while (rs.next()) {
 			  Metric mm=new Metric();
-			  mm.setid(rs.getInt("idmetrics"));
+			  /*mm.setid(rs.getInt("idmetrics"));*/
 			  mm.setname(rs.getString("metricname"));
 			  mm.setdes(rs.getString("metricdescr"));
 			  mm.setformula(rs.getString("formula"));
@@ -392,7 +393,7 @@ public List<Metric> getAllMetrics() {
 			  mm.setmin(rs.getString("min"));
 			  mm.setmax(rs.getString("max"));
 			  mm.setope(rs.getString("operator"));
-			  mm.setnist(rs.getString("nistcontrol"));
+			  /*mm.setnist(rs.getString("nistcontrol"));*/
 			  mm.setcomponenteid(rs.getString("componente_id"));
 
 			  m.add(mm);

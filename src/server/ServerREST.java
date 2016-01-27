@@ -234,11 +234,11 @@ public class ServerREST {
 	  
 	  
 	  
-	  //API tutte le metriche
-	  @RequestMapping(value="/metrics",method = RequestMethod.GET,headers="Accept=application/json")
-	  public List<Metric> getMetrics() throws ParseException { 
+	  //API tutte le metriche del comp
+	  @RequestMapping(value="/metrics/{id}",method = RequestMethod.GET,headers="Accept=application/json")
+	  public List<Metric> getMetrics(@PathVariable int id) throws ParseException { 
 		  
-		  List<Metric> m=service.getAllMetrics();
+		  List<Metric> m=service.getAllMetrics(id);
 		  return m;
 	  }
  

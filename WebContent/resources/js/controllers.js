@@ -1,5 +1,9 @@
 angular.module('SlaApp.controllers', [])
 
+.config(['$compileProvider', function ($compileProvider) {
+    $compileProvider.aHrefSanitizationWhitelist(/^\s*(|blob|):/);
+}])
+
 //VADO A DEFINIRE TUTTI I CONTROLLER DELLA BARRA IN ALTO
 //OGNI CONTROLLER E' ASSOCIATO AD UNA PAGINA HTML NEL FILE app.js
 
@@ -1531,12 +1535,69 @@ angular.module('SlaApp.negotiate.controllers', [])
     
     
     
+    
     //prelevo i componenti dell'utente
 	$scope.ListComponentFromDB = [];
 	$http.get(urlBase+"/rest/components/"+$scope.user_id).
 		success(function(data) {
 			$scope.ListComponentFromDB = data;
-			console.log('componenti utente prelevati');		
+			console.log('componenti utente prelevati');	
+			
+			//adesso per ogni componente recupero le metriche (senza duplicati)
+			angular.forEach($scope.ListComponentFromDB,function(valore,chiave){
+				
+
+				$scope.ListMetrics = [];
+				$http.get(urlBase+"/rest/metrics/"+valore.id).
+					success(function(dat) {
+						$scope.ListMetrics = dat;
+						console.log('metriche prelevate per componente '+valore.id);
+						if($scope.finito!=true){
+								//inizializzazione dati metriche in tabella
+								angular.forEach($scope.ListMetrics,function(temp,c){
+
+											switch(true){
+											case(temp.value=='yes / no'): //tipo 1
+										
+													if((temp.def=='yes')||(temp.def=='no')){
+													temp.outputYES_NO=temp.def;}
+													break;
+												
+									
+											case((temp.value=='integer')&&(temp.unit=='%')): //tipo 2
+													temp.N=0;
+													temp.T=0;
+													break;
+											
+									
+											case((temp.value=='integer')&&(temp.unit=='number')): //tipo 3
+										
+													if(temp.def!='n/a'){temp.N=parseInt(temp.def, 10);}
+													break;
+												
+											case((temp.value=='integer')&&(temp.unit=='levels')): //tipo 4
+													
+													if(temp.def!='n/a'){temp.N=parseInt(temp.def, 10);}
+													break;
+											
+											}	
+				
+								});
+								//provo a filtrare
+								//var elenco=_.uniq($scope.ListMetrics, JSON.stringify); //provo ad ignorare i duplicati
+								//console.log(elenco);
+
+								console.log('metriche inizializzate');
+								$scope.metricheassociate=$scope.metricheassociate.concat($scope.ListMetrics);
+								
+								
+						}
+				});//fine get
+				});//fine ciclo esterno
+			
+			
+			
+			
 	});
 	
 	$scope.getcompname= function(idcomponente){
@@ -1552,50 +1613,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 	
 	
 	
-    //prelevo le metriche già associate agli utenti (non l'elenco completo).....poi devi filtrare per componente
-	$scope.ListMetrics = [];
-	$http.get(urlBase+"/rest/metrics").
-		success(function(dat) {
-			$scope.ListMetrics = dat;
-			console.log('metriche prelevate');
-			if($scope.finito!=true){
-					//inizializzazione dati metriche in tabella
-					angular.forEach($scope.ListMetrics,function(temp,c){
 
-								switch(true){
-								case(temp.value=='yes / no'): //tipo 1
-							
-										if((temp.def=='yes')||(temp.def=='no')){
-										temp.outputYES_NO=temp.def;}
-										break;
-									
-						
-								case((temp.value=='integer')&&(temp.unit=='%')): //tipo 2
-										temp.N=0;
-										temp.T=0;
-										break;
-								
-						
-								case((temp.value=='integer')&&(temp.unit=='number')): //tipo 3
-							
-										if(temp.def!='n/a'){temp.N=parseInt(temp.def, 10);}
-										break;
-									
-								case((temp.value=='integer')&&(temp.unit=='levels')): //tipo 4
-										
-										if(temp.def!='n/a'){temp.N=parseInt(temp.def, 10);}
-										break;
-								
-								}	
-	
-					});
-					//elenco=_.uniq(elenco, JSON.stringify); //provo ad ignorare i duplicati
-					//console.log(elenco);
-
-					console.log('metriche inizializzate');
-					$scope.metricheassociate=$scope.ListMetrics;
-			}
-	});
 	
 	
 	
@@ -1628,8 +1646,9 @@ angular.module('SlaApp.negotiate.controllers', [])
 		console.log("metriche salvate nel localstorage");
 		$scope.finito=true;
 		$cookieStore.put('finitometriche',$scope.finito);
-	
-
+		
+		//pulisco il vecchio SLA
+		localStorage.removeItem('SLA');
 		
 		//costruisco lo sla
 		$scope.capabilities='';
@@ -1801,7 +1820,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 
 
 
-.controller('OverviewCtrl', function ($scope, $http, $cookieStore, $filter, $location, $timeout, $parse) {
+.controller('OverviewCtrl', function ($scope, $http, $cookieStore, $filter, $location, $timeout, $parse,$window) {
    
 	//prelevo dati cookie; 
 	$scope.user_name=		$cookieStore.get('name');
@@ -1855,7 +1874,15 @@ angular.module('SlaApp.negotiate.controllers', [])
 	   }
 	
 	
-	
+	$scope.downloadSLA=function(sla){
+		
+		var data=$scope.stringa_template_pre+sla.component+$scope.stringa_template_pre2+sla.comptype+$scope.stringa_template_pre3+sla.sla+$scope.stringa_template_post;
+		blob = new Blob([data], { type: 'text/plain' }),
+        url = $window.URL || $window.webkitURL;                                
+		$scope.fileUrl = url.createObjectURL(blob);
+		
+		
+	}
 	
 
     

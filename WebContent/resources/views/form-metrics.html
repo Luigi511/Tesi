@@ -6,7 +6,7 @@
             padding: 2px;  
          }
          
-         .tabella_scomparsa table, th , td {
+         .tabella_scomparsa table, th  {
             border: 0px solid grey;
             border-collapse: collapse;
             padding: 3px;
@@ -40,7 +40,8 @@
       If there are associated metrics with your chosen Controls, now you must enter the appropriate parameters for each Security Metric.
     </div>
 
-<div ng-repeat="com in ListComponentFromDB">
+<div class="panel panel-default" ng-repeat="com in ListComponentFromDB">
+<h3 align="center">Metrics for Component: {{com.name}} ({{com.type}})</h3>
 <table ng-repeat="met in metricheassociate | filter:{componenteid:com.id}" border="0" style="width:100%;">
 
 <!-- track by $index --> 
@@ -50,9 +51,11 @@
     	<!-- tabella tipo1 (yes/no) -->
     	<table class="tabella_scomparsa" ng-show="met.value=='yes / no'" border="1" style="width:100%;">
     	<tr>
-    		<td width="10%"><b>{{met.nist}}</b></td>
-    		<td width="15%">{{met.metricname}}</td>
-    		<td width="75%"><b>Valid for Component: {{getcompname(met.componenteid)}}</b><br>{{met.metricdescr}}<br><br>DO YOU WANT THIS METRIC? 
+    		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
+    		<td width="20%"><b>{{met.metricname}}</b></td>
+    		<td width="80%">
+    		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
+    		{{met.metricdescr}}<br><br>DO YOU WANT THIS METRIC? 
     			<select id="mySelect" ng-model="met.outputYES_NO">
     				<option value="yes">Yes</option>
       				<option value="no">No</option>
@@ -68,9 +71,11 @@
     	<!-- tabella tipo2 (%) -->
     	<table class="tabella_scomparsa" ng-show="(met.value=='integer')&&(met.unit=='%')"  border="1" style="width:100%;">
     	<tr>
-    		<td width="10%"><b>{{met.nist}}</b></td>
-    		<td width="15%">{{met.metricname}}</td>
-    		<td width="75%"><b>Valid for Component: {{getcompname(met.componenteid)}}</b><br>{{met.metricdescr}}<br><br>INPUT VALUES:<br>
+    		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
+    		<td width="20%"><b>{{met.metricname}}</b></td>
+    		<td width="80%">
+    		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
+    		{{met.metricdescr}}<br><br>INPUT VALUES:<br>
     		{{met.input1}}<br>{{met.input2}}
     		<br>
     		<table>
@@ -99,9 +104,11 @@
     	<!-- tabella tipo3 (numero semplice) -->
     	<table class="tabella_scomparsa" ng-show="(met.value=='integer')&&(met.unit=='number')"  border="1" style="width:100%;">
     	<tr>
-    		<td width="10%"><b>{{met.nist}}</b></td>
-    		<td width="15%">{{met.metricname}}</td>
-    		<td width="75%"><b>Valid for Component: {{getcompname(met.componenteid)}}</b><br>{{met.metricdescr}}<br><br>PLEASE ENTER THE PARAMETER: 
+    		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
+    		<td width="20%"><b>{{met.metricname}}</b></td>
+    		<td width="80%">
+    		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
+    		{{met.metricdescr}}<br><br>PLEASE ENTER THE PARAMETER: 
     			<input type="number" ng-model="met.N" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
     		</td>
     		
@@ -115,9 +122,11 @@
     	<!-- tabella tipo4 (livelli) -->
     	<table class="tabella_scomparsa" ng-show="(met.value=='integer')&&(met.unit=='levels')"  border="1" style="width:100%;">
     	<tr>
-    		<td width="10%"><b>{{met.nist}}</b></td>
-    		<td width="15%">{{met.metricname}}</td>
-    		<td width="75%"><b>Valid for Component: {{getcompname(met.componenteid)}}</b><br>{{met.metricdescr}}<br><br><span style="white-space:pre-line;">{{met.formula}}</span><br><br>CHOOSE A LEVEL: 
+    		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
+    		<td width="20%"><b>{{met.metricname}}</b></td>
+    		<td width="80%">
+    		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
+    		{{met.metricdescr}}<br><br><span style="white-space:pre-line;">{{met.formula}}</span><br><br>CHOOSE A LEVEL: 
     		   <input type="number" ng-model="met.N" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
     		</td>
 
