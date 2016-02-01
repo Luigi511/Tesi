@@ -3,7 +3,7 @@
 This README would normally document whatever steps are necessary to get your application up and running.
 
 You can try a demo updated every 2-3 days with latest functionality at:
-https://threatapplication-luigidm91.rhcloud.com/TESI-0.0.1-SNAPSHOT/    (new demo!)
+http://37.48.247.125/TESI-0.0.1-SNAPSHOT/
 
 ## Installation ##
 
