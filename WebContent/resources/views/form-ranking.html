@@ -198,11 +198,15 @@ a.tip2:hover span {
     <div class="well">
 		By following the approach here, it is possible to estimate the severity of all of these risks to the business and make an informed decision about what to do about those risks. Having a system in place for rating risks will save time and eliminate arguing about priorities. <br>This system will help to ensure that the business doesn't get distracted by minor risks while ignoring more serious risks that are less well understood. <br>
 		<a href="https://www.owasp.org/index.php/OWASP_Risk_Rating_Methodology" target="_blank">(Reference: The OWASP Risk Rating Methodology)</a>
-    	<br><br>For each threat, insert the appropriate values to assess likelihood and impact overall system.
-    	<br>TIPS: if you hover the mouse over each field, you can view additional information!
+    	<br><br>According to the <a href="https://www.owasp.org/index.php/Threat_Risk_Modeling#STRIDE" target="_blank">STRIDE Methodology,</a> the Threats previously selected are grouped in 6 categories.<br>
+    	 For each of them, insert the appropriate values to assess likelihood and impact overall system.
+    	<br><span style="color:red">TIPS: if you hover the mouse over each field, you can view additional information!</span>
+    	<br><br><b>Do you want to evaluate the risks for every Threat instead of evaluating the STRIDE categories?
+    	 </b>  <button ng-click="switchRiskRating()">{{valutazione}}</button>
+    	 
     </div>
     
-  <div class="panel panel-default" ng-repeat="component in ListComponentFromDB" ng-hide="vedirisultati">
+  <div class="panel panel-default" ng-repeat="component in ListComponentFromDB" ng-show="singolarmente">
   	<h3 align="center">{{component.name}} ({{component.type}})</h3><br>
   	<table  style="width: 100%;border:1px solid grey;">
 
@@ -275,8 +279,79 @@ a.tip2:hover span {
   	</table>
   </div>
   
+	<!-- valutazione STRIDE -->
+  <div class="panel panel-default" ng-repeat="component in ListSTRIDE" ng-hide="singolarmente">
+  <h3 align="center">{{component.component}} ({{component.type}})</h3><br>
+  	<table  style="width: 100%;border:1px solid grey;">
 
+  		<tr ng-repeat="threat in component.punteggi" style="border:1px solid grey;">
+  			<td width="10%"><a class="tip2">{{threat.name}}<span>{{threat.description}}</span></a></td>
+  			<td align="center"><b>OVERALL RISK SEVERITY = {{threat.risk}}</b>
+  			
+  			<table>
+			<td align="center" valign="top"><b>LIKEHOOD = {{threat.totaleLikehood}}</b>
+			
+				<table>
+				
+				<tr><td align="center"><b>Threat Agent Factors</b></td><td align="center"><b>Vulnerability Factors</b></td></tr>
+				</table>
+				<table>
+				<tr><td><a class="tip">Skill level<span>How technically skilled is this group of threat agents? Security penetration skills (9), network and programming skills (6), advanced computer user (5), some technical skills (3), no technical skills (1)</span></a></td>	
+				<td><input type="number" inputmode="numeric" pattern="[0-9]" ng-model="threat.skill" min="0" max="9"></td>														
+				<td><a class="tip">Ease of discovery<span>How easy is it for this group of threat agents to discover this vulnerability? Practically impossible (1), difficult (3), easy (7), automated tools available (9)</span></a></td>		
+				<td><input type="number" ng-model="threat.discover" min="0" max="9"></td></tr>
+				<tr><td><a class="tip">Motive<span>How motivated are the threat agents to find and exploit this vulnerability? Low or no reward (1), possible reward (4), high reward (9)</span></a></td>			
+				<td><input type="number" ng-model="threat.motive" min="0" max="9"></td>														
+				<td><a class="tip">Ease of exploit<span>How easy is it for this group of threat agents to actually exploit this vulnerability? Theoretical (1), difficult (3), easy (5), automated tools available (9)</span></a></td>		
+				<td><input type="number" ng-model="threat.ease" min="0" max="9"></td></tr>
+				<tr><td><a class="tip">Opportunity<span>What resources and opportunities are required for this group of threat agents to find and exploit this vulnerability? Full access or expensive resources required (0), special access or resources required (4), some access or resources required (7), no access or resources required (9)</span></a></td>	
+				<td><input type="number" ng-model="threat.opportunity" min="0" max="9"></td>												
+				<td><a class="tip">Awareness<span>How well known is this vulnerability to this group of threat agents? Unknown (1), hidden (4), obvious (6), public knowledge (9)</span></a></td>				
+				<td><input type="number" ng-model="threat.aware" min="0" max="9"></td></tr>
+				<tr><td><a class="tip">Size<span>How large is this group of threat agents? Developers (2), system administrators (2), intranet users (4), partners (5), authenticated users (6), anonymous Internet users (9)</span></a></td>			
+				<td><input type="number" ng-model="threat.size" min="0" max="9"></td>														
+				<td><a class="tip">Intrusion detection<span>How likely is an exploit to be detected? Active detection in application (1), logged and reviewed (3), logged without review (8), not logged (9)</span></a></td>
+				<td><input type="number" ng-model="threat.id" min="0" max="9"></td></tr>
+				
+				</table>
+			
+			</td>
+			
+			<td align="center" valign="top"><b>IMPACT = {{threat.totaleImpact}}</b>
+			
+				<table>
+				
+				<tr><td align="center"><b>Technical Impact Factors</b></td><td align="center"><b>Business Impact Factors</b></td></tr>
+				</table>
+				<table>
+				<tr><td><a class="tip">Loss of confidentiality<span>How much data could be disclosed and how sensitive is it? Minimal non-sensitive data disclosed (2), minimal critical data disclosed (6), extensive non-sensitive data disclosed (6), extensive critical data disclosed (7), all data disclosed (9)</span></a></td>	
+				<td><input type="number" ng-model="threat.confide" min="0" max="9" value="0"></td>								
+				<td><a class="tip">Financial damage<span>How much financial damage will result from an exploit? Less than the cost to fix the vulnerability (1), minor effect on annual profit (3), significant effect on annual profit (7), bankruptcy (9)</span></a></td>		
+				<td><input type="number" ng-model="threat.financial" min="0" max="9" value="0"></td></tr>
+				<tr><td><a class="tip">Loss of integrity<span>How much data could be corrupted and how damaged is it? Minimal slightly corrupt data (1), minimal seriously corrupt data (3), extensive slightly corrupt data (5), extensive seriously corrupt data (7), all data totally corrupt (9)</span></a></td>			
+				<td><input type="number" ng-model="threat.integri" min="0" max="9" value="0"></td>								
+				<td><a class="tip">Reputation damage<span>Would an exploit result in reputation damage that would harm the business? Minimal damage (1), Loss of major accounts (4), loss of goodwill (5), brand damage (9)</span></a></td>		
+				<td><input type="number" ng-model="threat.reputation" min="0" max="9" value="0"></td></tr>
+				<tr><td><a class="tip">Loss of availability<span>How much service could be lost and how vital is it? Minimal secondary services interrupted (1), minimal primary services interrupted (5), extensive secondary services interrupted (5), extensive primary services interrupted (7), all services completely lost (9)</span></a></td>		
+				<td><input type="number" ng-model="threat.avalai" min="0" max="9" value="0"></td>								
+				<td><a class="tip">Non-compliance<span>How much exposure does non-compliance introduce? Minor violation (2), clear violation (5), high profile violation (7)</span></a></td>			
+				<td><input type="number" ng-model="threat.noncompliance" min="0" max="9" value="0"></td></tr>
+				<tr><td><a class="tip">Loss of accountability<span>Are the threat agents' actions traceable to an individual? Fully traceable (1), possibly traceable (7), completely anonymous (9)</span></a></td>		
+				<td><input type="number" ng-model="threat.accounta" min="0" max="9" value="0"></td>								
+				<td><a class="tip">Privacy violation<span>How much personally identifiable information could be disclosed? One individual (3), hundreds of people (5), thousands of people (7), millions of people (9)</span></a></td>		
+				<td><input type="number" ng-model="threat.privacy" min="0" max="9" value="0"></td></tr>
+				
+				</table>
+			
+			</td>
 
+		</table></td>
+		
+		
+  		</tr>
+
+  	</table>
+  </div>
   
 
 

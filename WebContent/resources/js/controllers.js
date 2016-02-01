@@ -31,6 +31,7 @@ angular.module('SlaApp.controllers', [])
 		$cookieStore.remove('finitometriche');
 		$cookieStore.remove('questionario');
 		$cookieStore.remove('tastoselezionatutti');
+		$cookieStore.remove('singolarmente');
 		
 		localStorage.removeItem('imgData');
 		localStorage.removeItem('selection');
@@ -38,6 +39,7 @@ angular.module('SlaApp.controllers', [])
 		localStorage.removeItem('SLA');
 		localStorage.removeItem('metriche');
 		localStorage.removeItem('threatlist');
+		localStorage.removeItem('valoriSTRIDE');
 		console.log("cookie rimossi");
 	  
 	  
@@ -227,7 +229,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 
 //controller pagina iniziale di registrazione (salvataggio cookie)
 
-.controller('StartCtrl', function ($scope, $rootScope, $cookieStore, $location, $http, $window) {
+.controller('StartCtrl', function ($scope, $rootScope, $cookieStore, $location, $http, $window, $state) {
 	
 
 	//prelevo dati cookie; 
@@ -238,24 +240,18 @@ angular.module('SlaApp.negotiate.controllers', [])
     if($cookieStore.get('pulsante')==undefined){$scope.boolean=false;}
     else{$scope.boolean=		$cookieStore.get('pulsante');}
     
-    
 
-	
-	
     $scope.add_user = function () {
     //lo faccio solo se gli input sono validi
     	console.log($scope.user_name);
     	console.log($scope.user_surname);
     	if(($scope.user_name!=undefined)&&($scope.user_surname!=undefined)){
-    		
-    		
-    
+
     	//salvo cookie
         $cookieStore.put('name', $scope.user_name);
         $cookieStore.put('surname', $scope.user_surname);
         
         //adesso registro utente nel db
-
         if($location.$$host=='localhost'){
         	var urlBase="http://localhost:8080/TESI";
         }
@@ -280,6 +276,9 @@ angular.module('SlaApp.negotiate.controllers', [])
  	 	   		
  	 	   		$scope.boolean=true;
  	 	   		$cookieStore.put('pulsante',$scope.boolean);
+ 	 	   		
+ 	 	   		//vai direttamente alla pagina dopo se è tutto ok
+ 	 	   		$state.go('negotiate.insert');
  	   		})
  	   		.error(function() {$scope.user_id=0;});
 
@@ -297,10 +296,6 @@ angular.module('SlaApp.negotiate.controllers', [])
 .controller("InsertCtrl",function($scope,$http,$cookieStore,$location,$window,$timeout) {
 	
 	
-
-	
-	
-	
 	//prelevo dati cookie; 
 	$scope.user_name=	$cookieStore.get('name');
     $scope.user_surname=$cookieStore.get('surname');
@@ -313,9 +308,13 @@ angular.module('SlaApp.negotiate.controllers', [])
     $scope.alert=false;
     
     $scope.ThreatFromDB=JSON.parse(localStorage.getItem('threatlist'));
+    $scope.ListSTRIDE=JSON.parse(localStorage.getItem('valoriSTRIDE'));
     
     if($scope.ThreatFromDB==null){
     	$scope.ThreatFromDB=[];
+    }
+    if($scope.ListSTRIDE==null){
+    	$scope.ListSTRIDE=[];
     }
     
     
@@ -327,6 +326,72 @@ angular.module('SlaApp.negotiate.controllers', [])
     	//var urlBase="https://threatapplication.herokuapp.com";
     	var urlBase="http://37.48.247.125/TESI-0.0.1-SNAPSHOT";
     }
+    
+    
+  //inizializzo già adesso la tabella per il ranking
+    $scope.ListSTRIDEtemp = 
+        [
+         	{	'name':'SPOOFING',
+         		'description':"Threat action aimed to illegally access and use another user's credentials, such as username and password.",
+        	 	//likehood
+        	 		'skill':0,'motive':0,'opportunity':0,'size':0,
+   			   		'discover':0,'ease':0,'aware':0,'id':0,
+   			   		//technical impacts
+   			   		'confide':0,'integri':0,'avalai':0,'accounta':0,
+   			   		//business impacts
+   			   		'financial':0,'reputation':0,'noncompliance':0,'privacy':0},
+   			
+   			{	'name':'TAMPERING',
+   			   	'description':"Threat action aimed to maliciously change/modify persistent data, such as persistent data in a database, and the alteration of data in transit between two computers over an open network, such as the Internet.",
+   	        	 	//likehood
+   	        	 	'skill':0,'motive':0,'opportunity':0,'size':0,
+   	   			   	'discover':0,'ease':0,'aware':0,'id':0,
+   	   			   	//technical impacts
+   	   			   	'confide':0,'integri':0,'avalai':0,'accounta':0,
+   	   			   	//business impacts
+   	   			   	'financial':0,'reputation':0,'noncompliance':0,'privacy':0},
+   	   			   	
+   	   		{	'name':'REPUDIATION',
+   	   			'description':"Threat action aimed to perform illegal operations in a system that lacks the ability to trace the prohibited operations.	",
+   	         	 	//likehood
+   	         	 	'skill':0,'motive':0,'opportunity':0,'size':0,
+   	    			'discover':0,'ease':0,'aware':0,'id':0,
+   	    			//technical impacts
+   	    			'confide':0,'integri':0,'avalai':0,'accounta':0,
+   	    			//business impacts
+   	    			'financial':0,'reputation':0,'noncompliance':0,'privacy':0},
+   	    			   	
+   	    	{	'name':'INFORMATION DISCLOSURE',
+   	    		'description':"Threat action to read a file that one was not granted access to, or to read data in transit.",
+   	    	        //likehood
+   	    	        'skill':0,'motive':0,'opportunity':0,'size':0,
+   	    	   		'discover':0,'ease':0,'aware':0,'id':0,
+   	    	   		//technical impacts
+   	    	   		'confide':0,'integri':0,'avalai':0,'accounta':0,
+   	    	   		//business impacts
+   	    	   		'financial':0,'reputation':0,'noncompliance':0,'privacy':0},
+   	    	   			   	
+   	    	{	'name':'DENIAL OF SERVICE',
+   	    	    'description':"Threat aimed to deny access to valid users, such as by making a web server temporarily unavailable or unusable.",
+   	    	        //likehood
+   	    	        'skill':0,'motive':0,'opportunity':0,'size':0,
+   	    	    	'discover':0,'ease':0,'aware':0,'id':0,
+   	    	    	//technical impacts
+   	    	    	'confide':0,'integri':0,'avalai':0,'accounta':0,
+   	    	    	//business impacts
+   	    	    	'financial':0,'reputation':0,'noncompliance':0,'privacy':0},
+   	    	    			   	
+   	    	{	'name':'ELEVATION OF PRIVILEGES',
+   	    	    'description':"Threat aimed to gain privileged access to resources for gaining unauthorized access to information or to compromise a system.",
+   	    	    	//likehood
+   	    	    	'skill':0,'motive':0,'opportunity':0,'size':0,
+   	    	    	'discover':0,'ease':0,'aware':0,'id':0,
+   	    	    	//technical impacts
+   	    	    	'confide':0,'integri':0,'avalai':0,'accounta':0,
+   	    	    	//business impacts
+   	    	    	'financial':0,'reputation':0,'noncompliance':0,'privacy':0}];
+
+    
     
     //recupero la foto dal localstorage
     var dataImage = localStorage.getItem('imgData');
@@ -479,7 +544,7 @@ angular.module('SlaApp.negotiate.controllers', [])
                $scope.boolean2=true;
                $cookieStore.put('check2',$scope.boolean2);
                
-               //prova
+               
                //ricavo id componente dal db
                $http.get(urlBase+"/rest/compid/"+$scope.component.name+'/'+$scope.user_id).
     	    	success(function(result) {
@@ -499,7 +564,17 @@ angular.module('SlaApp.negotiate.controllers', [])
             	    		$scope.ThreatFromDB=$scope.ThreatFromDB.concat(result);
             	    		//faccio visualizzare il questionario 
                     		document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block';
-		
+                    		
+                    		//subito dopo aver inserito il componente, lo aggiungo pure nella lista per il ranking
+                            $scope.ListSTRIDE.push(
+                 	    		   {	'component':$scope.component.name,
+                 	    			   	'componentid':$scope.idcomponente,
+                 	    			   	'type':$scope.component.category,
+                 	    			   	'punteggi':$scope.ListSTRIDEtemp,
+                 	    		   });
+                            //e la memorizzo
+                            localStorage.setItem("valoriSTRIDE", JSON.stringify($scope.ListSTRIDE));
+                    		
             	    });
 	
     	    	});
@@ -585,6 +660,7 @@ angular.module('SlaApp.negotiate.controllers', [])
     	    	$scope.ThreatFromDB.splice(i, 1);
     	    }
     	}
+    	localStorage.setItem("threatlist", JSON.stringify($scope.ThreatFromDB));
         
     	//rimuovo da db
         console.log(urlBase + '/rest/delete/'+id);
@@ -604,6 +680,14 @@ angular.module('SlaApp.negotiate.controllers', [])
         
       //aggiorno i componenti dell'utente
         $scope.updateOnScreen();
+        
+      //adesso elimino elemento nella tabella STRIDE
+        for(var i = $scope.ListSTRIDE.length - 1; i >= 0; i--) {
+    	    if($scope.ListSTRIDE[i].componentid === id) {
+    	    	$scope.ListSTRIDE.splice(i, 1);
+    	    }
+    	}
+        localStorage.setItem("valoriSTRIDE", JSON.stringify($scope.ListSTRIDE));
 
     }//fine metodo remove
     
@@ -739,6 +823,10 @@ angular.module('SlaApp.negotiate.controllers', [])
 	
 	//raccolgo i threat selezionati
 	  $scope.toggleSelection = function toggleSelection(componentName,componentid,threatName,threatid,stride,descr,sourc) {
+		  //dato che ho apportato una modifica, elimino il tasto next in ranking e in questa pagina (forzo a fare save)
+		  var fattoo=false;
+		  $cookieStore.put('done',fattoo);
+		  $scope.booleanthreat=false;
 		  	
 		  	var idx = arrayObjectIndexOf($scope.selection,componentName,'component',threatName,'threat');
 	   		// is currently selected
@@ -836,7 +924,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 		 	   		$cookieStore.put('buttonthreat',$scope.booleanthreat);});
 			  
 			   });
-		   
+   
 	   }//fine saveselection
 	   
 	   
@@ -872,6 +960,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 	   
 	   //funzione tasto seleziona tutto
 	   $scope.all=function(){
+		   $scope.booleanthreat=false;
 		   
 		   if($scope.tastoselezione=='Select All'){
 		   //devo prima resettare tutta la lista
@@ -947,7 +1036,21 @@ angular.module('SlaApp.negotiate.controllers', [])
     
     //$scope.selection=		$cookieStore.get('selection');
     $scope.selection=		JSON.parse(localStorage.getItem('selection'));
+    $scope.ListSTRIDE=		JSON.parse(localStorage.getItem('valoriSTRIDE'));
+    
     $scope.done=			$cookieStore.get('done');
+    
+    $scope.singolarmente=	$cookieStore.get('singolarmente'); //permette il ranking x ogni threat
+    if(($scope.singolarmente==false)||($scope.singolarmente==undefined)){$scope.valutazione='NO';}
+    else{$scope.valutazione='YES';}
+    
+    
+    $scope.switchRiskRating=function(){
+    	if(($scope.singolarmente==false)||($scope.singolarmente==undefined)){$scope.singolarmente=true;$scope.valutazione='YES';}
+    	else{$scope.singolarmente=false;$scope.valutazione='NO';}
+    }
+    
+    
     
     if($location.$$host=='localhost'){
     	var urlBase="http://localhost:8080/TESI";
@@ -965,11 +1068,9 @@ angular.module('SlaApp.negotiate.controllers', [])
 			console.log('componenti utente prelevati');		
 	});
     
-    //inizializzazione dati in tabella
+    //inizializzazione dati nelle tabelle dei threat
 	angular.forEach($scope.selection, function(value, key){
-		
-		if(($scope.done==false)||($scope.done==undefined)){
-			
+		if($scope.done==undefined){
 			//inizializzazione
 			value.skill=0;
 			value.motive=0;
@@ -979,23 +1080,18 @@ angular.module('SlaApp.negotiate.controllers', [])
 			value.ease=0;
 			value.aware=0;
 			value.id=0;
-			
 			//technical impacts
 			value.confide=0;
 			value.integri=0;
 			value.avalai=0;
 			value.accounta=0;
-			
 			//business impacts
 			value.financial=0;
 			value.reputation=0;
 			value.noncompliance=0;
 			value.privacy=0;
 		}
-		
-		
 		value.totaleLikehood=(value.skill+value.motive+value.opportunity+value.size+value.discover+value.ease+value.aware+value.id)/8;
-		
 		value.totaleImpactBusiness=(value.financial+value.reputation+value.noncompliance+value.privacy)/4;
 		value.totaleImpactTechnical=(value.confide+value.integri+value.avalai+value.accounta)/4;
 		if(value.totaleImpactBusiness==0){
@@ -1003,7 +1099,6 @@ angular.module('SlaApp.negotiate.controllers', [])
 		}else{
 			value.totaleImpact=value.totaleImpactBusiness;
 		}
-		
 		//combinazione dei rischi
 		switch(true){
 			case((value.totaleImpact>=6)&&(value.totaleImpact<9)): //HIGH
@@ -1030,19 +1125,84 @@ angular.module('SlaApp.negotiate.controllers', [])
 				}
 			break;
 		}
-		
-		
-		
+	});
+	
+	//inizializzazione dati nelle tabelle STRIDE
+	angular.forEach($scope.ListSTRIDE, function(v, k){
+		angular.forEach(v.punteggi, function(value, key){
+		if($scope.done==undefined){
+			//inizializzazione
+			value.skill=0;
+			value.motive=0;
+			value.opportunity=0;
+			value.size=0;
+			value.discover=0;
+			value.ease=0;
+			value.aware=0;
+			value.id=0;
+			//technical impacts
+			value.confide=0;
+			value.integri=0;
+			value.avalai=0;
+			value.accounta=0;
+			//business impacts
+			value.financial=0;
+			value.reputation=0;
+			value.noncompliance=0;
+			value.privacy=0;
+		}
+		value.totaleLikehood=(value.skill+value.motive+value.opportunity+value.size+value.discover+value.ease+value.aware+value.id)/8;
+		value.totaleImpactBusiness=(value.financial+value.reputation+value.noncompliance+value.privacy)/4;
+		value.totaleImpactTechnical=(value.confide+value.integri+value.avalai+value.accounta)/4;
+		if(value.totaleImpactBusiness==0){
+			value.totaleImpact=value.totaleImpactTechnical;
+		}else{
+			value.totaleImpact=value.totaleImpactBusiness;
+		}
+		//combinazione dei rischi
+		switch(true){
+			case((value.totaleImpact>=6)&&(value.totaleImpact<9)): //HIGH
+				switch(true){
+				case value.totaleLikehood<3: value.risk='MEDIUM';break;
+				case (value.totaleLikehood>=3)&&(value.totaleLikehood<6): value.risk='HIGH';break;
+				case (value.totaleLikehood>=6)&&(value.totaleLikehood<9): value.risk='CRITICAL';break;
+				}
+			break;
+			
+			case((value.totaleImpact>=3)&&(value.totaleImpact<6)): //MEDIUM
+				switch(true){
+				case value.totaleLikehood<3: value.risk='LOW';break;
+				case (value.totaleLikehood>=3)&&(value.totaleLikehood<6): value.risk='MEDIUM';break;
+				case (value.totaleLikehood>=6)&&(value.totaleLikehood<9): value.risk='HIGH';break;
+				}
+			break;
+			
+			case(value.totaleImpact<3): //LOW
+				switch(true){
+				case value.totaleLikehood<3: value.risk='VERY LOW';break;
+				case (value.totaleLikehood>=3)&&(value.totaleLikehood<6): value.risk='LOW';break;
+				case (value.totaleLikehood>=6)&&(value.totaleLikehood<9): value.risk='MEDIUM';break;
+				}
+			break;
+		}	
+	});
 	});
     
+	
+	
+	
+	
     $scope.saveRating = function(){
     	
     	$scope.done=true;
     	$cookieStore.put('done',$scope.done);
+    	$cookieStore.put('singolarmente',$scope.singolarmente);
     	
-    	angular.forEach($scope.selection, function(value, key){
+    	//salvataggio dati dei 2 tipi di ranking
+    	if($scope.singolarmente==true){
+    	//caso 1
+    	  angular.forEach($scope.selection, function(value, key){
     		value.totaleLikehood=(value.skill+value.motive+value.opportunity+value.size+value.discover+value.ease+value.aware+value.id)/8;		
-    	
     		value.totaleImpactBusiness=(value.financial+value.reputation+value.noncompliance+value.privacy)/4;
     		value.totaleImpactTechnical=(value.confide+value.integri+value.avalai+value.accounta)/4;
     		if(value.totaleImpactBusiness==0){
@@ -1050,16 +1210,13 @@ angular.module('SlaApp.negotiate.controllers', [])
     		}else{
     			value.totaleImpact=value.totaleImpactBusiness;
     		}
-    		
     		//combinazione dei rischi x ogni threat
-    		
     		//Per il rischio totale ho bisogno di classificare numericamente da 1 a 9:
     		//VERY LOW	=1
     		//LOW		=3
     		//MEDIUM	=5
     		//HIGH		=7
     		//CRITICAL	=9
-    		
     		switch(true){
     			case((value.totaleImpact>=6)&&(value.totaleImpact<=9)): //HIGH
     				switch(true){
@@ -1084,19 +1241,100 @@ angular.module('SlaApp.negotiate.controllers', [])
     				case (value.totaleLikehood>=6)&&(value.totaleLikehood<=9): value.risk='MEDIUM';value.riskNum=5;break;
     				}
     			break;
-    		}
-    		
-    		
+    		}	
     	});
-    	
+    	}else{
+    		//caso 2 devo salvare le categorie e poi assegnare lo stesso punteggio ad ogni threat della categoria
+      	  angular.forEach($scope.ListSTRIDE, function(v, k){
+      	  angular.forEach(v.punteggi, function(value, key){
+      		value.totaleLikehood=(value.skill+value.motive+value.opportunity+value.size+value.discover+value.ease+value.aware+value.id)/8;		
+      		value.totaleImpactBusiness=(value.financial+value.reputation+value.noncompliance+value.privacy)/4;
+      		value.totaleImpactTechnical=(value.confide+value.integri+value.avalai+value.accounta)/4;
+      		if(value.totaleImpactBusiness==0){
+      			value.totaleImpact=value.totaleImpactTechnical;
+      		}else{
+      			value.totaleImpact=value.totaleImpactBusiness;
+      		}
+      		//combinazione dei rischi x ogni threat
+      		//Per il rischio totale ho bisogno di classificare numericamente da 1 a 9:
+      		//VERY LOW	=1
+      		//LOW		=3
+      		//MEDIUM	=5
+      		//HIGH		=7
+      		//CRITICAL	=9
+      		switch(true){
+      			case((value.totaleImpact>=6)&&(value.totaleImpact<=9)): //HIGH
+      				switch(true){
+      				case value.totaleLikehood<3: value.risk='MEDIUM';value.riskNum=5;break;
+      				case (value.totaleLikehood>=3)&&(value.totaleLikehood<6): value.risk='HIGH';value.riskNum=7;break;
+      				case (value.totaleLikehood>=6)&&(value.totaleLikehood<=9): value.risk='CRITICAL';value.riskNum=9;break;
+      				}
+      			break;
+      			
+      			case((value.totaleImpact>=3)&&(value.totaleImpact<6)): //MEDIUM
+      				switch(true){
+      				case value.totaleLikehood<3: value.risk='LOW';value.riskNum=3;break;
+      				case (value.totaleLikehood>=3)&&(value.totaleLikehood<6): value.risk='MEDIUM';value.riskNum=5;break;
+      				case (value.totaleLikehood>=6)&&(value.totaleLikehood<=9): value.risk='HIGH';value.riskNum=7;break;
+      				}
+      			break;
+      			
+      			case(value.totaleImpact<3): //LOW
+      				switch(true){
+      				case value.totaleLikehood<3: value.risk='VERY LOW';value.riskNum=1;break;
+      				case (value.totaleLikehood>=3)&&(value.totaleLikehood<6): value.risk='LOW';value.riskNum=3;break;
+      				case (value.totaleLikehood>=6)&&(value.totaleLikehood<=9): value.risk='MEDIUM';value.riskNum=5;break;
+      				}
+      			break;
+      		}	
+      	});});
+      	  
+      	  //assegno il punteggio della categoria al threat
+      	angular.forEach($scope.selection, function(threat, k){
+      		angular.forEach($scope.ListSTRIDE, function(cat, ke){
+      		if(threat.componentid==cat.componentid){
+      			
+      			angular.forEach(cat.punteggi, function(categoria, key){
+      			if(categoria.name==threat.stride){
+      				//likehood
+      				threat.skill=categoria.skill;
+      				threat.motive=categoria.motive;
+      				threat.opportunity=categoria.opportunity;
+      				threat.size=categoria.size;
+      				threat.discover=categoria.discover;
+      				threat.ease=categoria.ease;
+      				threat.aware=categoria.aware;
+      				threat.id=categoria.id;
+      				//technical impacts
+      				threat.confide=categoria.confide;
+      				threat.integri=categoria.integri;
+      				threat.avalai=categoria.avalai;
+      				threat.accounta=categoria.accounta;
+      				//business impacts
+      				threat.financial=categoria.financial;
+      				threat.reputation=categoria.reputation;
+      				threat.noncompliance=categoria.noncompliance;
+      				threat.privacy=categoria.privacy;
+      				//altro
+      				threat.totaleLikehood=categoria.totaleLikehood;
+      				threat.totaleImpactBusiness=categoria.totaleImpactBusiness;
+      				threat.totaleImpactTechnical=categoria.totaleImpactTechnical;
+      				threat.totaleImpact=categoria.totaleImpact;
+      				threat.risk=categoria.risk;
+      				threat.riskNum=categoria.riskNum;
+      			}
+      			});
+      		}	
+      		});
+      	});
+      	  
+    		
+    	}//fine else
 
-    	
-    	
-    	
     	//salvo i valori inseriti per mantenere anche le tabelle
     	//$cookieStore.put('selection',$scope.selection);
-    	
     	localStorage.setItem("selection", JSON.stringify($scope.selection));
+    	localStorage.setItem("valoriSTRIDE", JSON.stringify($scope.ListSTRIDE));
     }
     
     
@@ -1298,6 +1536,8 @@ angular.module('SlaApp.negotiate.controllers', [])
 	  
 	//funzione di inserimento del controllo selezionato con la spunta
 	  $scope.toggleSelection = function toggleSelection(control,name,component,desc,threatid) {
+		  //forzo next
+		  $scope.controlselected=false;
 		  
 		  	var idx = arrayObjectIndexOf($scope.controlselection,control,'control',component,'component');
 	   		// is currently selected
@@ -1446,6 +1686,9 @@ angular.module('SlaApp.negotiate.controllers', [])
 		//funzione di selezione di tutti i controlli required
 		//provo a farla lavorare sulla lista dei controlli suggeriti senza duplicati
 		$scope.selezionatuttiRequired= function(){
+			//forzo next
+			$scope.controlselected=false;
+			
 			angular.forEach($scope.ListComponentFromDB, function(componente, key1){
 				
 				angular.forEach($scope.selection, function(threat, key2){
@@ -1478,17 +1721,14 @@ angular.module('SlaApp.negotiate.controllers', [])
 		}//fine funzione
 		
 		
+	//funzione deseleziona tutto	
+	$scope.pulizia=function(){
 		
+		$scope.controlselection=[];
 		
+	}	
 		
-		
-		
-		
-		
-		
-		
-		
-		
+	
    
 })
 
