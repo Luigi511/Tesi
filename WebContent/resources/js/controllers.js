@@ -39,6 +39,7 @@ angular.module('SlaApp.controllers', [])
 		localStorage.removeItem('controlselection');
 		localStorage.removeItem('SLA');
 		localStorage.removeItem('metriche');
+		localStorage.removeItem('altremetriche');
 		localStorage.removeItem('threatlist');
 		localStorage.removeItem('valoriSTRIDE');
 		console.log("cookie rimossi");
@@ -916,6 +917,9 @@ angular.module('SlaApp.negotiate.controllers', [])
 		   
 			   localStorage.setItem("selection", JSON.stringify($scope.selection));
 			   localStorage.removeItem('controlselection'); //pulizia per dopo...
+			   localStorage.removeItem('SLA');
+			   localStorage.removeItem('metriche');
+			   localStorage.removeItem('altremetriche');
 
 			   console.log("salvato nel localstorage");
 		   
