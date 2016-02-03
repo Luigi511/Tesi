@@ -16,7 +16,7 @@
     </div>
     
  <div class="panel panel-default" ng-repeat="sla in capabilities">
- 	<h4 align="center"><b>SLA Component {{sla.component}}           </b><button class="btn btn-primary" ng-click="toggleTable(sla.component)">Show/Hide</button>  <a class="btn btn-primary" style="align:right;" ng-click="downloadSLA(sla)" ng-href="{{ fileUrl }}" download="SLA_{{sla.component}}.xml">download</a></h2>
+ 	<h4 align="center"><b>SLA Component {{sla.component}}           </b></h4><h4 align="center"><button class="btn btn-primary" ng-click="toggleTable(sla.component)">Show/Hide</button>  <a class="btn btn-primary" style="align:right;" ng-click="downloadSLA(sla)" ng-href="{{ fileUrl }}" download="SLA_{{sla.component}}.xml">download</a></h2>
    <textarea style="width:100%; display:none; white-space: pre-line; " rows="40" cols="150" disabled id="{{sla.component}}">
    {{stringa_template_pre}}{{sla.component}}{{stringa_template_pre2}}{{sla.comptype}}{{stringa_template_pre3}}
    {{sla.sla}} 

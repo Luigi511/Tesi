@@ -1419,7 +1419,13 @@ angular.module('SlaApp.negotiate.controllers', [])
 	   }
     
     
-    
+	   $scope.solosecisonoThreatSTRIDE=function(categoria,componente){
+		  var trovato=false;
+		  angular.forEach($scope.selection,function(t,k){
+			  if((t.stride==categoria)&&(t.componentid==componente)){trovato=true;}
+		  });
+		  return trovato;
+	   }
     
     
 })//fine controller ranking
@@ -1917,7 +1923,13 @@ angular.module('SlaApp.negotiate.controllers', [])
 	}//fine savemetrics
 
 
-	
+	$scope.nessunametrica=function(idcomponente){
+		var bool=false;
+		angular.forEach($scope.metricheassociate,function(val,ch){
+			if(val.componenteid==idcomponente){bool=true;}
+		});
+		return bool;
+	}
 	
 	
 })//fine controller metriche1
@@ -2218,6 +2230,17 @@ angular.module('SlaApp.negotiate.controllers', [])
 		
 		
 	}
+	
+	
+	$scope.getnumberofmetrics=function(cat,component){
+		var i=0;
+		angular.forEach($scope.altremetriche,function(val,ch){
+			if((val.componenteid==component)&&(val.stride==cat)){i++;}
+		});
+		return i;
+	}
+	
+	
 	
 })//fine controller metriche2
 

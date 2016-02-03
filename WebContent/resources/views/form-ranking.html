@@ -198,8 +198,17 @@ a.tip2:hover span {
     <div class="well">
 		By following the approach here, it is possible to estimate the severity of all of these risks to the business and make an informed decision about what to do about those risks. Having a system in place for rating risks will save time and eliminate arguing about priorities. <br>This system will help to ensure that the business doesn't get distracted by minor risks while ignoring more serious risks that are less well understood. <br>
 		<a href="https://www.owasp.org/index.php/OWASP_Risk_Rating_Methodology" target="_blank">(Reference: The OWASP Risk Rating Methodology)</a>
-    	<br><br>According to the <a href="https://www.owasp.org/index.php/Threat_Risk_Modeling#STRIDE" target="_blank">STRIDE Methodology,</a> the Threats previously selected are grouped in 6 categories.<br>
-    	 For each of them, insert the appropriate values to assess likelihood and impact overall system.
+    	<br><br>According to the <a href="https://www.owasp.org/index.php/Threat_Risk_Modeling#STRIDE" target="_blank">STRIDE Methodology,</a> the Threats previously selected are grouped in 6 categories:<br>
+    		<ul>
+    			<li>SPOOFING</li>
+    			<li>TAMPERING</li>
+    			<li>REPUDIATION</li>
+    			<li>INFORMATION DISCLOSURE</li>
+    			<li>DENIAL OF SERVICE</li>
+    			<li>ELEVATION OF PRIVILEGES</li>
+    		</ul>
+    	Below are shown only the STRIDE categories corresponding to the selected threats:
+    	for each of them, insert the appropriate values to assess likelihood and impact overall system.
     	<br><span style="color:red">TIPS: if you hover the mouse over each field, you can view additional information!</span>
     	<br><br><b>Do you want to evaluate the risks for every Threat instead of evaluating the STRIDE categories?
     	 </b>  <button ng-click="switchRiskRating()">{{valutazione}}</button>
@@ -286,7 +295,7 @@ a.tip2:hover span {
   	<p align="center" style="color:red" ng-hide="solosecisonoThreat(component.componentid)">You didn't select any threats!</p>
   	<table  style="width: 100%;border:1px solid grey;" ng-show="solosecisonoThreat(component.componentid)">
 
-  		<tr ng-repeat="threat in component.punteggi" style="border:1px solid grey;">
+  		<tr ng-repeat="threat in component.punteggi" style="border:1px solid grey;" ng-show="solosecisonoThreatSTRIDE(threat.name,component.componentid)">
   			<td width="10%"><a class="tip2">{{threat.name}}<span>{{threat.description}}</span></a></td>
   			<td align="center"><b>OVERALL RISK SEVERITY = {{threat.risk}}</b>
   			

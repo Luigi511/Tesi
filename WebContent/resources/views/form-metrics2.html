@@ -44,14 +44,14 @@
   
   <div class="panel-body ">
     <div class="well">
-      If there are associated metrics with your chosen Threats, now you must enter the appropriate parameters for each Security Metric.
+      If there are associated metrics with your chosen Threats, for each of them you must enter the appropriate parameters.
     </div>
 
 <div class="panel panel-default" ng-repeat="com in ListComponentFromDB">
 <h3 align="center">Metrics for Component: {{com.name}} ({{com.type}})</h3>
 
 <table style="border:1px solid grey; width:100%">
-<tr><td>SPOOFING</td></tr><tr><td>
+<tr><td>SPOOFING: {{getnumberofmetrics('SPOOFING',com.id)}}</td></tr><tr><td>
 <table ng-repeat="met in altremetriche | filter:{componenteid:com.id} | filter:{stride:'SPOOFING'}" border="0" style="width:100%;">
 <!-- track by $index --> 
  <tr><td width="100%">
@@ -138,7 +138,7 @@
 
 
 <table style="border:1px solid grey; width:100%">
-<tr><td>TAMPERING</td></tr><tr><td>
+<tr><td>TAMPERING: {{getnumberofmetrics('TAMPERING',com.id)}}</td></tr><tr><td>
 <table ng-repeat="met in altremetriche | filter:{componenteid:com.id} | filter:{stride:'TAMPERING'}" border="0" style="width:100%;">
 <!-- track by $index --> 
  <tr><td width="100%">
@@ -225,7 +225,7 @@
 
 
 <table style="border:1px solid grey; width:100%">
-<tr><td>REPUDIATION</td></tr><tr><td>
+<tr><td>REPUDIATION: {{getnumberofmetrics('REPUDIATION',com.id)}}</td></tr><tr><td>
 <table ng-repeat="met in altremetriche | filter:{componenteid:com.id} | filter:{stride:'REPUDIATION'}" border="0" style="width:100%;">
 <!-- track by $index --> 
  <tr><td width="100%">
@@ -312,7 +312,7 @@
 
 
 <table style="border:1px solid grey; width:100%">
-<tr><td>INFORMATION DISCLOSURE</td></tr><tr><td>
+<tr><td>INFORMATION DISCLOSURE: {{getnumberofmetrics('INFORMATION DISCLOSURE',com.id)}}</td></tr><tr><td>
 <table ng-repeat="met in altremetriche | filter:{componenteid:com.id} | filter:{stride:'INFORMATION DISCLOSURE'}" border="0" style="width:100%;">
 <!-- track by $index --> 
  <tr><td width="100%">
@@ -399,7 +399,7 @@
 
 
 <table style="border:1px solid grey; width:100%">
-<tr><td>DENIAL OF SERVICE</td></tr><tr><td>
+<tr><td>DENIAL OF SERVICE: {{getnumberofmetrics('DENIAL OF SERVICE',com.id)}}</td></tr><tr><td>
 <table ng-repeat="met in altremetriche | filter:{componenteid:com.id} | filter:{stride:'DENIAL OF SERVICE'}" border="0" style="width:100%;">
 <!-- track by $index --> 
  <tr><td width="100%">
@@ -485,7 +485,7 @@
 </table>
 
 <table style="border:1px solid grey; width:100%">
-<tr><td>ELEVATION OF PRIVILEGES</td></tr><tr><td>
+<tr><td>ELEVATION OF PRIVILEGES: {{getnumberofmetrics('ELEVATION OF PRIVILEGES',com.id)}}</td></tr><tr><td>
 <table ng-repeat="met in altremetriche | filter:{componenteid:com.id} | filter:{stride:'ELEVATION OF PRIVILEGES'}" border="0" style="width:100%;">
 <!-- track by $index --> 
  <tr><td width="100%">

@@ -37,7 +37,7 @@
   
   <div class="panel-body ">
     <div class="well">
-      If there are associated metrics with your chosen Controls, now you must enter the appropriate parameters for each Security Metric.
+      If there are associated metrics with your chosen Controls, for each of them you must enter the appropriate parameters.
     </div>
 
 <div class="panel panel-default" ng-repeat="com in ListComponentFromDB">
@@ -137,6 +137,7 @@
     
     
     </table>
+    <p align="center" style="color:red" ng-hide="nessunametrica(com.id)">There aren't Metrics associated with the chosen controls.</p>
 </div>
 
      
