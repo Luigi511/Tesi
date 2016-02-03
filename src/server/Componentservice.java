@@ -462,6 +462,40 @@ public int getComponentID(String name, int idd) {
 	}
 
 
+public List<Metric> getOtherMetrics(String threat) {
+	List<Metric> h = new ArrayList<Metric>();
+	
+	try {
+		  PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM metrics where metrics.threatname=?");
+		  preparedStatement.setString(1, threat);
+		  ResultSet rs = preparedStatement.executeQuery();
+		  while (rs.next()) {
+			  Metric mn=new Metric();
+			  mn.setid(rs.getInt("idmetrics"));
+			  mn.setname(rs.getString("metricname"));
+			  mn.setdes(rs.getString("metricdescr"));
+			  mn.setformula(rs.getString("formula"));
+			  mn.setinput1(rs.getString("input1"));
+			  mn.setinput2(rs.getString("input2"));
+			  mn.setvalue(rs.getString("value"));
+			  mn.setunit(rs.getString("unit"));
+			  mn.setdefault(rs.getString("defaultt"));
+			  mn.setmin(rs.getString("min"));
+			  mn.setmax(rs.getString("max"));
+			  mn.setope(rs.getString("operator"));
+			  /*mm.setnist(rs.getString("nistcontrol"));*/
+			  mn.setThreatname(rs.getString("threatname"));
+			  mn.setSTRIDE(rs.getString("STRIDE"));
+			  h.add(mn);
+			  
+		  }
+	}catch (SQLException e) {
+		  e.printStackTrace();
+	}
+	return h;
+}
+
+
 
 
  

@@ -241,6 +241,14 @@ public class ServerREST {
 		  List<Metric> m=service.getAllMetrics(id);
 		  return m;
 	  }
+	  
+	  //API tutte le metriche del comp
+	  @RequestMapping(value="/altremetrice/{threat}",method = RequestMethod.GET,headers="Accept=application/json")
+	  public List<Metric> getOtherMetrics(@PathVariable String threat) throws ParseException { 
+		  
+		  List<Metric> ml=service.getOtherMetrics(threat);
+		  return ml;
+	  }
  
  
          

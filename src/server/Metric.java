@@ -16,6 +16,8 @@ public class Metric {
 	private String operator;
 	private String nistcontrol;
 	private String componente_id;
+	private String threatname;
+	private String STRIDE;
 	
 	public void setid(int m){this.idmetrics=m;}
 	public void setname(String n){this.metricname=n;}
@@ -31,6 +33,8 @@ public class Metric {
 	public void setope(String op){this.operator=op;}
 	public void setnist(String ni){this.nistcontrol=ni;}
 	public void setcomponenteid(String cid){this.componente_id=cid;}
+	public void setThreatname(String tn){this.threatname=tn;}
+	public void setSTRIDE(String st){this.STRIDE=st;}
 	
 	
 	public int getid(){return idmetrics;}
@@ -47,6 +51,8 @@ public class Metric {
 	public String getop(){return operator;}
 	public String getnist(){return nistcontrol;}
 	public String getcomponenteid(){return componente_id;}
+	public String getThreatname(){return threatname;}
+	public String getSTRIDE(){return STRIDE;}
 	
 
 }

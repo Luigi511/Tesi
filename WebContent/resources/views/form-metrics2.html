@@ -1,0 +1,592 @@
+<style>
+         table, th , td {
+            /* border: 0px solid grey; */
+            
+            border-collapse: collapse;
+            padding: 2px;  
+         }
+         
+         .tabella_scomparsa table, th  {
+            border: 0px solid grey;
+            border-collapse: collapse;
+            padding: 3px;
+             
+         }
+         
+         .verticaltext{
+   			width:5px;
+    		word-wrap: break-word;
+    		font-family: monospace; /* this is just for good looks */
+    		font-size:12px;
+}
+
+</style>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h2>Security Metrics Selection (2) - Metrics for Threats</h2>
+  </div>
+<!--   <div class="panel-body ">
+    <div class="well">
+      <a ng-click="mostralistacontrolli()">Click here</a> to show/hide all the Security Controls that you have selected.
+    </div>
+    <table style="width:100%;" ng-show="listacontrolli">
+    <tr>
+    	<td style="width: 9%; " ><b>ID</b></td><td><b>Name</b></td><td align="center" style="width: 20%;"><b>Component</b></td>
+    </tr>
+    <tr ng-repeat="ctr in controlselection | orderBy:'component'">
+    	<td valign="top" >{{ctr.control}}</td><td>{{ctr.controlname}}</td><td valign="top" align="center">{{getcompname(ctr.component)}}</td>
+    </tr>
+    </table>
+    
+    
+  </div> -->
+  
+  <div class="panel-body ">
+    <div class="well">
+      If there are associated metrics with your chosen Threats, now you must enter the appropriate parameters for each Security Metric.
+    </div>
+
+<div class="panel panel-default" ng-repeat="com in ListComponentFromDB">
+<h3 align="center">Metrics for Component: {{com.name}} ({{com.type}})</h3>
+
+<table style="border:1px solid grey; width:100%">
+<tr><td>SPOOFING</td></tr><tr><td>
+<table ng-repeat="met in altremetriche | filter:{componenteid:com.id} | filter:{stride:'SPOOFING'}" border="0" style="width:100%;">
+<!-- track by $index --> 
+ <tr><td width="100%">
+
+    	<!-- tabella tipo1 (yes/no) -->
+    	<table class="tabella_scomparsa" ng-show="met.value=='yes / no'" border="1" style="width:100%;">
+    	<tr>
+    		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
+    		<td width="20%"><b>{{met.metricname}}</b></td>
+    		<td width="80%">
+    		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
+    		{{met.metricdescr}}<br><br>DO YOU WANT THIS METRIC? 
+    			<select id="mySelect" ng-model="met.outputYES_NO">
+    				<option value="yes">Yes</option>
+      				<option value="no">No</option>
+      			</select>
+    		</td>
+    	</tr>
+    	</table>
+    	
+    </td></tr>
+    <tr><td>
+    	<!-- tabella tipo2 (%) -->
+    	<table class="tabella_scomparsa" ng-show="(met.value=='integer')&&(met.unit=='%')"  border="1" style="width:100%;">
+    	<tr>
+    		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
+    		<td width="20%"><b>{{met.metricname}}</b></td>
+    		<td width="80%">
+    		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
+    		{{met.metricdescr}}<br><br>INPUT VALUES:<br>
+    		{{met.input1}}<br>{{met.input2}}
+    		<br>
+    		<table>
+    				
+    				<tr>
+    				<td>T= 
+    				<input type="number" ng-model="met.T" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
+    				</td>
+    				<td>N= 
+    				<input type="number" ng-model="met.N" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
+    				</td>
+
+    				<td>RESULT:</td>
+    				<td>{{met.op}} {{(met.N)/(met.T)*100 | number:2}} %</td>
+    				</tr>
+    				</table>
+    		</td>
+    	</tr>
+    	</table>
+    </td></tr>
+    
+    <tr><td>
+    	<!-- tabella tipo3 (numero semplice) -->
+    	<table class="tabella_scomparsa" ng-show="(met.value=='integer')&&(met.unit=='number')"  border="1" style="width:100%;">
+    	<tr>
+    		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
+    		<td width="20%"><b>{{met.metricname}}</b></td>
+    		<td width="80%">
+    		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
+    		{{met.metricdescr}}<br><br>PLEASE ENTER THE PARAMETER: 
+    			<input type="number" ng-model="met.N" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
+    		</td>			
+    	</tr>
+    	</table>
+    </td></tr>
+    
+        <tr><td>
+    	<!-- tabella tipo4 (livelli) -->
+    	<table class="tabella_scomparsa" ng-show="(met.value=='integer')&&(met.unit=='levels')"  border="1" style="width:100%;">
+    	<tr>
+    		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
+    		<td width="20%"><b>{{met.metricname}}</b></td>
+    		<td width="80%">
+    		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
+    		{{met.metricdescr}}<br><br><span style="white-space:pre-line;">{{met.formula}}</span><br><br>CHOOSE A LEVEL: 
+    		   <input type="number" ng-model="met.N" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
+    		</td>		
+    	</tr>
+    	</table>
+    </td></tr>
+</table>
+</td></tr>
+</table>
+
+
+<table style="border:1px solid grey; width:100%">
+<tr><td>TAMPERING</td></tr><tr><td>
+<table ng-repeat="met in altremetriche | filter:{componenteid:com.id} | filter:{stride:'TAMPERING'}" border="0" style="width:100%;">
+<!-- track by $index --> 
+ <tr><td width="100%">
+
+    	<!-- tabella tipo1 (yes/no) -->
+    	<table class="tabella_scomparsa" ng-show="met.value=='yes / no'" border="1" style="width:100%;">
+    	<tr>
+    		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
+    		<td width="20%"><b>{{met.metricname}}</b></td>
+    		<td width="80%">
+    		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
+    		{{met.metricdescr}}<br><br>DO YOU WANT THIS METRIC? 
+    			<select id="mySelect" ng-model="met.outputYES_NO">
+    				<option value="yes">Yes</option>
+      				<option value="no">No</option>
+      			</select>
+    		</td>
+    	</tr>
+    	</table>
+    	
+    </td></tr>
+    <tr><td>
+    	<!-- tabella tipo2 (%) -->
+    	<table class="tabella_scomparsa" ng-show="(met.value=='integer')&&(met.unit=='%')"  border="1" style="width:100%;">
+    	<tr>
+    		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
+    		<td width="20%"><b>{{met.metricname}}</b></td>
+    		<td width="80%">
+    		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
+    		{{met.metricdescr}}<br><br>INPUT VALUES:<br>
+    		{{met.input1}}<br>{{met.input2}}
+    		<br>
+    		<table>
+    				
+    				<tr>
+    				<td>T= 
+    				<input type="number" ng-model="met.T" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
+    				</td>
+    				<td>N= 
+    				<input type="number" ng-model="met.N" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
+    				</td>
+
+    				<td>RESULT:</td>
+    				<td>{{met.op}} {{(met.N)/(met.T)*100 | number:2}} %</td>
+    				</tr>
+    				</table>
+    		</td>
+    	</tr>
+    	</table>
+    </td></tr>
+    
+    <tr><td>
+    	<!-- tabella tipo3 (numero semplice) -->
+    	<table class="tabella_scomparsa" ng-show="(met.value=='integer')&&(met.unit=='number')"  border="1" style="width:100%;">
+    	<tr>
+    		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
+    		<td width="20%"><b>{{met.metricname}}</b></td>
+    		<td width="80%">
+    		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
+    		{{met.metricdescr}}<br><br>PLEASE ENTER THE PARAMETER: 
+    			<input type="number" ng-model="met.N" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
+    		</td>			
+    	</tr>
+    	</table>
+    </td></tr>
+    
+        <tr><td>
+    	<!-- tabella tipo4 (livelli) -->
+    	<table class="tabella_scomparsa" ng-show="(met.value=='integer')&&(met.unit=='levels')"  border="1" style="width:100%;">
+    	<tr>
+    		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
+    		<td width="20%"><b>{{met.metricname}}</b></td>
+    		<td width="80%">
+    		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
+    		{{met.metricdescr}}<br><br><span style="white-space:pre-line;">{{met.formula}}</span><br><br>CHOOSE A LEVEL: 
+    		   <input type="number" ng-model="met.N" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
+    		</td>		
+    	</tr>
+    	</table>
+    </td></tr>
+</table>
+</td></tr>
+</table>
+
+
+<table style="border:1px solid grey; width:100%">
+<tr><td>REPUDIATION</td></tr><tr><td>
+<table ng-repeat="met in altremetriche | filter:{componenteid:com.id} | filter:{stride:'REPUDIATION'}" border="0" style="width:100%;">
+<!-- track by $index --> 
+ <tr><td width="100%">
+
+    	<!-- tabella tipo1 (yes/no) -->
+    	<table class="tabella_scomparsa" ng-show="met.value=='yes / no'" border="1" style="width:100%;">
+    	<tr>
+    		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
+    		<td width="20%"><b>{{met.metricname}}</b></td>
+    		<td width="80%">
+    		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
+    		{{met.metricdescr}}<br><br>DO YOU WANT THIS METRIC? 
+    			<select id="mySelect" ng-model="met.outputYES_NO">
+    				<option value="yes">Yes</option>
+      				<option value="no">No</option>
+      			</select>
+    		</td>
+    	</tr>
+    	</table>
+    	
+    </td></tr>
+    <tr><td>
+    	<!-- tabella tipo2 (%) -->
+    	<table class="tabella_scomparsa" ng-show="(met.value=='integer')&&(met.unit=='%')"  border="1" style="width:100%;">
+    	<tr>
+    		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
+    		<td width="20%"><b>{{met.metricname}}</b></td>
+    		<td width="80%">
+    		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
+    		{{met.metricdescr}}<br><br>INPUT VALUES:<br>
+    		{{met.input1}}<br>{{met.input2}}
+    		<br>
+    		<table>
+    				
+    				<tr>
+    				<td>T= 
+    				<input type="number" ng-model="met.T" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
+    				</td>
+    				<td>N= 
+    				<input type="number" ng-model="met.N" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
+    				</td>
+
+    				<td>RESULT:</td>
+    				<td>{{met.op}} {{(met.N)/(met.T)*100 | number:2}} %</td>
+    				</tr>
+    				</table>
+    		</td>
+    	</tr>
+    	</table>
+    </td></tr>
+    
+    <tr><td>
+    	<!-- tabella tipo3 (numero semplice) -->
+    	<table class="tabella_scomparsa" ng-show="(met.value=='integer')&&(met.unit=='number')"  border="1" style="width:100%;">
+    	<tr>
+    		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
+    		<td width="20%"><b>{{met.metricname}}</b></td>
+    		<td width="80%">
+    		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
+    		{{met.metricdescr}}<br><br>PLEASE ENTER THE PARAMETER: 
+    			<input type="number" ng-model="met.N" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
+    		</td>			
+    	</tr>
+    	</table>
+    </td></tr>
+    
+        <tr><td>
+    	<!-- tabella tipo4 (livelli) -->
+    	<table class="tabella_scomparsa" ng-show="(met.value=='integer')&&(met.unit=='levels')"  border="1" style="width:100%;">
+    	<tr>
+    		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
+    		<td width="20%"><b>{{met.metricname}}</b></td>
+    		<td width="80%">
+    		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
+    		{{met.metricdescr}}<br><br><span style="white-space:pre-line;">{{met.formula}}</span><br><br>CHOOSE A LEVEL: 
+    		   <input type="number" ng-model="met.N" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
+    		</td>		
+    	</tr>
+    	</table>
+    </td></tr>
+</table>
+</td></tr>
+</table>
+
+
+<table style="border:1px solid grey; width:100%">
+<tr><td>INFORMATION DISCLOSURE</td></tr><tr><td>
+<table ng-repeat="met in altremetriche | filter:{componenteid:com.id} | filter:{stride:'INFORMATION DISCLOSURE'}" border="0" style="width:100%;">
+<!-- track by $index --> 
+ <tr><td width="100%">
+
+    	<!-- tabella tipo1 (yes/no) -->
+    	<table class="tabella_scomparsa" ng-show="met.value=='yes / no'" border="1" style="width:100%;">
+    	<tr>
+    		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
+    		<td width="20%"><b>{{met.metricname}}</b></td>
+    		<td width="80%">
+    		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
+    		{{met.metricdescr}}<br><br>DO YOU WANT THIS METRIC? 
+    			<select id="mySelect" ng-model="met.outputYES_NO">
+    				<option value="yes">Yes</option>
+      				<option value="no">No</option>
+      			</select>
+    		</td>
+    	</tr>
+    	</table>
+    	
+    </td></tr>
+    <tr><td>
+    	<!-- tabella tipo2 (%) -->
+    	<table class="tabella_scomparsa" ng-show="(met.value=='integer')&&(met.unit=='%')"  border="1" style="width:100%;">
+    	<tr>
+    		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
+    		<td width="20%"><b>{{met.metricname}}</b></td>
+    		<td width="80%">
+    		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
+    		{{met.metricdescr}}<br><br>INPUT VALUES:<br>
+    		{{met.input1}}<br>{{met.input2}}
+    		<br>
+    		<table>
+    				
+    				<tr>
+    				<td>T= 
+    				<input type="number" ng-model="met.T" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
+    				</td>
+    				<td>N= 
+    				<input type="number" ng-model="met.N" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
+    				</td>
+
+    				<td>RESULT:</td>
+    				<td>{{met.op}} {{(met.N)/(met.T)*100 | number:2}} %</td>
+    				</tr>
+    				</table>
+    		</td>
+    	</tr>
+    	</table>
+    </td></tr>
+    
+    <tr><td>
+    	<!-- tabella tipo3 (numero semplice) -->
+    	<table class="tabella_scomparsa" ng-show="(met.value=='integer')&&(met.unit=='number')"  border="1" style="width:100%;">
+    	<tr>
+    		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
+    		<td width="20%"><b>{{met.metricname}}</b></td>
+    		<td width="80%">
+    		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
+    		{{met.metricdescr}}<br><br>PLEASE ENTER THE PARAMETER: 
+    			<input type="number" ng-model="met.N" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
+    		</td>			
+    	</tr>
+    	</table>
+    </td></tr>
+    
+        <tr><td>
+    	<!-- tabella tipo4 (livelli) -->
+    	<table class="tabella_scomparsa" ng-show="(met.value=='integer')&&(met.unit=='levels')"  border="1" style="width:100%;">
+    	<tr>
+    		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
+    		<td width="20%"><b>{{met.metricname}}</b></td>
+    		<td width="80%">
+    		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
+    		{{met.metricdescr}}<br><br><span style="white-space:pre-line;">{{met.formula}}</span><br><br>CHOOSE A LEVEL: 
+    		   <input type="number" ng-model="met.N" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
+    		</td>		
+    	</tr>
+    	</table>
+    </td></tr>
+</table>
+</td></tr>
+</table>
+
+
+<table style="border:1px solid grey; width:100%">
+<tr><td>DENIAL OF SERVICE</td></tr><tr><td>
+<table ng-repeat="met in altremetriche | filter:{componenteid:com.id} | filter:{stride:'DENIAL OF SERVICE'}" border="0" style="width:100%;">
+<!-- track by $index --> 
+ <tr><td width="100%">
+
+    	<!-- tabella tipo1 (yes/no) -->
+    	<table class="tabella_scomparsa" ng-show="met.value=='yes / no'" border="1" style="width:100%;">
+    	<tr>
+    		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
+    		<td width="20%"><b>{{met.metricname}}</b></td>
+    		<td width="80%">
+    		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
+    		{{met.metricdescr}}<br><br>DO YOU WANT THIS METRIC? 
+    			<select id="mySelect" ng-model="met.outputYES_NO">
+    				<option value="yes">Yes</option>
+      				<option value="no">No</option>
+      			</select>
+    		</td>
+    	</tr>
+    	</table>
+    	
+    </td></tr>
+    <tr><td>
+    	<!-- tabella tipo2 (%) -->
+    	<table class="tabella_scomparsa" ng-show="(met.value=='integer')&&(met.unit=='%')"  border="1" style="width:100%;">
+    	<tr>
+    		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
+    		<td width="20%"><b>{{met.metricname}}</b></td>
+    		<td width="80%">
+    		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
+    		{{met.metricdescr}}<br><br>INPUT VALUES:<br>
+    		{{met.input1}}<br>{{met.input2}}
+    		<br>
+    		<table>
+    				
+    				<tr>
+    				<td>T= 
+    				<input type="number" ng-model="met.T" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
+    				</td>
+    				<td>N= 
+    				<input type="number" ng-model="met.N" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
+    				</td>
+
+    				<td>RESULT:</td>
+    				<td>{{met.op}} {{(met.N)/(met.T)*100 | number:2}} %</td>
+    				</tr>
+    				</table>
+    		</td>
+    	</tr>
+    	</table>
+    </td></tr>
+    
+    <tr><td>
+    	<!-- tabella tipo3 (numero semplice) -->
+    	<table class="tabella_scomparsa" ng-show="(met.value=='integer')&&(met.unit=='number')"  border="1" style="width:100%;">
+    	<tr>
+    		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
+    		<td width="20%"><b>{{met.metricname}}</b></td>
+    		<td width="80%">
+    		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
+    		{{met.metricdescr}}<br><br>PLEASE ENTER THE PARAMETER: 
+    			<input type="number" ng-model="met.N" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
+    		</td>			
+    	</tr>
+    	</table>
+    </td></tr>
+    
+        <tr><td>
+    	<!-- tabella tipo4 (livelli) -->
+    	<table class="tabella_scomparsa" ng-show="(met.value=='integer')&&(met.unit=='levels')"  border="1" style="width:100%;">
+    	<tr>
+    		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
+    		<td width="20%"><b>{{met.metricname}}</b></td>
+    		<td width="80%">
+    		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
+    		{{met.metricdescr}}<br><br><span style="white-space:pre-line;">{{met.formula}}</span><br><br>CHOOSE A LEVEL: 
+    		   <input type="number" ng-model="met.N" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
+    		</td>		
+    	</tr>
+    	</table>
+    </td></tr>
+</table>
+</td></tr>
+</table>
+
+<table style="border:1px solid grey; width:100%">
+<tr><td>ELEVATION OF PRIVILEGES</td></tr><tr><td>
+<table ng-repeat="met in altremetriche | filter:{componenteid:com.id} | filter:{stride:'ELEVATION OF PRIVILEGES'}" border="0" style="width:100%;">
+<!-- track by $index --> 
+ <tr><td width="100%">
+
+    	<!-- tabella tipo1 (yes/no) -->
+    	<table class="tabella_scomparsa" ng-show="met.value=='yes / no'" border="1" style="width:100%;">
+    	<tr>
+    		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
+    		<td width="20%"><b>{{met.metricname}}</b></td>
+    		<td width="80%">
+    		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
+    		{{met.metricdescr}}<br><br>DO YOU WANT THIS METRIC? 
+    			<select id="mySelect" ng-model="met.outputYES_NO">
+    				<option value="yes">Yes</option>
+      				<option value="no">No</option>
+      			</select>
+    		</td>
+    	</tr>
+    	</table>
+    	
+    </td></tr>
+    <tr><td>
+    	<!-- tabella tipo2 (%) -->
+    	<table class="tabella_scomparsa" ng-show="(met.value=='integer')&&(met.unit=='%')"  border="1" style="width:100%;">
+    	<tr>
+    		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
+    		<td width="20%"><b>{{met.metricname}}</b></td>
+    		<td width="80%">
+    		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
+    		{{met.metricdescr}}<br><br>INPUT VALUES:<br>
+    		{{met.input1}}<br>{{met.input2}}
+    		<br>
+    		<table>
+    				
+    				<tr>
+    				<td>T= 
+    				<input type="number" ng-model="met.T" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
+    				</td>
+    				<td>N= 
+    				<input type="number" ng-model="met.N" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
+    				</td>
+
+    				<td>RESULT:</td>
+    				<td>{{met.op}} {{(met.N)/(met.T)*100 | number:2}} %</td>
+    				</tr>
+    				</table>
+    		</td>
+    	</tr>
+    	</table>
+    </td></tr>
+    
+    <tr><td>
+    	<!-- tabella tipo3 (numero semplice) -->
+    	<table class="tabella_scomparsa" ng-show="(met.value=='integer')&&(met.unit=='number')"  border="1" style="width:100%;">
+    	<tr>
+    		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
+    		<td width="20%"><b>{{met.metricname}}</b></td>
+    		<td width="80%">
+    		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
+    		{{met.metricdescr}}<br><br>PLEASE ENTER THE PARAMETER: 
+    			<input type="number" ng-model="met.N" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
+    		</td>			
+    	</tr>
+    	</table>
+    </td></tr>
+    
+        <tr><td>
+    	<!-- tabella tipo4 (livelli) -->
+    	<table class="tabella_scomparsa" ng-show="(met.value=='integer')&&(met.unit=='levels')"  border="1" style="width:100%;">
+    	<tr>
+    		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
+    		<td width="20%"><b>{{met.metricname}}</b></td>
+    		<td width="80%">
+    		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
+    		{{met.metricdescr}}<br><br><span style="white-space:pre-line;">{{met.formula}}</span><br><br>CHOOSE A LEVEL: 
+    		   <input type="number" ng-model="met.N" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
+    		</td>		
+    	</tr>
+    	</table>
+    </td></tr>
+</table>
+</td></tr>
+</table>
+
+</div>
+
+     
+       
+<br>       
+<button class="btn btn-primary pull-left" ng-click="savemetrics()">Save</button>
+<a href="#/negotiate/overview"><button class="btn btn-primary pull-right" ng-show="finito">Next</button></a>
+<br><br><br>    
+       
+       
+       
+
+  
+<!-- prova dati utente in cookie-->	
+{{user_name}} {{user_surname}} {{user_id}}          
+  </div>
+
+ 
+</div>
+    

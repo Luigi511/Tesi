@@ -29,6 +29,7 @@ angular.module('SlaApp.controllers', [])
 		$cookieStore.remove('controls');
 		$cookieStore.remove('tastoselezionatutto');
 		$cookieStore.remove('finitometriche');
+		$cookieStore.remove('finitometriche2');
 		$cookieStore.remove('questionario');
 		$cookieStore.remove('tastoselezionatutti');
 		$cookieStore.remove('singolarmente');
@@ -539,6 +540,10 @@ angular.module('SlaApp.negotiate.controllers', [])
            $http.post(urlBase + '/rest/components/' +data.name+'/'+data.dept+'/'+$scope.user_id+'/'+data.type).
            success(function(data) {
         	   console.log("inserimento riuscito");
+        	   $cookieStore.remove('buttonthreat');
+        	   $cookieStore.remove('done');
+        	   
+        	   
         	 //aggiorno i componenti a schermo
                $scope.updateOnScreen();
                $scope.boolean2=true;
@@ -1887,10 +1892,142 @@ angular.module('SlaApp.negotiate.controllers', [])
 		$scope.finito=true;
 		$cookieStore.put('finitometriche',$scope.finito);
 		
+
+	}//fine savemetrics
+	
+	
+	
+	
+	
+})//fine controller metriche1
+
+
+.controller('MetricsCtrl2', function ($scope, $http, $cookieStore, $filter, $location, $timeout, $parse) {
+	
+	//prelevo dati cookie; 
+	$scope.user_name=		$cookieStore.get('name');
+    $scope.user_surname=	$cookieStore.get('surname');
+    $scope.user_id=			$cookieStore.get('id_utente');
+    $scope.controlselected=	$cookieStore.get('controls');
+    $scope.finito= 			$cookieStore.get('finitometriche2');
+
+
+    
+    $scope.selection=		JSON.parse(localStorage.getItem('selection'));
+    $scope.controlselection=JSON.parse(localStorage.getItem('controlselection'));
+    $scope.metricheassociate=JSON.parse(localStorage.getItem('metriche'));
+    $scope.altremetriche=JSON.parse(localStorage.getItem('altremetriche'));
+    
+    
+    if($scope.metricheassociate==null){
+    	$scope.metricheassociate=[];
+    }
+    
+    if($scope.altremetriche==null){
+    	$scope.altremetriche=[];
+    }
+    
+    
+    if($location.$$host=='localhost'){
+    	var urlBase="http://localhost:8080/TESI";
+    }
+    else {
+    	//var urlBase="https://threatapplication.herokuapp.com";
+    	var urlBase="http://37.48.247.125/TESI-0.0.1-SNAPSHOT";
+    }
+	
+    
+	
+	//prelevo i componenti dell'utente
+	$scope.ListComponentFromDB = [];
+	$http.get(urlBase+"/rest/components/"+$scope.user_id).
+		success(function(data) {
+			$scope.ListComponentFromDB = data;
+			console.log('componenti utente prelevati');
+		});
+	
+	if($scope.finito!=true){
+	//prelevo le metriche associate a i Threats: quindi per ogni threat recupero le metrice
+	angular.forEach($scope.selection,function(valore,chiave){
+		$http.get(urlBase+"/rest/altremetrice/"+valore.threat).
+		success(function(data) {
+			console.log(data);
+			//per ogni metrica ricevuta verifico che non sia già stata inserita, poi associo il comp e inizializzo
+			angular.forEach(data,function(val,ch){
+				
+				val.componenteid=valore.componentid;
+				
+				var trovato=false;
+				
+				angular.forEach($scope.metricheassociate,function(v,c){
+					var compid=parseInt(v.componenteid, 10);
+					console.log('comp: '+val.metricname+' con '+v.metricname);
+					if((val.metricname==v.metricname)&&(val.componenteid==compid)){trovato=true;console.log('trovato!');}
+				});
+				
+				if(trovato==true){
+					//metrica non valida
+				}
+				else{
+				
+				//inizializzazione dati metrica
+				switch(true){
+				case(val.value=='yes / no'): //tipo 1
+			
+						if((val.def=='yes')||(val.def=='no')){
+							val.outputYES_NO=val.def;}
+						break;
+					
+		
+				case((val.value=='integer')&&(val.unit=='%')): //tipo 2
+						val.N=0;
+						val.T=0;
+						break;
+				
+		
+				case((val.value=='integer')&&(val.unit=='number')): //tipo 3
+			
+						if(val.def!='n/a'){val.N=parseInt(val.def, 10);}
+						break;
+					
+				case((val.value=='integer')&&(val.unit=='levels')): //tipo 4
+						
+						if(val.def!='n/a'){val.N=parseInt(val.def, 10);}
+						break;
+				}
+			
+			//la metrica è valida e inizializzata quindi la salvo
+			$scope.altremetriche=$scope.altremetriche.concat(val);
+			
+			}//fine else
+			});//fine loop data
+			
+			
+			
+		});
+	});
+	
+	}//fine if
+
+
+
+	
+	
+	
+	$scope.savemetrics=function(){
+		
+		localStorage.setItem("altremetriche", JSON.stringify($scope.altremetriche));
+		var Allmetrics=$scope.metricheassociate.concat($scope.altremetriche);
+		
+		console.log("le altre metriche sono state salvate nel localstorage");
+		$scope.finito=true;
+		$cookieStore.put('finitometriche2',$scope.finito);
+		
 		//pulisco il vecchio SLA
 		localStorage.removeItem('SLA');
 		
 		//costruisco lo sla
+		$scope.SLAs=[];
 		$scope.capabilities='';
 		$scope.capability='';
 		$scope.threatsss='';
@@ -1972,7 +2109,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 				$scope.tempmet='';
 				
 				
-				angular.forEach($scope.metricheassociate,function(val,ch2){
+				angular.forEach(Allmetrics,function(val,ch2){
 					
 				//verifico se la metrica è associata al componente		
 				if(val.componenteid==valore.id){
@@ -2015,7 +2152,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 					$scope.SLO=$scope.SLO+SLO;
 					$scope.j++;
 				}//fine if interno
-				});//fine loop metricheassociate
+				});//fine loop tutte le metriche
 					
 				
 				
@@ -2050,13 +2187,11 @@ angular.module('SlaApp.negotiate.controllers', [])
 		
 		
 		console.log('SLA costruito e salvato nel localstorage');
-	}//fine savemetrics
+		
+	}
 	
-	
-	
-	
-	
-})//fine controller metriche
+})//fine controller metriche2
+
 
 
 
