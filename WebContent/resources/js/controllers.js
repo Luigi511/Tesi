@@ -33,6 +33,8 @@ angular.module('SlaApp.controllers', [])
 		$cookieStore.remove('questionario');
 		$cookieStore.remove('tastoselezionatutti');
 		$cookieStore.remove('singolarmente');
+		$cookieStore.remove('nextmetrics2');
+		
 		
 		localStorage.removeItem('imgData');
 		localStorage.removeItem('selection');
@@ -881,45 +883,38 @@ angular.module('SlaApp.negotiate.controllers', [])
 	   //funzione salvataggio dati
 	   $scope.saveSelection = function(){
 		   
-		   if($scope.booleanthreat==true){
-		   		//salvo di nuovo quindi pulisco prima TUTTO
+		   		//pulisco prima TUTTO il db
 			   	angular.forEach($scope.ListComponentFromDB,function(value,key){
-			   		
 			   		//elimino prima le possibili associazioni create in avanti nel wizard 
 			   		$http.post(urlBase+'/rest/delassocControl/'+value.id).
 			   			success(function(data) {
 			   				console.log("elimino dal db i controlli associati ad ogni componente!");
 					 });
 					  
-					//elimino le associazioni create in questa pagina
+					//elimino le associazioni create in precedenza in questa pagina
 					$http.post(urlBase+'/rest/delassoc/'+value.id).
 				 	  	success(function(data) {
-				 	   		console.log("elimino dal db il componente id="+value.id);
-				 	   		
-				 	   		
-				 	   		//$cookieStore.put('buttonthreat',$scope.booleanthreat);
-				 	   		});
+				 	   		console.log("elimino dal db le associazioni Threats-componente id="+value.id);
+
+				 	});
 				  });
-		   //provo a mettere un timeout di 2 secondi per evitare sovrapposizioni
-			   	$scope.booleanthreat=false;
-			   	$timeout(saveSelection2, 2000);
-		   }
-		   else{
-			   saveSelection2();
-		   }
+			   	//provo a mettere un timeout di 2 secondi per evitare sovrapposizioni
+			   	$timeout(saveSelection2, 2000); 
 	   }
-	   
 	   
 	   function saveSelection2(){
 		   	
-		   	//salvo anche i threat con il questionario nel localstorage
-		   	localStorage.setItem("threatlist", JSON.stringify($scope.ThreatFromDB));
+		   	   //salvo anche i threat con il questionario nel localstorage
+		   	   localStorage.setItem("threatlist", JSON.stringify($scope.ThreatFromDB));
 		   
 			   localStorage.setItem("selection", JSON.stringify($scope.selection));
+			   
 			   localStorage.removeItem('controlselection'); //pulizia per dopo...
 			   localStorage.removeItem('SLA');
 			   localStorage.removeItem('metriche');
 			   localStorage.removeItem('altremetriche');
+			   $cookieStore.remove('finitometriche');
+			   $cookieStore.remove('finitometriche2');
 
 			   console.log("salvato nel localstorage");
 		   
@@ -1410,6 +1405,23 @@ angular.module('SlaApp.negotiate.controllers', [])
     	}
     
   
+    
+	   $scope.solosecisonoThreat=function(idcomp){
+		   //conto se ci sono associazioni comp-Threats
+		   $scope.i=0;
+		   angular.forEach($scope.selection,function(t,k){
+			   if(t.componentid==idcomp){$scope.i++;}
+		   });
+		   var bool;
+		   if($scope.i==0){bool=false;}
+		   else{bool=true;} 
+	   return bool;
+	   }
+    
+    
+    
+    
+    
 })//fine controller ranking
 
 
@@ -1438,7 +1450,10 @@ angular.module('SlaApp.negotiate.controllers', [])
     
     if($scope.controlselection==null){
     	$scope.controlselection=[];
+    	$scope.controlselected=false;
     }
+
+    
     
     
     
@@ -1491,6 +1506,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 	
 	//funzione di inserimento di tutti i controlli suggeriti
 	  $scope.toggleSelectionALL = function toggleSelection(control,name,component,desc,threatid) {
+		  
 		  
 		  //gestisco selezione e deselezione indipendentemente con la variabile booleana nei cookie
 		  if($scope.selezionatitutti!=true){
@@ -1547,6 +1563,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 	  $scope.toggleSelection = function toggleSelection(control,name,component,desc,threatid) {
 		  //forzo next
 		  $scope.controlselected=false;
+
 		  
 		  	var idx = arrayObjectIndexOf($scope.controlselection,control,'control',component,'component');
 	   		// is currently selected
@@ -1588,8 +1605,12 @@ angular.module('SlaApp.negotiate.controllers', [])
 	   //funzione salvataggio dati
 	   $scope.saveSelection = function(){
 		   
-		   //se sono tornato indietro devo resettare le metriche associate
+		   //se sono tornato indietro devo resettare le metriche e lo SLA
 		   $cookieStore.remove('finitometriche');
+		   $cookieStore.remove('finitometriche2');
+		   localStorage.removeItem('SLA');
+		   localStorage.removeItem('metriche');
+		   localStorage.removeItem('altremetriche');
 		   
 		   if($scope.controlselected==true){
 		   		//salvo di nuovo quindi pulisco prima TUTTO
@@ -1604,7 +1625,8 @@ angular.module('SlaApp.negotiate.controllers', [])
 				 
 		   //provo a mettere un timeout di 2 secondi per evitare sovrapposizioni
 			   	$scope.controlselected=false;
-			   	$timeout(saveSelection2, 2000);
+			   	$cookieStore.put('controls',$scope.controlselected);
+			   	$timeout(saveSelection2, 200);
 		   }
 		   else{
 			   saveSelection2();
@@ -1735,6 +1757,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 		
 		$scope.controlselection=[];
 		
+		
 	}	
 		
 	
@@ -1747,7 +1770,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 //////////////////////////////////////////////////////////////////////////////////
 
 
-.controller('MetricsCtrl', function ($scope, $http, $cookieStore, $filter, $location, $timeout, $parse) {
+.controller('MetricsCtrl', function ($scope, $http, $cookieStore, $filter, $location, $timeout, $parse, $state) {
   
 	//prelevo dati cookie; 
 	$scope.user_name=		$cookieStore.get('name');
@@ -1794,8 +1817,6 @@ angular.module('SlaApp.negotiate.controllers', [])
 			
 			//adesso per ogni componente recupero le metriche (senza duplicati)
 			angular.forEach($scope.ListComponentFromDB,function(valore,chiave){
-				
-
 				$scope.ListMetrics = [];
 				$http.get(urlBase+"/rest/metrics/"+valore.id).
 					success(function(dat) {
@@ -1842,12 +1863,9 @@ angular.module('SlaApp.negotiate.controllers', [])
 								
 						}
 				});//fine get
-				});//fine ciclo esterno
-			
-			
-			
-			
+				});//fine ciclo esterno	
 	});
+	
 	
 	$scope.getcompname= function(idcomponente){
 		$scope.nomecomp='';
@@ -1859,12 +1877,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 		});		
 		return $scope.nomecomp;
 	}
-	
-	
-	
 
-	
-	
 	
 	//mi restituisce la metrica associata al controllo di sicurezza
 	$scope.getmetric= function(controllo){
@@ -1895,11 +1908,15 @@ angular.module('SlaApp.negotiate.controllers', [])
 		console.log("metriche salvate nel localstorage");
 		$scope.finito=true;
 		$cookieStore.put('finitometriche',$scope.finito);
+		localStorage.removeItem('SLA');	
 		
-
+		if($scope.metricheassociate.length==0){
+			//caso particolare 0 metriche vai avanti direttamente
+			$state.go('negotiate.metrics2');
+		}
 	}//fine savemetrics
-	
-	
+
+
 	
 	
 	
@@ -1914,6 +1931,7 @@ angular.module('SlaApp.negotiate.controllers', [])
     $scope.user_id=			$cookieStore.get('id_utente');
     $scope.controlselected=	$cookieStore.get('controls');
     $scope.finito= 			$cookieStore.get('finitometriche2');
+    $scope.nextbutton=		$cookieStore.get('nextmetrics2');
 
 
     
@@ -1929,6 +1947,10 @@ angular.module('SlaApp.negotiate.controllers', [])
     
     if($scope.altremetriche==null){
     	$scope.altremetriche=[];
+    }
+    if(JSON.parse(localStorage.getItem('SLA'))==null){
+    	//non posso far apparire next
+    	$scope.nextbutton=false;
     }
     
     
@@ -1965,7 +1987,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 				
 				angular.forEach($scope.metricheassociate,function(v,c){
 					var compid=parseInt(v.componenteid, 10);
-					console.log('comp: '+val.metricname+' con '+v.metricname);
+					//console.log('comp: '+val.metricname+' con '+v.metricname);
 					if((val.metricname==v.metricname)&&(val.componenteid==compid)){trovato=true;console.log('trovato!');}
 				});
 				
@@ -2191,6 +2213,9 @@ angular.module('SlaApp.negotiate.controllers', [])
 		
 		
 		console.log('SLA costruito e salvato nel localstorage');
+		$scope.nextbutton=true;
+		$cookieStore.put('nextmetrics2',$scope.nextbutton);
+		
 		
 	}
 	

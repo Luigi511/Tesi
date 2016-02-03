@@ -208,7 +208,8 @@ a.tip2:hover span {
     
   <div class="panel panel-default" ng-repeat="component in ListComponentFromDB" ng-show="singolarmente">
   	<h3 align="center">{{component.name}} ({{component.type}})</h3><br>
-  	<table  style="width: 100%;border:1px solid grey;">
+  	<p align="center" style="color:red" ng-hide="solosecisonoThreat(component.id)">You didn't select any threats!</p>
+  	<table  style="width: 100%;border:1px solid grey;" >
 
   		<tr ng-repeat='threat in selection | filter:{componentid:component.id}' style="border:1px solid grey;">
   			<td width="10%"><a class="tip2">{{threat.threat}}<br>({{threat.stride}})<span>{{threat.description}}</span></a></td>
@@ -282,7 +283,8 @@ a.tip2:hover span {
 	<!-- valutazione STRIDE -->
   <div class="panel panel-default" ng-repeat="component in ListSTRIDE" ng-hide="singolarmente">
   <h3 align="center">{{component.component}} ({{component.type}})</h3><br>
-  	<table  style="width: 100%;border:1px solid grey;">
+  	<p align="center" style="color:red" ng-hide="solosecisonoThreat(component.componentid)">You didn't select any threats!</p>
+  	<table  style="width: 100%;border:1px solid grey;" ng-show="solosecisonoThreat(component.componentid)">
 
   		<tr ng-repeat="threat in component.punteggi" style="border:1px solid grey;">
   			<td width="10%"><a class="tip2">{{threat.name}}<span>{{threat.description}}</span></a></td>
