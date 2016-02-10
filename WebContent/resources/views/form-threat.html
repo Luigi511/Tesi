@@ -145,12 +145,18 @@
   <div class="panel panel-default" ng-repeat="component in ListComponentFromDB">
   <h3 align="center">{{component.name}} ({{component.type}})</h3>
   <table style="width: 100%; ">
+  	<tr><td></td>
+  		<td><b>Threat name</b></td>
+  		<td><b>Threat Description</b></td>
+  		<td><b>Reason</b></td>
+  	</tr>
   	<tr ng-repeat="threat in ThreatFromDB | filter:{componentid:component.id}" ng-show="mostraThreat(threat.show)">
   		<td width="50"><input id="{{threat.name}}" type="checkbox" value="{{threat.name}}" 
   		ng-checked="find(component.name,threat.name)" 
   		ng-click="toggleSelection(component.name,component.id,threat.name,threat.idThreat,threat.stride,threat.descr,threat.source)" name="optionb" id="optb" class="paddingClass" /></td>
-  		<td width="20%">{{threat.name}}<br><h6>({{threat.source}})</h6></td>
+  		<td width="15%">{{threat.name}}<br><h6>({{threat.source}})</h6></td>
   		<td>{{threat.descr}}</td>
+  		<td width="15%">{{threat.answer}}</td>
   		
   	
   	

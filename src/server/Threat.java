@@ -8,6 +8,7 @@ public class Threat {
 	private String stride;
 	private String question;
 	private String source;
+	private String answer;
 	
 	public void setname(String n){this.threatname=n;}
 	public void setdescr(String d){this.threatdescription=d;}
@@ -16,6 +17,7 @@ public class Threat {
 	public void setSTRIDE(String string) {this.stride=string;}
 	public void setquestion(String q){this.question=q;}
 	public void setsource(String ss){this.source=ss;}
+	public void setanswer(String ans){this.answer=ans;}
 	
 	
 	public String getname(){return threatname;}
@@ -25,6 +27,7 @@ public class Threat {
 	public String getSTRIDE(){return stride;}
 	public String getquestion(){return question;}
 	public String getsource(){return source;}
+	public String getanswer(){return answer;}
 
 
 }

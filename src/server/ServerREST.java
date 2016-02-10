@@ -249,6 +249,14 @@ public class ServerREST {
 		  List<Metric> ml=service.getOtherMetrics(threat);
 		  return ml;
 	  }
+	  
+	//API tutti gli id dei controlli per metrica
+	  @RequestMapping(value="/metricControls/{metrica}/{comp}",method = RequestMethod.GET,headers="Accept=application/json")
+	  public List<String> getmetricControls(@PathVariable String metrica,@PathVariable int comp) throws ParseException { 
+		  
+		  List<String> mc=service.getmetricControls(comp,metrica);
+		  return mc;
+	  }
  
  
          

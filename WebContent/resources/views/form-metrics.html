@@ -52,7 +52,7 @@
     	<table class="tabella_scomparsa" ng-show="met.value=='yes / no'" border="1" style="width:100%;">
     	<tr>
     		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
-    		<td width="20%"><b>{{met.metricname}}</b></td>
+    		<td width="20%"><b>{{met.metricname}}</b><br><br>Valid for Controls: {{met.listacontrolli.join(", ")}}</td>
     		<td width="80%">
     		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
     		{{met.metricdescr}}<br><br>DO YOU WANT THIS METRIC? 
@@ -72,7 +72,7 @@
     	<table class="tabella_scomparsa" ng-show="(met.value=='integer')&&(met.unit=='%')"  border="1" style="width:100%;">
     	<tr>
     		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
-    		<td width="20%"><b>{{met.metricname}}</b></td>
+    		<td width="20%"><b>{{met.metricname}}</b><br><br>Valid for Controls: {{met.listacontrolli.join(", ")}}</td>
     		<td width="80%">
     		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
     		{{met.metricdescr}}<br><br>INPUT VALUES:<br>
@@ -105,7 +105,7 @@
     	<table class="tabella_scomparsa" ng-show="(met.value=='integer')&&(met.unit=='number')"  border="1" style="width:100%;">
     	<tr>
     		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
-    		<td width="20%"><b>{{met.metricname}}</b></td>
+    		<td width="20%"><b>{{met.metricname}}</b><br><br>Valid for Controls: {{met.listacontrolli.join(", ")}}</td>
     		<td width="80%">
     		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
     		{{met.metricdescr}}<br><br>PLEASE ENTER THE PARAMETER: 
@@ -123,7 +123,7 @@
     	<table class="tabella_scomparsa" ng-show="(met.value=='integer')&&(met.unit=='levels')"  border="1" style="width:100%;">
     	<tr>
     		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
-    		<td width="20%"><b>{{met.metricname}}</b></td>
+    		<td width="20%"><b>{{met.metricname}}</b><br><br>Valid for Controls: {{met.listacontrolli.join(", ")}}</td>
     		<td width="80%">
     		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
     		{{met.metricdescr}}<br><br><span style="white-space:pre-line;">{{met.formula}}</span><br><br>CHOOSE A LEVEL: 

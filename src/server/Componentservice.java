@@ -421,6 +421,7 @@ public List<Threat> getThreatsxCAT(String cat) {
 			  t.setSTRIDE(rs.getString("stride"));
 			  t.setquestion(rs.getString("question"));
 			  t.setsource(rs.getString("source"));
+			  t.setanswer(rs.getString("answer"));
 			  
 			  ts.add(t);
 			  System.out.println("prelevato threat= "+rs.getString("threatname")+" id="+rs.getInt("idthreats")+" STRIDE= "+rs.getString("stride"));
@@ -488,6 +489,25 @@ public List<Metric> getOtherMetrics(String threat) {
 			  mn.setSTRIDE(rs.getString("STRIDE"));
 			  h.add(mn);
 			  
+		  }
+	}catch (SQLException e) {
+		  e.printStackTrace();
+	}
+	return h;
+}
+
+
+public List<String> getmetricControls(int comp,String metrica) {
+List<String> h = new ArrayList<String>();
+	
+	try {
+		  PreparedStatement preparedStatement = connection.prepareStatement("SELECT DISTINCT nistcontrol FROM metrics,controls,controls_selected_by_users,components where components.idcomponents=? and components.idcomponents=controls_selected_by_users.componente_id and controls_selected_by_users.controlloscelto_id=controls.idControl and metrics.nistcontrol=controls.idControl and metricname=? and nistcontrol is not null");
+		  preparedStatement.setInt(1, comp);
+		  preparedStatement.setString(2, metrica);
+		  ResultSet rs = preparedStatement.executeQuery();
+		  while (rs.next()) {
+			  String s=rs.getString("nistcontrol");
+			  h.add(s);
 		  }
 	}catch (SQLException e) {
 		  e.printStackTrace();

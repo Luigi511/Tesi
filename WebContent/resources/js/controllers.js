@@ -744,6 +744,7 @@ angular.module('SlaApp.negotiate.controllers', [])
     
     //$scope.selection=$cookieStore.get('selection');
     $scope.selection=JSON.parse(localStorage.getItem('selection'));
+    //tutti i threat sono caricati nella pagina precedente!
     $scope.ThreatFromDB=JSON.parse(localStorage.getItem('threatlist'));
     
     
@@ -1810,9 +1811,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 
 
     $scope.SLAs=[];
-    
-    
-    
+ 
     
     //prelevo i componenti dell'utente
 	$scope.ListComponentFromDB = [];
@@ -1856,7 +1855,15 @@ angular.module('SlaApp.negotiate.controllers', [])
 													if(temp.def!='n/a'){temp.N=parseInt(temp.def, 10);}
 													break;
 											
-											}	
+											}
+											//per ogni metrica scarico la lista dei controlli associati al componente
+											$http.get(urlBase+"/rest/metricControls/"+temp.metricname+'/'+valore.id).
+											success(function(data) {
+												//console.log(data);
+												temp.listacontrolli=data;
+												
+											});
+											
 				
 								});
 								//provo a filtrare
@@ -1931,6 +1938,8 @@ angular.module('SlaApp.negotiate.controllers', [])
 		return bool;
 	}
 	
+
+	
 	
 })//fine controller metriche1
 
@@ -1989,7 +1998,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 	angular.forEach($scope.selection,function(valore,chiave){
 		$http.get(urlBase+"/rest/altremetrice/"+valore.threat).
 		success(function(data) {
-			console.log(data);
+			//console.log(data);
 			//per ogni metrica ricevuta verifico che non sia già stata inserita, poi associo il comp e inizializzo
 			angular.forEach(data,function(val,ch){
 				
