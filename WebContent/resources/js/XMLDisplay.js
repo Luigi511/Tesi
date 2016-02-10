@@ -1,11 +1,22 @@
-/* Copyright (c) 2007 Lev Muchnik <LevMuchnik@gmail.com>. All rights reserved.
- * You may copy and modify this script as long as the above copyright notice,
- * this condition and the following disclaimer is left intact.
- * This software is provided by the author "AS IS" and no warranties are
- * implied, including fitness for a particular purpose. In no event shall
- * the author be liable for any damages arising in any way out of the use
- * of this software, even if advised of the possibility of such damage.
- * $Date: 2007-10-03 19:08:15 -0700 (Wed, 03 Oct 2007) $
+/* 
+ 
+Copyright 2015 SPECS Project - CeRICT
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+@author  Massimiliano Rak massimiliano.rak@unina2.it
+@author  Luigi De Matteis luigi.dematteis2@studenti.unina2.it
+
  */
 
 function LoadXML(ParentElementID,URL) 
