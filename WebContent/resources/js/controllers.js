@@ -2086,6 +2086,17 @@ angular.module('SlaApp.negotiate.controllers', [])
 	
 	$scope.savemetrics=function(){
 		
+		angular.forEach($scope.altremetriche,function(val,ch){
+			//calcolo le percentuali
+			if((val.N!=undefined)&&(val.T!=undefined)){
+				val.Percent=(val.N/val.T)*100;
+				val.Percent=Math.round(val.Percent*100)/100;
+			}
+			if((val.N==0)&&(val.T==0)){
+				val.Percent=0;
+			}
+		});
+		
 		localStorage.setItem("altremetriche", JSON.stringify($scope.altremetriche));
 		var Allmetrics=$scope.metricheassociate.concat($scope.altremetriche);
 		
@@ -2112,7 +2123,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 				var i=0;
 				
 				
-				$scope.inizioGaranteeTerm='\n</specs:serviceDescription>\n</wsag:ServiceDescriptionTerm>\n\n<wsag:GuaranteeTerm wsag:Name="//specs:capability[@name="'+valore.name+'"]" wsag:Obligated="">\n<wsag:QualifyingCondition>false</wsag:QualifyingCondition>\n<wsag:ServiceLevelObjective>\n<wsag:CustomServiceLevel>\n<specs:objectiveList>\n';
+				$scope.inizioGaranteeTerm='\n				</specs:serviceDescription>\n			</wsag:ServiceDescriptionTerm>\n\n			<wsag:GuaranteeTerm wsag:Name="//specs:capability[@name='+valore.name+']" wsag:Obligated="">\n\n				<wsag:ServiceLevelObjective>\n					<wsag:CustomServiceLevel>\n						<specs:objectiveList>\n';
 				
 				angular.forEach($scope.selection,function(v,c){
 					//per ogni threat
@@ -2123,10 +2134,10 @@ angular.module('SlaApp.negotiate.controllers', [])
 						/*var string='<specs:capability name="'+v.threat+'" description="'+v.description+'" >'+'\n'+
 						'<specs:controlFramework id="NIST_800_53_r4" frameworkName="NIST Control framework 800-53 rev. 4">';*/
 						
-						$scope.stringcapability='<specs:capability id="" name="Requested capability for component '+valore.name+'" description="'+'"  mandatory="">'+'\n'+
-						'<specs:controlFramework id="NIST_800_53_r4" frameworkName="NIST Control framework 800-53 rev. 4">';
+						$scope.stringcapability='                        <specs:capability id="" name="Requested capability for component '+valore.name+'" description="'+'"  mandatory="">'+'\n'+
+						'                            <specs:controlFramework id="NIST_800_53_r4" frameworkName="NIST Control framework 800-53 rev. 4">\n';
 						
-						$scope.musaThreat=$scope.musaThreat+'<MUSA:Threat name="'+v.threat+'" source="'+v.source+'"/>\n';
+						$scope.musaThreat=$scope.musaThreat+'                            <MUSA:Threat name="'+v.threat+'" source='+v.source+'/>\n';
 						
 						angular.forEach($scope.controlselection,function(val,ch){
 							
@@ -2141,7 +2152,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 								var code=val.control.charAt(3)+cifra2;
 						
 						
-								var temp='\n<specs:securityControl nist:id="'+val.control+'"\nnist:name="'+val.controlname+'"\nnist:securityControl="'+code+'"nist:control_family="'+family+'>\n<specs:description> '+val.description+'\n</specs:description>\n<specs:importance_weight> '+v.risk+' </specs:importance_weight>\n</specs:securityControl>';
+								var temp='\n                                <specs:NISTsecurityControl id="'+val.control+'" name="'+val.controlname+'" control_family="'+family+'" securityControl="'+code+'" control_enhancement="'+'">\n                                    <nist:description> '/*+val.description*/+'\n                                    </nist:description>\n                                    <nist:importance_weight>'+v.risk+'</nist:importance_weight>\n                                </specs:NISTsecurityControl>';
 								$scope.controlstring=$scope.controlstring+temp;
 							}
 							else{
@@ -2156,7 +2167,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 									var code=val.control.charAt(3)+cifra2;
 							
 							
-									var temp2='\n<specs:securityControl nist:id="'+val.control+'"\nnist:name="'+val.controlname+'"\nnist:securityControl="'+code+'"nist:control_family="'+family+'>\n<specs:description> '+val.description+'\n</specs:description>\n</specs:securityControl>';
+									var temp2='\n                                <specs:NISTsecurityControl id="'+val.control+'" name="'+val.controlname+'" control_family="'+family+'" securityControl="'+code+'" control_enhancement="'+'">\n                                    <nist:description> '/*+val.description*/+'\n                                    </nist:description>\n                                    <nist:importance_weight>'+v.risk+'</nist:importance_weight>\n                                </specs:NISTsecurityControl>';
 									$scope.controlstring2=$scope.controlstring2+temp2;
 								}
 								
@@ -2170,12 +2181,12 @@ angular.module('SlaApp.negotiate.controllers', [])
 					}
 				});
 						
-				$scope.capability=$scope.threatsss+'<!-- Other Controls selected-->\n'+$scope.controlstring2+'\n\n</specs:controlFramework>\n</specs:capability>\n\n';
+				$scope.capability=$scope.threatsss+'                                <!-- Other Controls selected-->\n'+$scope.controlstring2+'\n\n                            </specs:controlFramework>\n                        </specs:capability>\n';
 				$scope.threatsss='';$scope.controlstring2='';temp2='';
 				
 				
 				//costruzione parte metriche
-				$scope.SLA_metriche='<specs:security_metrics>\n';
+				$scope.SLA_metriche='                    <specs:security_metrics>\n';
 				$scope.tempmet='';
 				
 				
@@ -2184,40 +2195,45 @@ angular.module('SlaApp.negotiate.controllers', [])
 				//verifico se la metrica è associata al componente		
 				if(val.componenteid==valore.id){
 
-					var start='\n\n<specs:Metric name="'+val.metricname+'">\n<specs:MetricDefinition>\n<specs:definition>'+val.metricdescr+'</specs:definition>\n';
+					var start='\n\n						<specs:Metric name="'+val.metricname+'" referenceId="">\n							<specs:MetricDefinition>\n';
 					var metric='';
 					var param='';
 					var SLO='';
+					var robavuota='';
 					
 					//gestisco le 4 tipologie
 					switch(true){
 					
-					case(val.value=='yes / no'): 									
-						metric='<specs:expression></specs:expression>\n<specs:unit>\n<specs:intervalUnit>\n<intervalItemsType>'+val.value+'</intervalItemsType>\n<intervalItemStart></intervalItemStart>\n<intervalItemStop></intervalItemStop>\n<intervalItemStep></intervalItemStep>\n</specs:intervalUnit>\n</specs:unit>';
-						param='<specs:MetricParameters>\n<specs:MetricParameter>\n<specs:parameterDefinitionId></specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.outputYES_NO+'</specs:value>\n</specs:MetricParameter>\n</specs:MetricParameters>\n';
-						SLO='\n<specs:SLO SLO_ID="'+$scope.j+'">\n<specs:MetricREF>'+val.metricname+'</specs:MetricREF>\n<specs:SLOexpression>\n<specs:oneOpExpression operator="'+val.op+'" operand="'+val.outputYES_NO+'"/>\n</specs:SLOexpression>\n<specs:importance_weight>MEDIUM</specs:importance_weight>\n</specs:SLO>\n';
+					case(val.value=='yes / no'): 	//fatto								
+						metric='								<specs:unit name="'+val.unit+'">\n									<specs:enumUnit>\n										<specs:enumItemsType>string</specs:enumItemsType>\n										<specs:enumItems>\n											<specs:enumItem>\n												<specs:value>yes</specs:value>\n												<specs:description></specs:description>\n											</specs:enumItem>\n											<specs:enumItem>\n												<specs:value>no</specs:value>\n												<specs:description></specs:description>\n											</specs:enumItem>\n										</specs:enumItems>\n									</specs:enumUnit>\n								</specs:unit>\n								<specs:scale>\n									<specs:Qualitative>Nominal</specs:Qualitative>\n								</specs:scale>\n								<specs:expression></specs:expression>';
+						robavuota='							<specs:AbstractMetricRuleDefinition>\n								<specs:RuleDefinition name="" referenceId="">\n									<specs:definition></specs:definition>\n									<specs:note></specs:note>\n								</specs:RuleDefinition>\n							</specs:AbstractMetricRuleDefinition>\n							<specs:AbstractMetricParameterDefinition>\n								<specs:ParameterDefinition name="" referenceId="">\n									<specs:definition></specs:definition>\n									<specs:parameterType></specs:parameterType>\n									<specs:note></specs:note>\n								</specs:ParameterDefinition>\n							</specs:AbstractMetricParameterDefinition>\n\n							<specs:MetricRules>\n								<specs:MetricRule>\n									<specs:ruleDefinitionId></specs:ruleDefinitionId>\n									<specs:value></specs:value>\n									<specs:note></specs:note>\n								</specs:MetricRule>\n							</specs:MetricRules>';
+						param=robavuota+'\n							<specs:MetricParameters>\n								<specs:MetricParameter>\n									<specs:parameterDefinitionId></specs:parameterDefinitionId>\n									<specs:note></specs:note>\n									<specs:value>'+val.outputYES_NO+'</specs:value>\n								</specs:MetricParameter>\n							</specs:MetricParameters>\n';
+						SLO='\n							<specs:SLO SLO_ID="'+$scope.j+'">\n						<specs:MetricREF>'+val.metricname+'</specs:MetricREF>\n						<specs:SLOexpression>\n							<specs:oneOpExpression operator="'+val.op+'" operand="'+val.outputYES_NO+'"/>\n						</specs:SLOexpression>\n						<specs:importance_weight>MEDIUM</specs:importance_weight>\n					</specs:SLO>\n';
 						break;
 					
-					case((val.value=='integer')&&(val.unit=='%')):
-						metric='<specs:expression>'+val.formula+'</specs:expression>\n<specs:unit>\n<specs:intervalUnit>\n<intervalItemsType>'+val.value+'</intervalItemsType>\n<intervalItemStart>'+val.def+'</intervalItemStart>\n<intervalItemStop></intervalItemStop>\n<intervalItemStep></intervalItemStep>\n</specs:intervalUnit>\n</specs:unit>';
-						param='<specs:MetricParameters>\n<specs:MetricParameter>\n<specs:parameterDefinitionId>'+val.input1+'</specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.N+'</specs:value>\n</specs:MetricParameter>\n<specs:MetricParameter>\n<specs:parameterDefinitionId>'+val.input2+'</specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.T+'</specs:value>\n</specs:MetricParameter>\n<specs:MetricParameter>\n<specs:parameterDefinitionId>Result(%)</specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.Percent+'</specs:value>\n</specs:MetricParameter></specs:MetricParameters>\n';
-						SLO='\n<specs:SLO SLO_ID="'+$scope.j+'">\n<specs:MetricREF>'+val.metricname+'</specs:MetricREF>\n<specs:SLOexpression>\n<specs:oneOpExpression operator="'+val.op+'" operand="'+val.Percent+'"/>\n</specs:SLOexpression>\n<specs:importance_weight>MEDIUM</specs:importance_weight>\n</specs:SLO>\n';
+					case((val.value=='integer')&&(val.unit=='%')):    //fatto
+						metric='								<specs:unit name="'+val.unit+'">\n									<specs:intervalUnit>\n										<specs:intervalItemsType>'+val.value+'</specs:intervalItemsType>\n										<specs:intervalItemStart>0</specs:intervalItemStart>\n										<specs:intervalItemStop>100</specs:intervalItemStop>\n										<specs:intervalItemStep>1</specs:intervalItemStep>\n									</specs:intervalUnit>\n								</specs:unit>\n								<specs:scale>\n									<specs:Quantitative>Ratio</specs:Quantitative>\n								</specs:scale>\n								<specs:expression>'+val.formula+'</specs:expression>';
+						robavuota='							<specs:AbstractMetricRuleDefinition>\n								<specs:RuleDefinition name="" referenceId="">\n									<specs:definition></specs:definition>\n									<specs:note></specs:note>\n								</specs:RuleDefinition>\n							</specs:AbstractMetricRuleDefinition>\n							<specs:AbstractMetricParameterDefinition>\n								<specs:ParameterDefinition name="N" referenceId="">\n									<specs:definition>'+val.input1+'</specs:definition>\n									<specs:parameterType>integer</specs:parameterType>\n									<specs:note></specs:note>\n								</specs:ParameterDefinition>\n								<specs:ParameterDefinition name="T" referenceId="">\n									<specs:definition>'+val.input2+'</specs:definition>\n									<specs:parameterType>integer</specs:parameterType>\n									<specs:note></specs:note>\n								</specs:ParameterDefinition>\n							</specs:AbstractMetricParameterDefinition>\n\n							<specs:MetricRules>\n								<specs:MetricRule>\n									<specs:ruleDefinitionId></specs:ruleDefinitionId>\n									<specs:value></specs:value>\n									<specs:note></specs:note>\n								</specs:MetricRule>\n							</specs:MetricRules>';
+						param=robavuota+'\n							<specs:MetricParameters>\n								<specs:MetricParameter>\n									<specs:parameterDefinitionId>Result</specs:parameterDefinitionId>\n									<specs:note>It is the percent parameter.</specs:note>\n									<specs:value>'+val.Percent+'</specs:value>\n								</specs:MetricParameter>\n							</specs:MetricParameters>\n							<specs:note></specs:note>\n';
+						SLO='\n							<specs:SLO SLO_ID="'+$scope.j+'">\n						<specs:MetricREF>'+val.metricname+'</specs:MetricREF>\n						<specs:SLOexpression>\n							<specs:oneOpExpression operator="'+val.op+'" operand="'+val.Percent+'"/>\n						</specs:SLOexpression>\n						<specs:importance_weight>MEDIUM</specs:importance_weight>\n					</specs:SLO>\n';
 						break;
 					
-					case((val.value=='integer')&&(val.unit=='number')):
-						metric='<specs:unit>\n<specs:intervalUnit>\n<intervalItemsType>'+val.value+'</intervalItemsType>\n<intervalItemStart>'+val.def+'</intervalItemStart>\n<intervalItemStop></intervalItemStop>\n<intervalItemStep></intervalItemStep>\n</specs:intervalUnit>\n</specs:unit>';
-						param='<specs:MetricParameters>\n<specs:MetricParameter>\n<specs:parameterDefinitionId></specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.N+'</specs:value>\n</specs:MetricParameter>\n</specs:MetricParameters>\n';
-						SLO='\n<specs:SLO SLO_ID="'+$scope.j+'">\n<specs:MetricREF>'+val.metricname+'</specs:MetricREF>\n<specs:SLOexpression>\n<specs:oneOpExpression operator="'+val.op+'" operand="'+val.N+'"/>\n</specs:SLOexpression>\n<specs:importance_weight>MEDIUM</specs:importance_weight>\n</specs:SLO>\n';
+					case((val.value=='integer')&&(val.unit=='number')): //fatto
+						metric='								<specs:unit name="'+val.unit+'">\n									<specs:intervalUnit>\n										<specs:intervalItemsType>'+val.value+'</specs:intervalItemsType>\n										<specs:intervalItemStart>'+val.min+'</specs:intervalItemStart>\n										<specs:intervalItemStop>'+val.max+'</specs:intervalItemStop>\n										<specs:intervalItemStep>1</specs:intervalItemStep>\n									</specs:intervalUnit>\n								</specs:unit>\n								<specs:scale>\n									<specs:Quantitative>Ratio</specs:Quantitative>\n								</specs:scale>\n								<specs:expression> </specs:expression>';
+						robavuota='							<specs:AbstractMetricRuleDefinition>\n								<specs:RuleDefinition name="" referenceId="">\n									<specs:definition></specs:definition>\n									<specs:note></specs:note>\n								</specs:RuleDefinition>\n							</specs:AbstractMetricRuleDefinition>\n							<specs:AbstractMetricParameterDefinition>\n								<specs:ParameterDefinition name="" referenceId="">\n									<specs:definition></specs:definition>\n									<specs:parameterType></specs:parameterType>\n									<specs:note></specs:note>\n								</specs:ParameterDefinition>\n							</specs:AbstractMetricParameterDefinition>\n\n							<specs:MetricRules>\n								<specs:MetricRule>\n									<specs:ruleDefinitionId></specs:ruleDefinitionId>\n									<specs:value></specs:value>\n									<specs:note></specs:note>\n								</specs:MetricRule>\n							</specs:MetricRules>';
+						param=robavuota+'\n							<specs:MetricParameters>\n								<specs:MetricParameter>\n									<specs:parameterDefinitionId></specs:parameterDefinitionId>\n									<specs:note></specs:note>\n									<specs:value>'+val.N+'</specs:value>\n								</specs:MetricParameter>\n							</specs:MetricParameters>\n							<specs:note></specs:note>\n';
+						SLO='\n							<specs:SLO SLO_ID="'+$scope.j+'">\n						<specs:MetricREF>'+val.metricname+'</specs:MetricREF>\n						<specs:SLOexpression>\n							<specs:oneOpExpression operator="'+val.op+'" operand="'+val.N+'"/>\n						</specs:SLOexpression>\n						<specs:importance_weight>MEDIUM</specs:importance_weight>\n					</specs:SLO>\n';
 						break;
 						
-					case((val.value=='integer')&&(val.unit=='levels')): 			
-						metric='<specs:expression>\n'+val.formula+'</specs:expression>\n<specs:unit>\n<specs:intervalUnit>\n<intervalItemsType>'+val.value+'</intervalItemsType>\n<intervalItemStart>'+val.def+'</intervalItemStart>\n<intervalItemStop></intervalItemStop>\n<intervalItemStep></intervalItemStep>\n</specs:intervalUnit>\n</specs:unit>';
-						param='<specs:MetricParameters>\n<specs:MetricParameter>\n<specs:parameterDefinitionId></specs:parameterDefinitionId>\n<specs:note></specs:note>\n<specs:value>'+val.N+'</specs:value>\n</specs:MetricParameter>\n</specs:MetricParameters>\n';
-						SLO='<specs:SLO SLO_ID="'+$scope.j+'">\n<specs:MetricREF>'+val.metricname+'</specs:MetricREF>\n<specs:SLOexpression>\n<specs:oneOpExpression operator="'+val.op+'" operand="'+val.N+'"/>\n</specs:SLOexpression>\n<specs:importance_weight>MEDIUM</specs:importance_weight>\n</specs:SLO>\n';
+					case((val.value=='integer')&&(val.unit=='levels')): 	//fatto		
+						metric='								<specs:unit name="level">\n									<specs:intervalUnit>\n										<specs:intervalItemsType>'+val.value+'</specs:intervalItemsType>\n										<specs:intervalItemStart>'+val.min+'</specs:intervalItemStart>\n										<specs:intervalItemStop>'+val.max+'</specs:intervalItemStop>\n										<specs:intervalItemStep>1</specs:intervalItemStep>\n									</specs:intervalUnit>\n								</specs:unit>\n								<specs:scale>\n									<specs:Quantitative>Ratio</specs:Quantitative>\n								</specs:scale>\n								<specs:expression> </specs:expression>';
+						robavuota='							<specs:AbstractMetricRuleDefinition>\n								<specs:RuleDefinition name="" referenceId="">\n									<specs:definition></specs:definition>\n									<specs:note></specs:note>\n								</specs:RuleDefinition>\n							</specs:AbstractMetricRuleDefinition>\n							<specs:AbstractMetricParameterDefinition>\n								<specs:ParameterDefinition name="Level" referenceId="">\n									<specs:definition>This integer indicates the chosen level.</specs:definition>\n									<specs:parameterType>integer</specs:parameterType>\n									<specs:note></specs:note>\n								</specs:ParameterDefinition>\n							</specs:AbstractMetricParameterDefinition>\n\n							<specs:MetricRules>\n								<specs:MetricRule>\n									<specs:ruleDefinitionId></specs:ruleDefinitionId>\n									<specs:value></specs:value>\n									<specs:note></specs:note>\n								</specs:MetricRule>\n							</specs:MetricRules>';
+						param=robavuota+'\n							<specs:MetricParameters>\n								<specs:MetricParameter>\n									<specs:parameterDefinitionId></specs:parameterDefinitionId>\n									<specs:note></specs:note>\n									<specs:value>'+val.N+'</specs:value>\n								</specs:MetricParameter>\n							</specs:MetricParameters>\n							<specs:note></specs:note>\n';
+						SLO='\n							<specs:SLO SLO_ID="'+$scope.j+'">\n						<specs:MetricREF>'+val.metricname+'</specs:MetricREF>\n						<specs:SLOexpression>\n							<specs:oneOpExpression operator="'+val.op+'" operand="'+val.N+'"/>\n						</specs:SLOexpression>\n						<specs:importance_weight>MEDIUM</specs:importance_weight>\n					</specs:SLO>\n';
 						break;
 					}
 					
-					var end=start+metric+'\n</specs:MetricDefinition>\n'+param+'</specs:Metric>\n\n';
+					var end=start+metric+'\n								<specs:definition>'+val.metricdescr+'</specs:definition>\n								<specs:note></specs:note>\n							</specs:MetricDefinition>\n'+param+'						</specs:Metric>\n\n';
 					$scope.tempmet=$scope.tempmet+end;
 					$scope.SLO=$scope.SLO+SLO;
 					$scope.j++;
@@ -2226,17 +2242,17 @@ angular.module('SlaApp.negotiate.controllers', [])
 					
 				
 				
-				$scope.SLA_metriche=$scope.SLA_metriche+$scope.tempmet+'\n</specs:security_metrics>';
+				$scope.SLA_metriche=$scope.SLA_metriche+$scope.tempmet+'\n					</specs:security_metrics>';
 				
-				$scope.musa='<MUSA:Components>\n<MUSA:Component name="'+valore.name+'" type="'+valore.type+'">\n<MUSA:ComponentProperty name="'+valore.name+'"/>\n<MUSA:Description>'+valore.description+'</MUSA:Description>\n';
-				$scope.musaThreatPRE='<MUSA:Threats>\n';
-				$scope.musaThreatPOST='</MUSA:Threats>\n</MUSA:Component>\n</MUSA:Components>\n';
+				$scope.musa='                <MUSA:Components>\n                    <MUSA:Component name="'+valore.name+'" type="'+valore.type+'">\n                        <MUSA:ComponentProperty name="'+valore.name+'"/>\n                        <MUSA:Description>'+valore.description+'</MUSA:Description>\n';
+				$scope.musaThreatPRE='                        <MUSA:Threats>\n';
+				$scope.musaThreatPOST='                            </MUSA:Threats>\n                    </MUSA:Component>\n                </MUSA:Components>\n';
 				
 				//risultato finale
-				$scope.capabilities='\n'+$scope.musa+''+$scope.musaThreatPRE+$scope.musaThreat+$scope.musaThreatPOST+'\n<specs:capabilities>\n'+$scope.stringcapability+'\n'+$scope.capability+'\n</specs:capabilities>\n\n'+$scope.SLA_metriche+'\n';
+				$scope.capabilities='\n'+$scope.musa+''+$scope.musaThreatPRE+$scope.musaThreat+$scope.musaThreatPOST+'\n                    <specs:capabilities>\n'+$scope.stringcapability+$scope.capability+'                    </specs:capabilities>\n\n'+$scope.SLA_metriche+'\n';
 				
 				
-				$scope.capabilities=$scope.capabilities+$scope.inizioGaranteeTerm+$scope.SLO+'</specs:objectiveList>\n</wsag:CustomServiceLevel>\n</wsag:ServiceLevelObjective>\n</wsag:GuaranteeTerm>';
+				$scope.capabilities=$scope.capabilities+$scope.inizioGaranteeTerm+$scope.SLO+'						</specs:objectiveList>\n					</wsag:CustomServiceLevel>\n				</wsag:ServiceLevelObjective>\n				<wsag:BusinessValueList></wsag:BusinessValueList>\n			</wsag:GuaranteeTerm>';
 				
 				
 				$scope.SLAs.push({	'component'	:valore.name,
@@ -2312,10 +2328,10 @@ angular.module('SlaApp.negotiate.controllers', [])
     }
     
     
-    $scope.stringa_template_pre='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<wsag:AgreementOffer xmlns:specs="http://specs-project.eu/schemas/SLAtemplate" xmlns:wsag="http://schemas.ggf.org/graap/2007/03/ws-agreement" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:nist="http://specs-project.eu/schemas/nist">\n    <wsag:Name>MUSA_SLA_TEMPLATE</wsag:Name>\n<wsag:Context>\n<wsag:AgreementInitiator>$SPECS-CUSTOMER</wsag:AgreementInitiator>\n<wsag:AgreementResponder>$SPECS-APPLICATION</wsag:AgreementResponder>\n<wsag:ServiceProvider>AgreementResponder</wsag:ServiceProvider>\n<wsag:ExpirationTime>2014-02-02T07:00:00+01:00</wsag:ExpirationTime>\n<wsag:TemplateName></wsag:TemplateName>\n</wsag:Context>\n<wsag:Terms>\n<wsag:All>\n<wsag:ServiceDescriptionTerm wsag:Name="';
+    $scope.stringa_template_pre='<?xml version="1.0" encoding="UTF-8"?>\n<wsag:AgreementOffer \n    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" \n    xmlns:wsag="http://schemas.ggf.org/graap/2007/03/ws-agreement" \n    xmlns:specs="http://www.specs-project.eu/resources/schemas/xml/SLAtemplate" \n    xmlns:nist="http://www.specs-project.eu/resources/schemas/xml/control_frameworks/nist"\n\n    xsi:schemaLocation=\n    "http://schemas.ggf.org/graap/2007/03/ws-agreement wsag.xsd\n    http://www.specs-project.eu/resources/schemas/xml/SLAtemplate SLAtemplate.xsd\n    http://www.specs-project.eu/resources/schemas/xml/control_frameworks/nist nist.xsd">\n\n\n    <wsag:Name>MUSA_SLA_TEMPLATE</wsag:Name>\n    <wsag:Context>\n        <wsag:AgreementInitiator>$SPECS-CUSTOMER</wsag:AgreementInitiator>\n        <wsag:AgreementResponder>$SPECS-APPLICATION</wsag:AgreementResponder>\n        <wsag:ServiceProvider>AgreementResponder</wsag:ServiceProvider>\n        <wsag:ExpirationTime>2014-02-02T06:00:00</wsag:ExpirationTime>\n        <wsag:TemplateName>SPECS_TEMPLATE_v1</wsag:TemplateName>\n    </wsag:Context>\n\n    <wsag:Terms>\n        <wsag:All>\n            <wsag:ServiceDescriptionTerm wsag:Name="';
     $scope.stringa_template_pre2='" wsag:ServiceName="';
-    $scope.stringa_template_pre3='">\n<specs:serviceDescription>';
-    $scope.stringa_template_post='</wsag:All>\n</wsag:Terms>\n</wsag:AgreementOffer>';
+    $scope.stringa_template_pre3='">\n                <specs:serviceDescription>';
+    $scope.stringa_template_post='\n		</wsag:All>\n	</wsag:Terms>\n</wsag:AgreementOffer>';
     
 
 	$scope.submitSLA=function(){

@@ -37,7 +37,10 @@ limitations under the License.
                   
                     <li ng-class="{ active: tabActive('/welcome') }"><a ui-sref="welcome">Home</a></li>
 
-					<li ng-class="{ active: tabActive('/negotiate/start') }">	<a ui-sref="negotiate.start">Security SLA Wizard</a></li>
+<!-- 					<li ng-class="{ active: tabActive('/negotiate/start')}">	<a ui-sref="negotiate.start">Security SLA Wizard</a></li>
+ -->					<li ng-class="{ active:tabActive('/negotiate/start') || tabActive('/negotiate/insert')|| tabActive('/negotiate/threat')|| tabActive('/negotiate/ranking')|| tabActive('/negotiate/security')|| tabActive('/negotiate/metrics')|| tabActive('/negotiate/metrics2')|| tabActive('/negotiate/overview')}">	<a ui-sref="negotiate.start">Security SLA Wizard</a></li>
+					
+					
 		   	   <!-- <li ng-class="{ active: tabActive('/sign') }">				<a ui-sref="sign">Sign SLA</a></li>
 					<li ng-class="{ active: tabActive('/implement') }">			<a ui-sref="implement">Implement SLA</a></li>
 					<li ng-class="{ active: tabActive('/monitor') }">			<a href="./observe.do">Observe SLA</a></li> -->
