@@ -207,11 +207,12 @@ input[type=checkbox] {
 			For each components select the appropriate security controls.<br>
 			
     		<br>
-      		<ol>Tips:
-      		<li>Press the respective button to fade in/out the control lists;</li>
-      		<li>You can also filter the list to get only the security controls that are needed to solve your critical issues.
+      		<ul style="color:red">TIPS:
+      		<li>Press the respective button to switch between 2 lists: Suggested Controls and All Controls;</li>
+      		<li><span style="text-decoration: underline;">For the Suggested Controls List</span>, pressing the "Only Required" button, you can filter to get only the security controls that are needed to solve your critical issues.
       		</li>
-      		</ol><br><h5 align="center">
+      		</ul>
+      		<br><h5 align="center">
       		<button	ng-click="cambiofiltro()">{{nomepulsantefiltro}}</button>
       		<button	ng-click="selezionatuttiRequired()">Select/Deselect All Required</button>
       		<button	ng-click="pulizia()">Clear all</button>
@@ -237,7 +238,9 @@ input[type=checkbox] {
     <button 
   	ng-click="toggleTable2(component.name)"
   	ng-hide="((getRisk(component.name,'SPOOFING')==undefined)&&(getRisk(component.name,'TAMPERING')==undefined)&&(getRisk(component.name,'REPUDIATION')==undefined)&&(getRisk(component.name,'INFORMATION DISCLOSURE')==undefined)&&(getRisk(component.name,'DENIAL OF SERVICE')==undefined)&&(getRisk(component.name,'ELEVATION OF PRIVILEGES')==undefined))"
-  	>All controls</button>
+  	>All controls</button> 
+  	
+
   	
 
   	

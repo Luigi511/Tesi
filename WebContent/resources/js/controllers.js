@@ -1687,18 +1687,20 @@ angular.module('SlaApp.negotiate.controllers', [])
 	   
 	   //per nascondere le tab 1
 	   $scope.toggleTable1=function(component){
-	      if (document.getElementById(component+'tab1').style.display == "table" ) {
-	          document.getElementById(component+'tab1').style.display="none";
+	      if (document.getElementById(component+'tab1').style.display == "table" ) { //se la tabella 1 c'è
+	          //document.getElementById(component+'tab1').style.display="none";  //tutto ok
 	      } else {
-	         document.getElementById(component+'tab1').style.display="table";
+	         document.getElementById(component+'tab1').style.display="table";  //la mostro
+	         document.getElementById(component+'tab2').style.display="none";   //e nascondo la 2
 	      }
 	   }
 	   //per nascondere le tab 2
 	   $scope.toggleTable2=function(component){
-	      if (document.getElementById(component+'tab2').style.display == "table" ) {
-	          document.getElementById(component+'tab2').style.display="none";
+	      if (document.getElementById(component+'tab2').style.display == "table" ) { //se c'è la tabella 2
+	          //document.getElementById(component+'tab2').style.display="none"; //ok
 	      } else {
-	         document.getElementById(component+'tab2').style.display="table";
+	         document.getElementById(component+'tab2').style.display="table";  //la mostro
+	         document.getElementById(component+'tab1').style.display="none";    //e nascondo la 1
 	      }
 	   }
 
@@ -2150,9 +2152,15 @@ angular.module('SlaApp.negotiate.controllers', [])
 						
 								if(val.control.charAt(4)!='('){var cifra2=val.control.charAt(4);}else{var cifra2='';}
 								var code=val.control.charAt(3)+cifra2;
+								
+								var rischio=v.risk;
+								switch(v.risk){	
+									case('VERY LOW'): rischio='LOW';break;
+									case('CRITICAL'): rischio='HIGH';break;	
+								}
 						
 						
-								var temp='\n                                <specs:NISTsecurityControl id="'+val.control+'" name="'+val.controlname+'" control_family="'+family+'" securityControl="'+code+'" control_enhancement="'+'">\n                                    <nist:description> '/*+val.description*/+'\n                                    </nist:description>\n                                    <nist:importance_weight>'+v.risk+'</nist:importance_weight>\n                                </specs:NISTsecurityControl>';
+								var temp='\n                                <specs:NISTsecurityControl id="'+val.control+'" name="'+val.controlname+'" control_family="'+family+'" securityControl="'+code+'" control_enhancement="'+'">\n                                    <nist:description> '/*+val.description*/+'\n                                    </nist:description>\n                                    <nist:importance_weight>'+rischio+'</nist:importance_weight>\n                                </specs:NISTsecurityControl>';
 								$scope.controlstring=$scope.controlstring+temp;
 							}
 							else{
@@ -2166,8 +2174,13 @@ angular.module('SlaApp.negotiate.controllers', [])
 									if(val.control.charAt(4)!='('){var cifra2=val.control.charAt(4);}else{var cifra2='';}
 									var code=val.control.charAt(3)+cifra2;
 							
-							
-									var temp2='\n                                <specs:NISTsecurityControl id="'+val.control+'" name="'+val.controlname+'" control_family="'+family+'" securityControl="'+code+'" control_enhancement="'+'">\n                                    <nist:description> '/*+val.description*/+'\n                                    </nist:description>\n                                    <nist:importance_weight>'+v.risk+'</nist:importance_weight>\n                                </specs:NISTsecurityControl>';
+									var rischio=v.risk;
+									switch(v.risk){	
+										case('VERY LOW'): rischio='LOW';break;
+										case('CRITICAL'): rischio='HIGH';break;	
+									}
+									
+									var temp2='\n                                <specs:NISTsecurityControl id="'+val.control+'" name="'+val.controlname+'" control_family="'+family+'" securityControl="'+code+'" control_enhancement="'+'">\n                                    <nist:description> '/*+val.description*/+'\n                                    </nist:description>\n                                    <nist:importance_weight>'+rischio+'</nist:importance_weight>\n                                </specs:NISTsecurityControl>';
 									$scope.controlstring2=$scope.controlstring2+temp2;
 								}
 								
@@ -2207,28 +2220,28 @@ angular.module('SlaApp.negotiate.controllers', [])
 					case(val.value=='yes / no'): 	//fatto								
 						metric='								<specs:unit name="'+val.unit+'">\n									<specs:enumUnit>\n										<specs:enumItemsType>string</specs:enumItemsType>\n										<specs:enumItems>\n											<specs:enumItem>\n												<specs:value>yes</specs:value>\n												<specs:description></specs:description>\n											</specs:enumItem>\n											<specs:enumItem>\n												<specs:value>no</specs:value>\n												<specs:description></specs:description>\n											</specs:enumItem>\n										</specs:enumItems>\n									</specs:enumUnit>\n								</specs:unit>\n								<specs:scale>\n									<specs:Qualitative>Nominal</specs:Qualitative>\n								</specs:scale>\n								<specs:expression></specs:expression>';
 						robavuota='							<specs:AbstractMetricRuleDefinition>\n								<specs:RuleDefinition name="" referenceId="">\n									<specs:definition></specs:definition>\n									<specs:note></specs:note>\n								</specs:RuleDefinition>\n							</specs:AbstractMetricRuleDefinition>\n							<specs:AbstractMetricParameterDefinition>\n								<specs:ParameterDefinition name="" referenceId="">\n									<specs:definition></specs:definition>\n									<specs:parameterType></specs:parameterType>\n									<specs:note></specs:note>\n								</specs:ParameterDefinition>\n							</specs:AbstractMetricParameterDefinition>\n\n							<specs:MetricRules>\n								<specs:MetricRule>\n									<specs:ruleDefinitionId></specs:ruleDefinitionId>\n									<specs:value></specs:value>\n									<specs:note></specs:note>\n								</specs:MetricRule>\n							</specs:MetricRules>';
-						param=robavuota+'\n							<specs:MetricParameters>\n								<specs:MetricParameter>\n									<specs:parameterDefinitionId></specs:parameterDefinitionId>\n									<specs:note></specs:note>\n									<specs:value>'+val.outputYES_NO+'</specs:value>\n								</specs:MetricParameter>\n							</specs:MetricParameters>\n';
+						param=robavuota+'\n							<specs:MetricParameters>\n								<specs:MetricParameter>\n									<specs:parameterDefinitionId></specs:parameterDefinitionId>\n									<specs:value>'+val.outputYES_NO+'</specs:value>\n									<specs:note></specs:note>\n								</specs:MetricParameter>\n							</specs:MetricParameters>\n';
 						SLO='\n							<specs:SLO SLO_ID="'+$scope.j+'">\n						<specs:MetricREF>'+val.metricname+'</specs:MetricREF>\n						<specs:SLOexpression>\n							<specs:oneOpExpression operator="'+val.op+'" operand="'+val.outputYES_NO+'"/>\n						</specs:SLOexpression>\n						<specs:importance_weight>MEDIUM</specs:importance_weight>\n					</specs:SLO>\n';
 						break;
 					
 					case((val.value=='integer')&&(val.unit=='%')):    //fatto
 						metric='								<specs:unit name="'+val.unit+'">\n									<specs:intervalUnit>\n										<specs:intervalItemsType>'+val.value+'</specs:intervalItemsType>\n										<specs:intervalItemStart>0</specs:intervalItemStart>\n										<specs:intervalItemStop>100</specs:intervalItemStop>\n										<specs:intervalItemStep>1</specs:intervalItemStep>\n									</specs:intervalUnit>\n								</specs:unit>\n								<specs:scale>\n									<specs:Quantitative>Ratio</specs:Quantitative>\n								</specs:scale>\n								<specs:expression>'+val.formula+'</specs:expression>';
-						robavuota='							<specs:AbstractMetricRuleDefinition>\n								<specs:RuleDefinition name="" referenceId="">\n									<specs:definition></specs:definition>\n									<specs:note></specs:note>\n								</specs:RuleDefinition>\n							</specs:AbstractMetricRuleDefinition>\n							<specs:AbstractMetricParameterDefinition>\n								<specs:ParameterDefinition name="N" referenceId="">\n									<specs:definition>'+val.input1+'</specs:definition>\n									<specs:parameterType>integer</specs:parameterType>\n									<specs:note></specs:note>\n								</specs:ParameterDefinition>\n								<specs:ParameterDefinition name="T" referenceId="">\n									<specs:definition>'+val.input2+'</specs:definition>\n									<specs:parameterType>integer</specs:parameterType>\n									<specs:note></specs:note>\n								</specs:ParameterDefinition>\n							</specs:AbstractMetricParameterDefinition>\n\n							<specs:MetricRules>\n								<specs:MetricRule>\n									<specs:ruleDefinitionId></specs:ruleDefinitionId>\n									<specs:value></specs:value>\n									<specs:note></specs:note>\n								</specs:MetricRule>\n							</specs:MetricRules>';
-						param=robavuota+'\n							<specs:MetricParameters>\n								<specs:MetricParameter>\n									<specs:parameterDefinitionId>Result</specs:parameterDefinitionId>\n									<specs:note>It is the percent parameter.</specs:note>\n									<specs:value>'+val.Percent+'</specs:value>\n								</specs:MetricParameter>\n							</specs:MetricParameters>\n							<specs:note></specs:note>\n';
+						robavuota='							<specs:AbstractMetricRuleDefinition>\n								<specs:RuleDefinition name="" referenceId="">\n									<specs:definition></specs:definition>\n									<specs:note></specs:note>\n								</specs:RuleDefinition>\n							</specs:AbstractMetricRuleDefinition>\n							<specs:AbstractMetricParameterDefinition>\n								<specs:ParameterDefinition name="N" referenceId="">\n									<specs:definition>'+val.input1+'</specs:definition>\n									<specs:parameterType></specs:parameterType>\n									<specs:note></specs:note>\n								</specs:ParameterDefinition>\n								<specs:ParameterDefinition name="T" referenceId="">\n									<specs:definition>'+val.input2+'</specs:definition>\n									<specs:parameterType>integer</specs:parameterType>\n									<specs:note></specs:note>\n								</specs:ParameterDefinition>\n							</specs:AbstractMetricParameterDefinition>\n\n							<specs:MetricRules>\n								<specs:MetricRule>\n									<specs:ruleDefinitionId></specs:ruleDefinitionId>\n									<specs:value></specs:value>\n									<specs:note></specs:note>\n								</specs:MetricRule>\n							</specs:MetricRules>';
+						param=robavuota+'\n							<specs:MetricParameters>\n								<specs:MetricParameter>\n									<specs:parameterDefinitionId>Result</specs:parameterDefinitionId>\n									<specs:value>'+val.Percent+'</specs:value>\n									<specs:note>It is the percent parameter.</specs:note>\n								</specs:MetricParameter>\n							</specs:MetricParameters>\n							<specs:note></specs:note>\n';
 						SLO='\n							<specs:SLO SLO_ID="'+$scope.j+'">\n						<specs:MetricREF>'+val.metricname+'</specs:MetricREF>\n						<specs:SLOexpression>\n							<specs:oneOpExpression operator="'+val.op+'" operand="'+val.Percent+'"/>\n						</specs:SLOexpression>\n						<specs:importance_weight>MEDIUM</specs:importance_weight>\n					</specs:SLO>\n';
 						break;
 					
 					case((val.value=='integer')&&(val.unit=='number')): //fatto
 						metric='								<specs:unit name="'+val.unit+'">\n									<specs:intervalUnit>\n										<specs:intervalItemsType>'+val.value+'</specs:intervalItemsType>\n										<specs:intervalItemStart>'+val.min+'</specs:intervalItemStart>\n										<specs:intervalItemStop>'+val.max+'</specs:intervalItemStop>\n										<specs:intervalItemStep>1</specs:intervalItemStep>\n									</specs:intervalUnit>\n								</specs:unit>\n								<specs:scale>\n									<specs:Quantitative>Ratio</specs:Quantitative>\n								</specs:scale>\n								<specs:expression> </specs:expression>';
 						robavuota='							<specs:AbstractMetricRuleDefinition>\n								<specs:RuleDefinition name="" referenceId="">\n									<specs:definition></specs:definition>\n									<specs:note></specs:note>\n								</specs:RuleDefinition>\n							</specs:AbstractMetricRuleDefinition>\n							<specs:AbstractMetricParameterDefinition>\n								<specs:ParameterDefinition name="" referenceId="">\n									<specs:definition></specs:definition>\n									<specs:parameterType></specs:parameterType>\n									<specs:note></specs:note>\n								</specs:ParameterDefinition>\n							</specs:AbstractMetricParameterDefinition>\n\n							<specs:MetricRules>\n								<specs:MetricRule>\n									<specs:ruleDefinitionId></specs:ruleDefinitionId>\n									<specs:value></specs:value>\n									<specs:note></specs:note>\n								</specs:MetricRule>\n							</specs:MetricRules>';
-						param=robavuota+'\n							<specs:MetricParameters>\n								<specs:MetricParameter>\n									<specs:parameterDefinitionId></specs:parameterDefinitionId>\n									<specs:note></specs:note>\n									<specs:value>'+val.N+'</specs:value>\n								</specs:MetricParameter>\n							</specs:MetricParameters>\n							<specs:note></specs:note>\n';
+						param=robavuota+'\n							<specs:MetricParameters>\n								<specs:MetricParameter>\n									<specs:parameterDefinitionId></specs:parameterDefinitionId>\n									<specs:value>'+val.N+'</specs:value>\n									<specs:note></specs:note>\n								</specs:MetricParameter>\n							</specs:MetricParameters>\n							<specs:note></specs:note>\n';
 						SLO='\n							<specs:SLO SLO_ID="'+$scope.j+'">\n						<specs:MetricREF>'+val.metricname+'</specs:MetricREF>\n						<specs:SLOexpression>\n							<specs:oneOpExpression operator="'+val.op+'" operand="'+val.N+'"/>\n						</specs:SLOexpression>\n						<specs:importance_weight>MEDIUM</specs:importance_weight>\n					</specs:SLO>\n';
 						break;
 						
 					case((val.value=='integer')&&(val.unit=='levels')): 	//fatto		
 						metric='								<specs:unit name="level">\n									<specs:intervalUnit>\n										<specs:intervalItemsType>'+val.value+'</specs:intervalItemsType>\n										<specs:intervalItemStart>'+val.min+'</specs:intervalItemStart>\n										<specs:intervalItemStop>'+val.max+'</specs:intervalItemStop>\n										<specs:intervalItemStep>1</specs:intervalItemStep>\n									</specs:intervalUnit>\n								</specs:unit>\n								<specs:scale>\n									<specs:Quantitative>Ratio</specs:Quantitative>\n								</specs:scale>\n								<specs:expression> </specs:expression>';
-						robavuota='							<specs:AbstractMetricRuleDefinition>\n								<specs:RuleDefinition name="" referenceId="">\n									<specs:definition></specs:definition>\n									<specs:note></specs:note>\n								</specs:RuleDefinition>\n							</specs:AbstractMetricRuleDefinition>\n							<specs:AbstractMetricParameterDefinition>\n								<specs:ParameterDefinition name="Level" referenceId="">\n									<specs:definition>This integer indicates the chosen level.</specs:definition>\n									<specs:parameterType>integer</specs:parameterType>\n									<specs:note></specs:note>\n								</specs:ParameterDefinition>\n							</specs:AbstractMetricParameterDefinition>\n\n							<specs:MetricRules>\n								<specs:MetricRule>\n									<specs:ruleDefinitionId></specs:ruleDefinitionId>\n									<specs:value></specs:value>\n									<specs:note></specs:note>\n								</specs:MetricRule>\n							</specs:MetricRules>';
-						param=robavuota+'\n							<specs:MetricParameters>\n								<specs:MetricParameter>\n									<specs:parameterDefinitionId></specs:parameterDefinitionId>\n									<specs:note></specs:note>\n									<specs:value>'+val.N+'</specs:value>\n								</specs:MetricParameter>\n							</specs:MetricParameters>\n							<specs:note></specs:note>\n';
+						robavuota='							<specs:AbstractMetricRuleDefinition>\n								<specs:RuleDefinition name="" referenceId="">\n									<specs:definition></specs:definition>\n									<specs:note></specs:note>\n								</specs:RuleDefinition>\n							</specs:AbstractMetricRuleDefinition>\n							<specs:AbstractMetricParameterDefinition>\n								<specs:ParameterDefinition name="Level" referenceId="">\n									<specs:definition>This integer indicates the chosen level.</specs:definition>\n									<specs:parameterType></specs:parameterType>\n									<specs:note></specs:note>\n								</specs:ParameterDefinition>\n							</specs:AbstractMetricParameterDefinition>\n\n							<specs:MetricRules>\n								<specs:MetricRule>\n									<specs:ruleDefinitionId></specs:ruleDefinitionId>\n									<specs:value></specs:value>\n									<specs:note></specs:note>\n								</specs:MetricRule>\n							</specs:MetricRules>';
+						param=robavuota+'\n							<specs:MetricParameters>\n								<specs:MetricParameter>\n									<specs:parameterDefinitionId></specs:parameterDefinitionId>\n									<specs:value>'+val.N+'</specs:value>\n									<specs:note></specs:note>\n								</specs:MetricParameter>\n							</specs:MetricParameters>\n							<specs:note></specs:note>\n';
 						SLO='\n							<specs:SLO SLO_ID="'+$scope.j+'">\n						<specs:MetricREF>'+val.metricname+'</specs:MetricREF>\n						<specs:SLOexpression>\n							<specs:oneOpExpression operator="'+val.op+'" operand="'+val.N+'"/>\n						</specs:SLOexpression>\n						<specs:importance_weight>MEDIUM</specs:importance_weight>\n					</specs:SLO>\n';
 						break;
 					}
