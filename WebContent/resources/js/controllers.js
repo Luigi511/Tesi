@@ -67,6 +67,8 @@ angular.module('SlaApp.controllers', [])
 		localStorage.removeItem('altremetriche');
 		localStorage.removeItem('threatlist');
 		localStorage.removeItem('valoriSTRIDE');
+		localStorage.removeItem('metrichescelte');
+		localStorage.removeItem('altremetrichescelte');
 		console.log("cookie rimossi");
 	  
 	  
@@ -1813,7 +1815,9 @@ angular.module('SlaApp.negotiate.controllers', [])
     
     $scope.selection=		JSON.parse(localStorage.getItem('selection'));
     $scope.controlselection=JSON.parse(localStorage.getItem('controlselection'));
+    
     $scope.metricheassociate=JSON.parse(localStorage.getItem('metriche'));
+    $scope.selezionemetriche=JSON.parse(localStorage.getItem('metrichescelte'));
     
     $scope.listacontrolli=false;
     $scope.mostralistacontrolli=function(){
@@ -1825,6 +1829,10 @@ angular.module('SlaApp.negotiate.controllers', [])
     	$scope.metricheassociate=[];
     }
     
+    if($scope.selezionemetriche==null){
+    	$scope.selezionemetriche=[];
+    }
+    
     
     if($location.$$host=='localhost'){
     	var urlBase="http://localhost:8080/TESI";
@@ -1834,7 +1842,51 @@ angular.module('SlaApp.negotiate.controllers', [])
     	var urlBase="http://37.48.247.125/TESI-0.0.1-SNAPSHOT";
     }
 
+    
 
+    
+	//funzione ricerca doppia
+	function arrayObjectIndexOf(myArray, searchTerm1, property1, searchTerm2, property2) {
+	    for(var i = 0, len = myArray.length; i < len; i++) {
+	        if ((myArray[i][property1] === searchTerm1)&&(myArray[i][property2] === searchTerm2)) return i;
+	    }
+	    return -1;
+	}
+    
+	//raccolgo solo le metriche selezionate
+	  $scope.toggleSelection = function toggleSelection(metrica) {
+		  	
+		  	var idx = arrayObjectIndexOf($scope.selezionemetriche,metrica.componenteid,'componenteid',metrica.metricname,'metricname');
+	   		// is currently selected
+		    if (idx > -1) {
+		       $scope.selezionemetriche.splice(idx, 1);
+		    }
+		    // is newly selected
+		    else {
+		    	$scope.selezionemetriche.push(metrica);
+		    }
+	  };//fine metodo
+    
+	   //funzione associata alla checkbox
+	   $scope.find = function(componenteid,metricname){
+		   var i = arrayObjectIndexOf($scope.selezionemetriche,componenteid,'componenteid',metricname,'metricname');
+		   //è già selezionato
+		   if (i > -1) {
+		       return true;
+		    }
+		    // is newly selected
+		    else {
+		    	return false;
+		    }
+		   
+	   }
+    
+    
+    
+    
+    
+    
+    
     $scope.SLAs=[];
  
     
@@ -1943,6 +1995,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 		
 		//salvataggio nel localstorage
 		localStorage.setItem("metriche", JSON.stringify($scope.metricheassociate));
+		localStorage.setItem("metrichescelte", JSON.stringify($scope.selezionemetriche));
 		console.log("metriche salvate nel localstorage");
 		$scope.finito=true;
 		$cookieStore.put('finitometriche',$scope.finito);
@@ -1983,8 +2036,10 @@ angular.module('SlaApp.negotiate.controllers', [])
     
     $scope.selection=		JSON.parse(localStorage.getItem('selection'));
     $scope.controlselection=JSON.parse(localStorage.getItem('controlselection'));
-    $scope.metricheassociate=JSON.parse(localStorage.getItem('metriche'));
+    
+    $scope.metricheassociate=JSON.parse(localStorage.getItem('metrichescelte'));
     $scope.altremetriche=JSON.parse(localStorage.getItem('altremetriche'));
+    $scope.selezionemetriche=JSON.parse(localStorage.getItem('altremetrichescelte'));
     
     
     if($scope.metricheassociate==null){
@@ -1994,6 +2049,11 @@ angular.module('SlaApp.negotiate.controllers', [])
     if($scope.altremetriche==null){
     	$scope.altremetriche=[];
     }
+    
+    if($scope.selezionemetriche==null){
+    	$scope.selezionemetriche=[];
+    }
+    
     if(JSON.parse(localStorage.getItem('SLA'))==null){
     	//non posso far apparire next
     	$scope.nextbutton=false;
@@ -2008,6 +2068,49 @@ angular.module('SlaApp.negotiate.controllers', [])
     	var urlBase="http://37.48.247.125/TESI-0.0.1-SNAPSHOT";
     }
 	
+
+    
+  //funzione ricerca doppia
+	function arrayObjectIndexOf(myArray, searchTerm1, property1, searchTerm2, property2) {
+	    for(var i = 0, len = myArray.length; i < len; i++) {
+	        if ((myArray[i][property1] === searchTerm1)&&(myArray[i][property2] === searchTerm2)) return i;
+	    }
+	    return -1;
+	}
+    
+	//raccolgo solo le metriche selezionate
+	  $scope.toggleSelection = function toggleSelection(metrica) {
+		  	
+		  	var idx = arrayObjectIndexOf($scope.selezionemetriche,metrica.componenteid,'componenteid',metrica.metricname,'metricname');
+	   		// is currently selected
+		    if (idx > -1) {
+		       $scope.selezionemetriche.splice(idx, 1);
+		    }
+		    // is newly selected
+		    else {
+		    	$scope.selezionemetriche.push(metrica);
+		    }
+	  };//fine metodo
+    
+	   //funzione associata alla checkbox
+	   $scope.find = function(componenteid,metricname){
+		   var i = arrayObjectIndexOf($scope.selezionemetriche,componenteid,'componenteid',metricname,'metricname');
+		   //è già selezionato
+		   if (i > -1) {
+		       return true;
+		    }
+		    // is newly selected
+		    else {
+		    	return false;
+		    }
+		   
+	   }
+    
+    
+    
+    
+    
+    
     
 	
 	//prelevo i componenti dell'utente
@@ -2100,7 +2203,10 @@ angular.module('SlaApp.negotiate.controllers', [])
 		});
 		
 		localStorage.setItem("altremetriche", JSON.stringify($scope.altremetriche));
-		var Allmetrics=$scope.metricheassociate.concat($scope.altremetriche);
+		localStorage.setItem("altremetrichescelte", JSON.stringify($scope.selezionemetriche));
+		
+		//tutte le metriche
+		var Allmetrics=$scope.metricheassociate.concat($scope.selezionemetriche);
 		
 		console.log("le altre metriche sono state salvate nel localstorage");
 		$scope.finito=true;

@@ -32,6 +32,13 @@ limitations under the License.
             padding: 3px;
              
          }
+        input[type=checkbox] {
+  		/* All browsers except webkit*/
+  		transform: scale(1.5);
+
+  		/* Webkit browsers*/
+  		-webkit-transform: scale(1.5);
+		}
 
 </style>
 
@@ -71,15 +78,22 @@ limitations under the License.
     	<!-- tabella tipo1 (yes/no) -->
     	<table class="tabella_scomparsa" ng-show="met.value=='yes / no'" border="1" style="width:100%;">
     	<tr>
-    		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
+    		
+			<td width="25">&nbsp<input type="checkbox" 
+  			ng-checked="find(met.componenteid,met.metricname)" 
+  			ng-click="toggleSelection(met)" name="optionb" id="optb" class="paddingClass" />
+  			</td>
+  			
+		
     		<td width="20%"><b>{{met.metricname}}</b><br><br>Valid for Controls: {{met.listacontrolli.join(", ")}}</td>
-    		<td width="80%">
+    		<td>
     		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
-    		{{met.metricdescr}}<br><br>DO YOU WANT THIS METRIC? 
+    		{{met.metricdescr}}
+    		<!-- <br><br>DO YOU WANT THIS METRIC? 
     			<select id="mySelect" ng-model="met.outputYES_NO">
     				<option value="yes">Yes</option>
       				<option value="no">No</option>
-      			</select>
+      			</select> -->
     		
     		</td>
     		
@@ -91,9 +105,14 @@ limitations under the License.
     	<!-- tabella tipo2 (%) -->
     	<table class="tabella_scomparsa" ng-show="(met.value=='integer')&&(met.unit=='%')"  border="1" style="width:100%;">
     	<tr>
-    		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
+    		
+			<td width="25">&nbsp<input type="checkbox" 
+  			ng-checked="find(met.componenteid,met.metricname)" 
+  			ng-click="toggleSelection(met)" name="optionb" id="optb" class="paddingClass" />
+  			</td>
+			
     		<td width="20%"><b>{{met.metricname}}</b><br><br>Valid for Controls: {{met.listacontrolli.join(", ")}}</td>
-    		<td width="80%">
+    		<td>
     		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
     		{{met.metricdescr}}<br><br>INPUT VALUES:<br>
     		{{met.input1}}<br>{{met.input2}}
@@ -124,9 +143,16 @@ limitations under the License.
     	<!-- tabella tipo3 (numero semplice) -->
     	<table class="tabella_scomparsa" ng-show="(met.value=='integer')&&(met.unit=='number')"  border="1" style="width:100%;">
     	<tr>
-    		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
+    		
+			<td width="25">&nbsp<input type="checkbox" 
+  			ng-checked="find(met.componenteid,met.metricname)" 
+  			ng-click="toggleSelection(met)" name="optionb" id="optb" class="paddingClass" />
+  			</td>
+
+
+
     		<td width="20%"><b>{{met.metricname}}</b><br><br>Valid for Controls: {{met.listacontrolli.join(", ")}}</td>
-    		<td width="80%">
+    		<td>
     		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
     		{{met.metricdescr}}<br><br>PLEASE ENTER THE PARAMETER: 
     			<input type="number" ng-model="met.N" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">
@@ -142,9 +168,16 @@ limitations under the License.
     	<!-- tabella tipo4 (livelli) -->
     	<table class="tabella_scomparsa" ng-show="(met.value=='integer')&&(met.unit=='levels')"  border="1" style="width:100%;">
     	<tr>
-    		<!-- <td width="10%"><b>{{met.nist}}</b></td> -->
+    		
+
+			<td width="25">&nbsp<input type="checkbox" 
+  			ng-checked="find(met.componenteid,met.metricname)" 
+  			ng-click="toggleSelection(met)" name="optionb" id="optb" class="paddingClass" />
+  			</td>
+
+
     		<td width="20%"><b>{{met.metricname}}</b><br><br>Valid for Controls: {{met.listacontrolli.join(", ")}}</td>
-    		<td width="80%">
+    		<td>
     		<!-- <b>Valid for Component: {{getcompname(met.componenteid)}}</b><br> -->
     		{{met.metricdescr}}<br><br><span style="white-space:pre-line;">{{met.formula}}</span><br><br>CHOOSE A LEVEL: 
     		   <input type="number" ng-model="met.N" inputmode="numeric" min="{{met.min}}" max="{{met.max}}">

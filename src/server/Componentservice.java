@@ -405,7 +405,7 @@ public List<Metric> getAllMetrics(int id_comp) {
 		  ResultSet rs = preparedStatement.executeQuery();
 		  while (rs.next()) {
 			  Metric mm=new Metric();
-			  /*mm.setid(rs.getInt("idmetrics"));*/
+			  //mm.setid(rs.getInt("idmetrics")); con questo ci sarebbero duplicati
 			  mm.setname(rs.getString("metricname"));
 			  mm.setdes(rs.getString("metricdescr"));
 			  mm.setformula(rs.getString("formula"));
