@@ -55,6 +55,7 @@ angular.module('SlaApp.controllers', [])
 		$cookieStore.remove('finitometriche2');
 		$cookieStore.remove('questionario');
 		$cookieStore.remove('tastoselezionatutti');
+		$cookieStore.remove('tastoselezionatutti2');
 		$cookieStore.remove('singolarmente');
 		$cookieStore.remove('nextmetrics2');
 		
@@ -1494,7 +1495,13 @@ angular.module('SlaApp.negotiate.controllers', [])
 	$http.get(urlBase+"/rest/components/"+$scope.user_id).
 		success(function(data) {
 			$scope.ListComponentFromDB = data;
-			console.log('componenti utente prelevati');		
+			console.log('componenti utente prelevati');	
+			//all'inizio non applicato il filtraggio dei controlli necessari!
+			angular.forEach($scope.ListComponentFromDB, function(com, key1){
+				com.variabile=false;
+				com.nomepulsantefiltro='Only Required?  NO';
+			});
+			console.log('aggiunte info tasti');
 	});
 	
 	//funzione calcolo rischio complessivo STRIDE
@@ -1595,14 +1602,10 @@ angular.module('SlaApp.negotiate.controllers', [])
 	  $scope.toggleSelection = function toggleSelection(control,name,component,desc,threatid) {
 		  //forzo next
 		  $scope.controlselected=false;
-
-		  
 		  	var idx = arrayObjectIndexOf($scope.controlselection,control,'control',component,'component');
 	   		// is currently selected
 		    if (idx > -1) {
-		    	
 		    	$scope.controlselection.splice(idx, 1);
-
 		    }
 		    // is newly selected
 		    else {
@@ -1614,7 +1617,29 @@ angular.module('SlaApp.negotiate.controllers', [])
 	   		    			   	'tid':threatid,
 	   		    		});
 		    }
-
+	  };//fine metodo
+	  
+	  
+	  
+	//funzione di inserimento con presenza di duplicati
+	  $scope.toggleSelectionSEMPRE = function toggleSelection(control,name,component,desc,threatid) {
+		  //forzo next
+		  $scope.controlselected=false;
+		  	var idx = arrayObjectIndexOf($scope.controlselection,control,'control',component,'component');
+	   		// is currently selected
+		    if (idx > -1) {
+		    	//$scope.controlselection.splice(idx, 1);
+		    }
+		    // is newly selected
+		    else {
+		    	$scope.controlselection.push(
+	   		    		   {	'control':control,
+	   		    			    'controlname':name,
+	   		    			   	'component':component,
+	   		    			   	'description':desc,
+	   		    			   	'tid':threatid,
+	   		    		});
+		    }
 	  };//fine metodo
 	
 	  
@@ -1644,26 +1669,22 @@ angular.module('SlaApp.negotiate.controllers', [])
 		   localStorage.removeItem('metriche');
 		   localStorage.removeItem('altremetriche');
 		   
-		   if($scope.controlselected==true){
-		   		//salvo di nuovo quindi pulisco prima TUTTO
-
+		   
+		   //salvo di nuovo quindi pulisco prima TUTTO
 					   	angular.forEach($scope.ListComponentFromDB,function(value,key){
-							  
 							  $http.post(urlBase+'/rest/delassocControl/'+value.id).
 						 	   	success(function(data) {
-						 	   		console.log("elimino dal db i controlli associati");
-						 	   		});
+						 	   		console.log("elimino dal db i controlli associati al comp");
+						 	   });
 						  });
 				 
-		   //provo a mettere un timeout di 2 secondi per evitare sovrapposizioni
+				//provo a mettere un timeout di 2 secondi per evitare sovrapposizioni
 			   	$scope.controlselected=false;
 			   	$cookieStore.put('controls',$scope.controlselected);
 			   	$timeout(saveSelection2, 200);
-		   }
-		   else{
-			   saveSelection2();
-		   }
-	   }
+		   
+
+	   }//fine funzione di salvataggio
 	   
 	   
 	   function saveSelection2(){
@@ -1689,6 +1710,10 @@ angular.module('SlaApp.negotiate.controllers', [])
 	   
 	   //per nascondere le tab 1
 	   $scope.toggleTable1=function(component){
+		   document.getElementById(component+'tasto2').style.color = "black";
+		   document.getElementById(component+'tasto1').style.color = "red";
+		   $scope.nasconditasti=false;
+		   
 	      if (document.getElementById(component+'tab1').style.display == "table" ) { //se la tabella 1 c'è
 	          //document.getElementById(component+'tab1').style.display="none";  //tutto ok
 	      } else {
@@ -1698,6 +1723,10 @@ angular.module('SlaApp.negotiate.controllers', [])
 	   }
 	   //per nascondere le tab 2
 	   $scope.toggleTable2=function(component){
+		   document.getElementById(component+'tasto1').style.color = "black";
+		   document.getElementById(component+'tasto2').style.color = "red";
+		   $scope.nasconditasti=true;
+		   
 	      if (document.getElementById(component+'tab2').style.display == "table" ) { //se c'è la tabella 2
 	          //document.getElementById(component+'tab2').style.display="none"; //ok
 	      } else {
@@ -1717,23 +1746,25 @@ angular.module('SlaApp.negotiate.controllers', [])
 				console.log('lista di controlli suggeriti ricevuta');		
 		});
 	   
+
 		
-		//all'inizio non applicato il filtraggio dei controlli necessari!
-		$scope.variabile=false;
-		$scope.nomepulsantefiltro='Only Required?:  NO';
+		
 		//funzione switch filtro
-		$scope.cambiofiltro=function(){
-			if($scope.variabile==true){
-				$scope.variabile=false;
-				$scope.nomepulsantefiltro='Only Required?:  NO';
-
-			}
-			else{
-				$scope.variabile=true;
-				$scope.nomepulsantefiltro='Only Required?: YES';
-
-			}
+		$scope.cambiofiltro=function(idcomp){
+			angular.forEach($scope.ListComponentFromDB,function(value,key){
+			if(value.id==idcomp){ //matching
+				if(value.variabile==true){
+					value.variabile=false;
+					value.nomepulsantefiltro='Only Required?  NO';
+				}
+				else{
+					value.variabile=true;
+					value.nomepulsantefiltro='Only Required? YES';
+				}
+			}});
 		}
+		
+		
 		
 		$scope.valoretestuale=function(numero){
 			
@@ -1753,46 +1784,105 @@ angular.module('SlaApp.negotiate.controllers', [])
 		$scope.selezionatuttiRequired= function(){
 			//forzo next
 			$scope.controlselected=false;
+			//$scope.controlselection=[];
 			
 			angular.forEach($scope.ListComponentFromDB, function(componente, key1){
-				
 				angular.forEach($scope.selection, function(threat, key2){
-					
 					if(threat.componentid==componente.id){
 					angular.forEach($scope.controllisuggeriti, function(controllo, key3){
-						
 						if(controllo.hreatid==threat.threatid){
-							
 							if(threat.riskNum>=controllo.minrisk){
-								
 								//devo selezionarlo
 								$scope.toggleSelectionALL(controllo.control,controllo.controlname, componente.id, controllo.controldesc,threat.threatid);
 							}
-							
 						}
-						
 					});
 					}
 				});
 			});
-			
 			//switch pressione tasto
 			if($scope.selezionatitutti==true){
 				$scope.selezionatitutti=false;
 			}else{$scope.selezionatitutti=true;}
-			
 			$cookieStore.put('tastoselezionatutti',$scope.selezionatitutti);
-			
 		}//fine funzione
+		
+		
+		
+		$scope.selezionatutti= function(componente,compid){
+			//forzo next
+			$scope.controlselected=false;
+			
+			//funzionamento dipende dalla lista
+			if(document.getElementById(componente+'tasto1').style.color == "red"){
+				//lista1
+				angular.forEach($scope.ListComponentFromDB,function(value,key){
+					if(compid==value.id){ //matching
+						if(value.variabile==true){
+							//lista1 - seleziona tutti i required
+							angular.forEach($scope.selection, function(threat, key2){
+								if(threat.componentid==compid){
+								angular.forEach($scope.controllisuggeriti, function(controllo, key3){
+									if(controllo.hreatid==threat.threatid){
+										if(threat.riskNum>=controllo.minrisk){
+											//devo selezionarlo SEMPRE
+											$scope.toggleSelectionSEMPRE(controllo.control,controllo.controlname, compid, controllo.controldesc,threat.threatid);
+										}
+									}
+								});
+								}
+							});
+						}
+						else{
+							//lista1 -seleziona tutto
+							angular.forEach($scope.selection, function(threat, key2){
+								if(threat.componentid==compid){
+								angular.forEach($scope.controllisuggeriti, function(controllo, key3){
+									if(controllo.hreatid==threat.threatid){	
+										//devo selezionarlo SEMPRE
+										$scope.toggleSelectionSEMPRE(controllo.control,controllo.controlname, compid, controllo.controldesc,threat.threatid);
+									}
+								});
+								}
+							});	
+						}
+					}
+				});
+			}
+			else{
+				//lista2
+			}
+		}
+			
+		$scope.puliscitutti= function(componente,compid){
+			//forzo next
+			$scope.controlselected=false;
+			//lista1 - clear all
+			angular.forEach($scope.selection, function(threat, key2){
+				if(threat.componentid==compid){
+				angular.forEach($scope.controllisuggeriti, function(controllo, key3){
+					if(controllo.hreatid==threat.threatid){	
+						//devo cancellare
+						var idx = arrayObjectIndexOf($scope.controlselection,controllo.control,'control',compid,'component');
+					   	// is currently selected
+						if (idx > -1) {    	
+						    $scope.controlselection.splice(idx, 1);
+						}
+					}
+				});
+				}
+			});
+		}
 		
 		
 	//funzione deseleziona tutto	
 	$scope.pulizia=function(){
-		
 		$scope.controlselection=[];
-		
-		
-	}	
+		//forzo next
+		$scope.controlselected=false;
+		$scope.selezionatitutti=false;
+	}
+	
 		
 	
    
