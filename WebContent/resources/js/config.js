@@ -22,27 +22,15 @@ limitations under the License.
 
 
 angular.module('SlaApp.config', [])
-	.constant('NEGOTIATION_API', {
-
-		UrlBase: 'http://www.sla-negotiation.com/api/',
-        Services: 'http://194.102.62.151/:8080/specs-app-webcontainer-rev2/rest/services/',
-        Capabilities: 'http://194.102.62.151/:8080/specs-app-webcontainer-rev2/rest/capabilities/',  
-        Securities: 'http://194.102.62.151/:8080/specs-app-webcontainer-rev2/rest/securities/',
-        Agreements: 'http://194.102.62.151/:8080/specs-app-webcontainer-rev2/rest/agreements/',
-        Overview: 'http://194.102.62.151/:8080/specs-app-webcontainer-rev2/rest/overview/',
-        Offer: 'http://194.102.62.151/:8080/specs-app-webcontainer-rev2/rest/submitOffer/',
-        OfferXML: 'http://194.102.62.151/:8080/specs-app-webcontainer-rev2/rest/offerxml/'
+	.constant('START_API', {
+        AddUser: 'rest/user/',
+        GetUserId: 'rest/user/',
+        GetUsers: 'rest/users',
 	})
-
-    .constant('SIGN_API', {
-  
-        Signs: 'http://194.102.62.151/:8080/specs-app-webcontainer-rev2/rest/incomplete/negotiating/',
-        Sign: 'http://194.102.62.151/:8080/specs-app-webcontainer-rev2/rest/sign/'
-    })
-
-    .constant('IMPLEMENT_API', {
-  
-        Implements: 'http://194.102.62.151/:8080/specs-app-webcontainer-rev2/rest/incomplete/signed/',
-        Implement: 'http://194.102.62.151/:8080/specs-app-webcontainer-rev2/rest/implement/'
-    })
+	.constant('INSERT_API', {
+        Categories: 'rest/categories',
+        Components: 'rest/components/',
+        UpFile: 'rest/upload/',
+        AddComponent: 'rest/components/'
+	})
 ;

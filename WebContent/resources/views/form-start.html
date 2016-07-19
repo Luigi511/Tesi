@@ -46,8 +46,7 @@ limitations under the License.
     
         <label>Name</label></td></tr>
             <tr><td>
-            <input type="text" class="form-control" name="name" ng-disabled="boolean"
-                required
+            <input type="text" class="form-control" name="name"
                 style="width:400px"
                 maxlength="20"
                 ng-model="user_name"/>
@@ -55,22 +54,47 @@ limitations under the License.
 			<tr><td>
         <label>Surname</label></td></tr> 
         	<tr><td>
-            <input type="text" class="form-control" name="surname" ng-disabled="boolean"
-                required
+            <input type="text" class="form-control" name="surname"
                 style="width:400px"
                 maxlength="40"
                 ng-model="user_surname"/>
             </td></tr>
 </table>	
-
-    <br>
-	<button type="submit" class="btn btn-primary pull-left" value="Save" title="Save" ng-click="add_user()" ng-hide="boolean">
+<br/>
+	<button type="submit" class="btn btn-primary pull-left" value="Save" title="Save" ng-click="add_user()">
            <span>Save</span>
          </button>
-         <a href="#/negotiate/insert"><button class="btn btn-primary pull-left" ng-show="boolean">Next</button></a>
-    
-
-    
+         
+    <br/>
+    <br/>
+    <br/>
+    <div class="well">
+								or choose an existing session
+							</div>
+							<table width="100%">
+<tr><td style="width:50%">
+							<label >User</label>
+							</td><td style="width:50%">
+							<label>Session</label>
+							</td></tr>
+            <tr><td>
+<select style="width:90%" class="form-control"
+								name="userName" id="selectedUser"
+								ng-options="(option.cognome+'&nbsp;'+option.name) for option in allUsers"
+								ng-model="allUsers.selectedUser" style="width: 100%;"
+								ng-change="updateSessions(allUsers.selectedUser)" ></select>
+								</td><td>
+								<select style="width:20%" class="form-control"
+								name="userName" id="selectedUser"
+								ng-options="option for option in allSessions"
+								ng-model="allUsers.selectedUser.selectedSession" style="width: 100%;"
+								></select>
+    </td></tr>
+    </table>
+    <br/>
+    <button class="btn btn-primary" ng-click="submitSession()">
+           Next
+         </button>
 
 <!-- </form> -->
 

@@ -31,14 +31,11 @@ angular.module('underscore', [])
 
 //NECESSARIO!!!!
 //Define an angular module for our app
-angular.module('SlaApp', [//'SlaApp.ranking', 
+angular.module('SlaApp', [
                           'SlaApp.negotiate',
                           'ngCookies',
-                          //'SlaApp.sign', 
-                          //'SlaApp.implement', 
-                          //'SlaApp.monitor', 
                           'SlaApp.controllers', 'SlaApp.directives', 'SlaApp.config', 'SlaApp.filters', 'SlaApp.services',
-                          'SlaApp.sign.factories', 'SlaApp.implement.factories', 
+                          
                            'ngAnimate', 'ui.router', 'angular-loading-bar', 'underscore'])
 
                            
@@ -91,16 +88,6 @@ angular.module('SlaApp', [//'SlaApp.ranking',
             template: '<div>monitor</div>',
             //controller: 'MonitorCtrl'
         });
-        
-        
-/*        
-        .state('ranking', {
-            url: '/',
-            template: '<div>ranking</div>',
-            //controller: 'IndexCtrl'
-        })
-        */
-        
 
         
         $urlRouterProvider.otherwise('/welcome');

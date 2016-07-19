@@ -28,11 +28,21 @@ public class User {
 	private String cognome;
 	private int id;
 
+	public User(){
+		//Zero Arguments
+	}
+	
+	public User(String name, String surname){
+		setnome(name);
+		setcognome(surname);
+	}
+	
 	
 	public String getname(){return nome;}
 	public String getcognome(){return cognome;}
 	public int getid(){return id;}
 	
+	public void setid(int id){this.id=id;}
 	public void setnome(String n){this.nome=n;}
 	public void setcognome(String c){this.cognome=c;}
 

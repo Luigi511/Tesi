@@ -22,107 +22,55 @@ limitations under the License.
 
 
 angular.module('SlaApp.negotiate.factories', [])
-
-
-.factory('ServiceFactory', function ($http,NEGOTIATION_API) {
+.factory('StartFactory', function ($http,START_API) {
 	return {
-		all: function () {
-            return $http.get(NEGOTIATION_API.Services, {
-			//return $http.get('data/services.json', {
+		add: function (name, surname) {
+            return $http.post(START_API.AddUser+name+"/"+surname, {
+				timeout: 5000
+			});
+		},
+		getId: function (name, surname) {
+            return $http.get(START_API.GetUserId+name+"/"+surname, {
+				timeout: 5000
+			});
+		},
+		getUsers: function () {
+            return $http.get(START_API.GetUsers, {
+				timeout: 5000
+			});
+		},
+		getUserSession: function (name, surname) {
+            return $http.get(START_API.GetUsers+"/"+name+"/"+surname+"/sessions", {
 				timeout: 5000
 			});
 		}
 	}
 })
-.factory('CapabilityFactory', function ($http,NEGOTIATION_API) {
+.factory('InsertFactory', function ($http,INSERT_API) {
 	return {
-		all: function (serviceId) {
-			return $http.get(NEGOTIATION_API.Capabilities, {
-//          return $http.get('data/capabilities.json', {
-				timeout: 5000
-			})
-		},
-        get: function (serviceId) {
-        	return $http.get(NEGOTIATION_API.Capabilities + serviceId, {
-          //return $http.get('data/capabilities.json', {
-				timeout: 5000
-			})
-		}
-	}
-})
-.factory('SecurityFactory', function ($http,NEGOTIATION_API) {
-	return {
-		submit: function (capabilitiesObj) {
-			return $http.post(NEGOTIATION_API.Securities,capabilitiesObj,{timeout:5000})
-//          return $http.get('data/securitycontrols.json',{timeout:5000})
-		}
-      
-	}
-})
-.factory('AgreementFactory', function ($http,NEGOTIATION_API) {
-	return {
-		submit: function (securitiesObj) {
-			 return $http.post(NEGOTIATION_API.Agreements,securitiesObj,{timeout:5000})
-//          return $http.get('data/metrics.json',{timeout:5000})
-		}
-      
-	}
-})
-.factory('OverviewFactory', function ($http,NEGOTIATION_API) {
-	return {
-		submit: function (agreementsObj) {
-			 return $http.post(NEGOTIATION_API.Overview,agreementsObj,{timeout:5000})
-//          return $http.get('data/offers.json',{timeout:5000})
-		},
-        get: function (offerIdentifier) {
-			return $http.get(NEGOTIATION_API.OfferXML + offerIdentifier, {
-//          return $http.get('data/offer.xml', {
-				timeout: 5000
-			})
-		},
-        sendOffer: function (offerObj) {
-			 return $http.post(NEGOTIATION_API.Offer,offerObj,{timeout:5000})
-		},
-	}
-})
-
-;
-
-
-
-angular.module('SlaApp.sign.factories', [])
-
-.factory('SignFactory', function ($http,SIGN_API) {
-	return {
-		get: function () {
-            return $http.get(SIGN_API.Signs, {
-//			return $http.get('data/signs.json', {
+		getCategories: function () {
+            return $http.get(INSERT_API.Categories, {
 				timeout: 5000
 			});
 		},
-        submit: function (signId) {
-			 return $http.post(SIGN_API.Sign + signId, null,{timeout:5000})
-		}
-	}
-})
-
-;
-
-
-angular.module('SlaApp.implement.factories', [])
-
-.factory('ImplementFactory', function ($http,IMPLEMENT_API) {
-	return {
-		get: function () {
-            return $http.get(IMPLEMENT_API.Implements, {
-//			return $http.get('data/implements.json', {
+		getComponents: function (userId) {
+            return $http.get(INSERT_API.Components+userId, {
 				timeout: 5000
 			});
 		},
-        submit: function (implementId) {
-			 return $http.post(IMPLEMENT_API.Implement + implementId, null,{timeout:5000})
+		uploadFile: function (userId, fd) {
+			return $http.post(INSERT_API.UpFile+userId, fd, {
+				transformRequest : angular.identity,
+				headers : {
+					'Content-Type' : undefined
+				}
+			})
+		},
+		addComponent: function (userId, name, dept, type) {
+            return $http.post(INSERT_API.AddComponent+name+"/"+dept+"/"+userId+"/"+type, {
+				timeout: 5000
+			});
 		}
 	}
 })
-
 ;

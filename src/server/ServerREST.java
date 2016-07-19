@@ -95,7 +95,7 @@ public class ServerREST {
 	  cp.setIDUser(id);
 	  cp.setType(type);
 	  service.addComponent(cp);
-	  //return taskmanagerservice.getAllTasks(); void secondo me perchè gli passo i dati e non deve tornare niente!
+	  //return taskmanagerservice.getAllTasks(); void secondo me perchï¿½ gli passo i dati e non deve tornare niente!
 	  }
 	  
 	  
@@ -167,6 +167,18 @@ public class ServerREST {
 	  public int getUserId(@PathVariable String Name,@PathVariable String Surname) throws ParseException { 
 	  int id =service.getUserID(Name,Surname);
 	  return id;
+	  }
+	  
+	  //API get all users
+	  @RequestMapping(value="/users",method = RequestMethod.GET,headers="Accept=application/json")
+	  public List<User> getUsers() throws ParseException { 
+		  return service.getUsers();
+	  }
+	  
+	//API get all user sessions
+	  @RequestMapping(value="/users/{name}/{surname}/sessions",method = RequestMethod.GET,headers="Accept=application/json")
+	  public List<Integer> getUserSessions(@PathVariable String name,@PathVariable String surname) throws ParseException { 
+		  return service.getUserSessions(name, surname);
 	  }
 	  
 	  
