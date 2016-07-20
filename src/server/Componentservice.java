@@ -152,7 +152,7 @@ public class Componentservice {
 		List<User> users = new ArrayList<User>();
 
 		try {
-			PreparedStatement preparedStatement = connection.prepareStatement("SELECT DISTINCT name, surname FROM users");
+			PreparedStatement preparedStatement = connection.prepareStatement("SELECT DISTINCT name, surname FROM users ORDER BY surname ASC");
 
 			ResultSet rs = preparedStatement.executeQuery();
 			while (rs.next()) {
