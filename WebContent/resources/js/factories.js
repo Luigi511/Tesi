@@ -46,6 +46,15 @@ angular.module('SlaApp.negotiate.factories', [])
 		}
 	}
 })
+.factory('SecurityFactory', function ($http,NEGOTIATION_API) {
+	return {
+		submit: function (capabilitiesObj) {
+			return $http.post(NEGOTIATION_API.Securities,capabilitiesObj,{timeout:5000})
+//          return $http.get('data/securitycontrols.json',{timeout:5000})
+		}
+      
+	}
+})
 .factory('InsertFactory', function ($http,INSERT_API) {
 	return {
 		getCategories: function () {
