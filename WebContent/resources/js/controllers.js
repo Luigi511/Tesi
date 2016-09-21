@@ -241,7 +241,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 	$scope.user_id=		$cookieStore.get('id_utente');
 	$scope.allUsers = [];
 	$scope.allSessions = [];
-	
+
 	if($cookieStore.get('pulsante') == undefined){$scope.boolean=false;}
 	else{$scope.boolean = $cookieStore.get('pulsante');}
 
@@ -292,9 +292,9 @@ angular.module('SlaApp.negotiate.controllers', [])
 
 		}
 	}
-	
+
 	$scope.updateSessions = function(userSel){
-		
+
 		StartFactory.getUserSession(userSel.name, userSel.cognome)
 		.success(function (data, status, headers, config) {
 			console.log("Data recived: "+data);
@@ -304,10 +304,10 @@ angular.module('SlaApp.negotiate.controllers', [])
 			$scope.alertMessage = "";
 		});
 	}
-	
+
 	$scope.submitSession = function(){
 		console.log("User selected name: "+$scope.allUsers.selectedUser.name)
-		
+
 
 		$scope.user_name=$scope.allUsers.selectedUser.name;
 		$scope.user_surname=$scope.allUsers.selectedUser.cognome;
@@ -315,17 +315,17 @@ angular.module('SlaApp.negotiate.controllers', [])
 		console.log('surname user='+$scope.user_surname);
 		$cookieStore.put('name', $scope.user_name);
 		$cookieStore.put('surname', $scope.user_surname);
-		
+
 		$scope.user_id=$scope.allUsers.selectedUser.selectedSession;
 		console.log('id user='+$scope.user_id);
 		$cookieStore.put('id_utente',$scope.user_id); //id utente ---> chiave esterna
-		
+
 		$scope.boolean=true;
 		$cookieStore.put('pulsante',$scope.boolean);
 
 		//vai direttamente alla pagina dopo se è tutto ok
 		$state.go('negotiate.insert');  
-		
+
 	}
 })
 
@@ -2405,7 +2405,8 @@ angular.module('SlaApp.negotiate.controllers', [])
 			$scope.musaThreatPOST='                            </MUSA:Threats>\n                    </MUSA:Component>\n                </MUSA:Components>\n';
 
 			//risultato finale
-			$scope.capabilities='\n'+$scope.musa+''+$scope.musaThreatPRE+$scope.musaThreat+$scope.musaThreatPOST+'\n                    <specs:capabilities>\n'+$scope.stringcapability+$scope.capability+'                    </specs:capabilities>\n\n'+$scope.SLA_metriche+'\n';
+			//$scope.capabilities='\n'+$scope.musa+''+$scope.musaThreatPRE+$scope.musaThreat+$scope.musaThreatPOST+'\n                    <specs:capabilities>\n'+$scope.stringcapability+$scope.capability+'                    </specs:capabilities>\n\n'+$scope.SLA_metriche+'\n';
+			$scope.capabilities='\n                    <specs:capabilities>\n'+$scope.stringcapability+$scope.capability+'                    </specs:capabilities>\n\n'+$scope.SLA_metriche+'\n';
 
 
 			$scope.capabilities=$scope.capabilities+$scope.inizioGaranteeTerm+$scope.SLO+'						</specs:objectiveList>\n					</wsag:CustomServiceLevel>\n				</wsag:ServiceLevelObjective>\n				<wsag:BusinessValueList></wsag:BusinessValueList>\n			</wsag:GuaranteeTerm>';
@@ -2498,11 +2499,73 @@ angular.module('SlaApp.negotiate.controllers', [])
 	$scope.downloadSLA=function(sla){
 
 		var data=$scope.stringa_template_pre+sla.component+$scope.stringa_template_pre2+sla.comptype+$scope.stringa_template_pre3+sla.sla+$scope.stringa_template_post;
-		blob = new Blob([data], { type: 'text/plain' }),
+		var dataEscape = data.encodeHTML();
+		blob = new Blob([dataEscape], { type: 'text/plain' }),
 		url = $window.URL || $window.webkitURL;                                
 		$scope.fileUrl = url.createObjectURL(blob);
 
 
+	}
+
+	$scope.putSLAinManager=function(sla){
+//		console.log("String template pre:"+$scope.stringa_template_pre+"!!!");
+//		console.log("String Sla component:"+sla.component+"!!!");
+//		console.log("String template pre2:"+$scope.stringa_template_pre2+"!!!");
+//		console.log("String Sla CompType:"+sla.comptype+"!!!");
+//		console.log("String template pre3:"+$scope.stringa_template_pre3+"!!!");
+//		console.log("String Sla.Sla:"+sla.sla+"!!!");
+//		console.log("String template post:"+$scope.stringa_template_post+"!!!");
+
+		var data=$scope.stringa_template_pre+sla.component+$scope.stringa_template_pre2+sla.comptype+$scope.stringa_template_pre3+sla.sla+$scope.stringa_template_post;
+		var dataEscape = data.encodeHTML();
+		$http(
+				{
+					method : 'POST',
+					url : 'rest/upload/sla',
+					headers : {
+						'Content-Type' : 'application/x-www-form-urlencoded'
+					},
+					transformRequest : function(
+							obj) {
+						var str = [];
+						for ( var p in obj)
+							str
+							.push(encodeURIComponent(p)
+									+ "="
+									+ encodeURIComponent(obj[p]));
+						return str.join("&");
+					},
+					data : {
+						'body' : dataEscape
+					}
+
+				})
+				.then(
+						function successCallback(
+								response) {
+							console
+							.log(response);
+							console
+							.log(response.status);
+							if (response.status == '201') {
+								console.log("The SLA is succesfully stored! SLA ID: "+response.data)
+								window.alert("The SLA is succesfully stored! SLA ID: "+response.data);
+							} else {
+								window.alert("Error! The SLA is not stored!");
+
+							}
+
+						},
+						function errorCallback(
+								response) {
+							console
+							.log(response);
+							console
+							.log(response.status);
+							console
+							.log(response.data);
+							window.alert("Error! The SLA is not stored!");
+						});
 	}
 
 
@@ -2510,6 +2573,14 @@ angular.module('SlaApp.negotiate.controllers', [])
 
 
 });//fine controller
+
+String.prototype.encodeHTML = function () {
+    return this.replace(/&/g, '&amp;')
+               .replace('(<=)', '(&lt;=)')
+               .replace('(>=)', '(&gt;=)')
+               .replace('(>)', '(&gt;)')
+               .replace('(<)', '(&lt;)');
+  };
 
 
 

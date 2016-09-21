@@ -34,12 +34,20 @@ import javax.ws.rs.FormParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -69,6 +77,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -295,6 +304,37 @@ public class ServerREST {
 		  return mc;
 	  }
  
+	//API POST sla: 
+	  @RequestMapping(value = "/upload/sla", method = RequestMethod.POST)
+	    public ResponseEntity<?> putSla(
+	    		@RequestParam(value = "body") String sla) {
+	        	
+	        	String slaPulito =sla;
+
+	        	RestTemplate restPutSla = new RestTemplate();
+
+				Properties prop = new Properties();
+                InputStream inputStream = ServerREST.class.getClassLoader().getResourceAsStream("/config.properties");
+                try {
+					prop.load(inputStream);
+					String slaManager = prop.getProperty("sla_manager");
+	                
+					String urlToUpdateSla = slaManager
+							+ "slas";
+
+					HttpHeaders headersPutSla = new HttpHeaders();
+					headersPutSla.setContentType(MediaType.TEXT_XML);
+					HttpEntity entityPuSla = new HttpEntity(slaPulito, headersPutSla);
+					return restPutSla.exchange(urlToUpdateSla, HttpMethod.POST, entityPuSla,
+							String.class);
+					
+				} catch (IOException e) {
+					e.printStackTrace();
+					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+				}
+                
+	        	
+	    }
  
          
 }

@@ -19,40 +19,54 @@ limitations under the License.
 
 
 <style>
-
-
 </style>
 
 <div class="panel panel-default">
-  <div class="panel-heading">
-    <h2>Negotiated SLA</h2>
-  </div>
-  <div class="panel-body ">
-    <div class="well">
-      A Security SLA has been built according to your choices during the negotiation process.<br>
-      Check it and submit it in order to have it stored in your collection of negotiated SLAs.<br>
-      
-          The next steps of the SPECS Application will enable you to sign and implement the SLA.
-    </div>
-    
- <div class="panel panel-default" ng-repeat="sla in capabilities">
- 	<h4 align="center"><b>SLA Component {{sla.component}}           </b></h4><h4 align="center"><button class="btn btn-primary" ng-click="toggleTable(sla.component)">Show/Hide</button>  <a class="btn btn-primary" style="align:right;" ng-click="downloadSLA(sla)" ng-href="{{ fileUrl }}" download="SLA_{{sla.component}}.xml">download</a></h2>
-   <textarea style="width:100%; display:none; white-space: pre-line; " rows="40" cols="150" disabled id="{{sla.component}}">
+	<div class="panel-heading">
+		<h2>Negotiated SLA</h2>
+	</div>
+	<div class="panel-body ">
+		<div class="well">
+			A Security SLA has been built according to your choices during the
+			negotiation process.<br> Check it and submit it in order to have
+			it stored in your collection of negotiated SLAs.<br> The next
+			steps of the SPECS Application will enable you to sign and implement
+			the SLA.
+		</div>
+
+		<div class="panel panel-default" ng-repeat="sla in capabilities">
+			<h4 align="center">
+				<b>SLA Component {{sla.component}} </b>
+			</h4>
+			<h4 align="center">
+				<button class="btn btn-primary"
+					ng-click="toggleTable(sla.component)">Show/Hide</button>
+				<a class="btn btn-primary" style="align: right;"
+					ng-click="downloadSLA(sla)" ng-href="{{ fileUrl }}"
+					download="SLA_{{sla.component}}.xml">download</a>
+				<button class="btn btn-primary"
+					ng-click="putSLAinManager(sla)">Put SLA in Manager</button>	
+					
+				</h2>
+				<textarea style="width: 100%; display: none; white-space: pre-line;"
+					rows="40" cols="150" disabled id="{{sla.component}}">
    {{stringa_template_pre}}{{sla.component}}{{stringa_template_pre2}}{{sla.comptype}}{{stringa_template_pre3}}
    {{sla.sla}} 
    {{stringa_template_post}}
    
-   </textarea><br><br>
-   <!-- <button class="btn btn-primary" ng-click="submitSLA()">REQUEST OFFERS</button><br><br><br>  -->     
-    </div>     
+   </textarea>
+				<br>
+				<br>
+				<!-- <button class="btn btn-primary" ng-click="submitSLA()">REQUEST OFFERS</button><br><br><br>  -->
+		</div>
 
-        
-        
-<!-- {{controlselection}}   <br> -->
-  
-<!-- prova dati utente in cookie-->	
-{{user_name}} {{user_surname}} {{user_id}}          
-  </div>
 
- 
+
+		<!-- {{controlselection}}   <br> -->
+
+		<!-- prova dati utente in cookie-->
+		{{user_name}} {{user_surname}} {{user_id}}
+	</div>
+
+
 </div>
