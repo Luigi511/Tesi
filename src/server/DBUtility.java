@@ -23,13 +23,11 @@ limitations under the License.
 
 package server;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Properties;
+
+import utility.PropertiesManager;
 
 public class DBUtility {
  private static Connection connection = null;
@@ -40,11 +38,8 @@ public class DBUtility {
             return connection;
         else {
             try {
-             Properties prop = new Properties();
-                InputStream inputStream = DBUtility.class.getClassLoader().getResourceAsStream("/config.properties");
-                prop.load(inputStream);
-                String driver = prop.getProperty("driver");
-                String url = prop.getProperty("url");
+                String driver = PropertiesManager.getProperty("driver");
+                String url = PropertiesManager.getProperty("url");
                 
 
                 
@@ -54,8 +49,8 @@ public class DBUtility {
                 String url = String.format("jdbc:mysql://%s:%s/threatapplication", host, port);*/
 
                 
-                String user = prop.getProperty("user");
-                String password = prop.getProperty("password");
+                String user = PropertiesManager.getProperty("user");
+                String password = PropertiesManager.getProperty("password");
                 Class.forName(driver);
                 connection = DriverManager.getConnection(url, user, password);
                 System.out.println("connesso a : "+url+"("+user+","+password+")");
@@ -65,12 +60,6 @@ public class DBUtility {
                 e.printStackTrace();
                 
             } catch (SQLException e) {
-                e.printStackTrace();
-                
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                
-            } catch (IOException e) {
                 e.printStackTrace();
                 
             }

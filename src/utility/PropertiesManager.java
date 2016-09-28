@@ -17,7 +17,7 @@ public class PropertiesManager {
 				prop.load(new FileInputStream("/opt/apache-tomcat-7.0.70/webapps/sla_generator.properties"));
 			}catch(FileNotFoundException e){
 				InputStream input = null;
-				input = PropertiesManager.class.getClassLoader().getResourceAsStream("config.properties");
+				input = PropertiesManager.class.getClassLoader().getResourceAsStream("sla_generator.properties");
 				if(input==null){
 					System.out.println("Sorry, unable to find config.properties");
 					return "";
