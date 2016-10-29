@@ -364,7 +364,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 		 {	'name':'SPOOFING',
 			 'description':"Threat action aimed to illegally access and use another user's credentials, such as username and password.",
 			 //likehood
-			 'skill':0,'motive':0,'opportunity':0,'size':0,
+			 'skill':9,'motive':0,'opportunity':0,'size':0,
 			 'discover':0,'ease':0,'aware':0,'id':0,
 			 //technical impacts
 			 'confide':0,'integri':0,'avalai':0,'accounta':0,
@@ -586,8 +586,65 @@ angular.module('SlaApp.negotiate.controllers', [])
 							value.user=$scope.user_id;
 						});
 						$scope.ThreatFromDB=$scope.ThreatFromDB.concat(result);
+
 						//faccio visualizzare il questionario 
 						document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block';
+
+						// CALCOLO VALORI DI DEFAULT PER CATEGORIE STRIDE (MEDIA)
+
+						//Ciclio sulle categorie di stride
+						angular.forEach($scope.ListSTRIDEtemp,function(listStride,key){
+
+							var skill = 0;
+							var motive = 0;
+							var opportunity = 0;
+							var size = 0;
+							var ease_of_discovery = 0;
+							var ease_of_exploit = 0;
+							var awareness = 0;
+							var intrusion_detection = 0;
+							var loss_of_confidentiality = 0;
+							var loss_of_integrity = 0;
+							var loss_of_availability = 0;
+							var loss_of_accountability = 0;
+							
+							var threatStrideCount = 0;
+							angular.forEach($scope.ThreatFromDB,function(threat,key2){
+								if(threat.stride == listStride.name){
+									console.log("Threat trovato con stride giusto!")
+									threatStrideCount++;
+									skill = skill + threat.skill_level;
+									motive = motive + threat.motive;
+									opportunity = opportunity + threat.opportunity;
+									size = size + threat.size;
+									ease_of_discovery = ease_of_discovery + threat.ease_of_discovery;
+									ease_of_exploit = ease_of_exploit + threat.ease_of_exploit;
+									awareness = awareness + threat.awareness;
+									intrusion_detection = intrusion_detection + threat.intrusion_detection;
+
+									//technical impacts
+									loss_of_confidentiality = loss_of_confidentiality + threat.loss_of_confidentiality;
+									loss_of_integrity = loss_of_integrity + threat.loss_of_integrity;
+									loss_of_availability = loss_of_availability + threat.loss_of_availability;
+									loss_of_accountability = loss_of_accountability + threat.loss_of_accountability;
+								}
+							});
+
+							listStride.skill = Math.floor(skill/threatStrideCount);
+							listStride.motive = motive/threatStrideCount;
+							listStride.opportunity = opportunity/threatStrideCount;
+							listStride.size =  Math.floor(size/threatStrideCount);
+							listStride.discover = ease_of_discovery/threatStrideCount;
+							listStride.ease = ease_of_exploit/threatStrideCount;
+							listStride.aware = awareness/threatStrideCount;
+							listStride.id = intrusion_detection/threatStrideCount;
+							listStride.confide = loss_of_confidentiality/threatStrideCount;
+							listStride.integri = loss_of_integrity/threatStrideCount;
+							listStride.avalai = loss_of_availability/threatStrideCount;
+							listStride.accounta = loss_of_accountability/threatStrideCount;
+						});
+
+						//FINE CALCOLO VALORI DI DEFAULT PER CATEGORIE STRIDE
 
 						//subito dopo aver inserito il componente, lo aggiungo pure nella lista per il ranking
 						$scope.ListSTRIDE.push(
@@ -784,6 +841,9 @@ angular.module('SlaApp.negotiate.controllers', [])
 		});
 	};
 
+
+
+
 	$scope.mostraThreat= function(valore){
 		if(valore=='true'){
 			return true;
@@ -839,12 +899,12 @@ angular.module('SlaApp.negotiate.controllers', [])
 	}
 
 	//raccolgo i threat selezionati
-	$scope.toggleSelection = function toggleSelection(componentName,componentid,threatName,threatid,stride,descr,sourc) {
+	$scope.toggleSelection = function toggleSelection(threat,componentName,componentid,threatName,threatid,stride,descr,sourc) {
 		//dato che ho apportato una modifica, elimino il tasto next in ranking e in questa pagina (forzo a fare save)
 		var fattoo=false;
 		$cookieStore.put('done',fattoo);
 		$scope.booleanthreat=false;
-
+		console.log('threat selezionato: '+JSON.stringify(threat));
 		var idx = arrayObjectIndexOf($scope.selection,componentName,'component',threatName,'threat');
 		// is currently selected
 		if (idx > -1) {
@@ -861,20 +921,20 @@ angular.module('SlaApp.negotiate.controllers', [])
 						'description':descr,
 						'source':sourc,
 
-						'skill':0,
-						'motive':0,
-						'opportunity':0,
-						'size':0,
-						'discover':0,
-						'ease':0,
-						'aware':0,
-						'id':0,
+						'skill':threat.skill_level,
+						'motive':threat.motive,
+						'opportunity':threat.opportunity,
+						'size':threat.size,
+						'discover':threat.ease_of_discovery,
+						'ease':threat.ease_of_exploit,
+						'aware':threat.awareness,
+						'id':threat.intrusion_detection,
 
 						//technical impacts
-						'confide':0,
-						'integri':0,
-						'avalai':0,
-						'accounta':0,
+						'confide':threat.loss_of_confidentiality,
+						'integri':threat.loss_of_integrity,
+						'avalai':threat.loss_of_availability,
+						'accounta':threat.loss_of_accountability,
 
 						//business impacts
 						'financial':0,
@@ -982,6 +1042,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 			angular.forEach($scope.ThreatFromDB,function(threat,key2){
 				//per ogni threat
 				if(threat.show=='true'){
+//					console.log("ThreatFromDB: "+JSON.stringify(threat))
 
 					$scope.selection.push(
 							{	'component':threat.componentname,
@@ -992,20 +1053,20 @@ angular.module('SlaApp.negotiate.controllers', [])
 								'description':threat.descr,
 								'source':threat.source,
 
-								'skill':0,
-								'motive':0,
-								'opportunity':0,
-								'size':0,
-								'discover':0,
-								'ease':0,
-								'aware':0,
-								'id':0,
+								'skill':threat.skill_level,
+								'motive':threat.motive,
+								'opportunity':threat.opportunity,
+								'size':threat.size,
+								'discover':threat.ease_of_discovery,
+								'ease':threat.ease_of_exploit,
+								'aware':threat.awareness,
+								'id':threat.intrusion_detection,
 
 								//technical impacts
-								'confide':0,
-								'integri':0,
-								'avalai':0,
-								'accounta':0,
+								'confide':threat.loss_of_confidentiality,
+								'integri':threat.loss_of_integrity,
+								'avalai':threat.loss_of_availability,
+								'accounta':threat.loss_of_accountability,
 
 								//business impacts
 								'financial':0,
@@ -1050,6 +1111,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 	//$scope.selection=		$cookieStore.get('selection');
 	$scope.selection=		JSON.parse(localStorage.getItem('selection'));
 	$scope.ListSTRIDE=		JSON.parse(localStorage.getItem('valoriSTRIDE'));
+	$scope.ThreatFromDB=	JSON.parse(localStorage.getItem('threatlist'));
 
 	$scope.done=			$cookieStore.get('done');
 
@@ -1074,7 +1136,9 @@ angular.module('SlaApp.negotiate.controllers', [])
 
 	//inizializzazione dati nelle tabelle dei threat
 	angular.forEach($scope.selection, function(value, key){
-		if($scope.done==undefined){
+//		console.log("Scope selection: "+JSON.stringify(value))
+		/*if($scope.done==undefined){
+
 			//inizializzazione
 			value.skill=0;
 			value.motive=0;
@@ -1094,7 +1158,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 			value.reputation=0;
 			value.noncompliance=0;
 			value.privacy=0;
-		}
+		}*/
 		value.totaleLikehood=(value.skill+value.motive+value.opportunity+value.size+value.discover+value.ease+value.aware+value.id)/8;
 		value.totaleImpactBusiness=(value.financial+value.reputation+value.noncompliance+value.privacy)/4;
 		value.totaleImpactTechnical=(value.confide+value.integri+value.avalai+value.accounta)/4;
@@ -1134,7 +1198,8 @@ angular.module('SlaApp.negotiate.controllers', [])
 	//inizializzazione dati nelle tabelle STRIDE
 	angular.forEach($scope.ListSTRIDE, function(v, k){
 		angular.forEach(v.punteggi, function(value, key){
-			if($scope.done==undefined){
+//			console.log("List Stride selection: "+JSON.stringify(value))
+			/*if($scope.done==undefined){
 				//inizializzazione
 				value.skill=0;
 				value.motive=0;
@@ -1154,7 +1219,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 				value.reputation=0;
 				value.noncompliance=0;
 				value.privacy=0;
-			}
+			}*/
 			value.totaleLikehood=(value.skill+value.motive+value.opportunity+value.size+value.discover+value.ease+value.aware+value.id)/8;
 			value.totaleImpactBusiness=(value.financial+value.reputation+value.noncompliance+value.privacy)/4;
 			value.totaleImpactTechnical=(value.confide+value.integri+value.avalai+value.accounta)/4;
@@ -2475,7 +2540,7 @@ angular.module('SlaApp.negotiate.controllers', [])
 			console.log('componenti utente prelevati');		
 	});*/
 
-	$scope.stringa_template_pre='<?xml version="1.0" encoding="UTF-8"?>\n<wsag:AgreementOffer \n    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" \n    xmlns:wsag="http://schemas.ggf.org/graap/2007/03/ws-agreement" \n    xmlns:specs="http://www.specs-project.eu/resources/schemas/xml/SLAtemplate" \n    xmlns:nist="http://www.specs-project.eu/resources/schemas/xml/control_frameworks/nist"\n\n    xsi:schemaLocation=\n    "http://schemas.ggf.org/graap/2007/03/ws-agreement wsag.xsd\n    http://www.specs-project.eu/resources/schemas/xml/SLAtemplate SLAtemplate.xsd\n    http://www.specs-project.eu/resources/schemas/xml/control_frameworks/nist nist.xsd">\n\n\n    <wsag:Name>MUSA_SLA_TEMPLATE</wsag:Name>\n    <wsag:Context>\n        <wsag:AgreementInitiator>$SPECS-CUSTOMER</wsag:AgreementInitiator>\n        <wsag:AgreementResponder>$SPECS-APPLICATION</wsag:AgreementResponder>\n        <wsag:ServiceProvider>AgreementResponder</wsag:ServiceProvider>\n        <wsag:ExpirationTime>2014-02-02T06:00:00</wsag:ExpirationTime>\n        <wsag:TemplateName>SPECS_TEMPLATE_v1</wsag:TemplateName>\n    </wsag:Context>\n\n    <wsag:Terms>\n        <wsag:All>\n            <wsag:ServiceDescriptionTerm wsag:Name="';
+	$scope.stringa_template_pre='<?xml version="1.0" encoding="UTF-8"?>\n<wsag:AgreementOffer \n    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" \n    xmlns:wsag="http://schemas.ggf.org/graap/2007/03/ws-agreement" \n    xmlns:specs="http://www.specs-project.eu/resources/schemas/xml/SLAtemplate" \n    xmlns:nist="http://www.specs-project.eu/resources/schemas/xml/control_frameworks/nist"\n\n    xsi:schemaLocation=\n    "http://schemas.ggf.org/graap/2007/03/ws-agreement wsag.xsd\n    http://www.specs-project.eu/resources/schemas/xml/SLAtemplate SLAtemplate.xsd\n    http://www.specs-project.eu/resources/schemas/xml/control_frameworks/nist nist.xsd">\n\n\n    <wsag:Name>MUSA_SLA_TEMPLATE</wsag:Name>\n    <wsag:Context>\n        <wsag:AgreementInitiator>CUSTOMER</wsag:AgreementInitiator>\n        <wsag:AgreementResponder>PROVIDER</wsag:AgreementResponder>\n        <wsag:ServiceProvider>AgreementResponder</wsag:ServiceProvider>\n        <wsag:ExpirationTime>2014-02-02T06:00:00</wsag:ExpirationTime>\n        <wsag:TemplateName>SLA_TEMPLATE</wsag:TemplateName>\n    </wsag:Context>\n\n    <wsag:Terms>\n        <wsag:All>\n            <wsag:ServiceDescriptionTerm wsag:Name="';
 	$scope.stringa_template_pre2='" wsag:ServiceName="';
 	$scope.stringa_template_pre3='">\n                <specs:serviceDescription>';
 	$scope.stringa_template_post='\n		</wsag:All>\n	</wsag:Terms>\n</wsag:AgreementOffer>';
@@ -2575,12 +2640,12 @@ angular.module('SlaApp.negotiate.controllers', [])
 });//fine controller
 
 String.prototype.encodeHTML = function () {
-    return this.replace(/&/g, '&amp;')
-               .replace('(<=)', '(&lt;=)')
-               .replace('(>=)', '(&gt;=)')
-               .replace('(>)', '(&gt;)')
-               .replace('(<)', '(&lt;)');
-  };
+	return this.replace(/&/g, '&amp;')
+	.replace('(<=)', '(&lt;=)')
+	.replace('(>=)', '(&gt;=)')
+	.replace('(>)', '(&gt;)')
+	.replace('(<)', '(&lt;)');
+};
 
 
 

@@ -250,6 +250,19 @@ public class Componentservice {
 				t.setquestion(rs.getString("question"));
 				t.setsource(rs.getString("source"));
 
+				t.setSkill_level(rs.getInt("skill_level"));
+				t.setMotive(rs.getInt("motive"));
+				t.setOpportunity(rs.getInt("opportunity"));
+				t.setSize(rs.getInt("size"));
+				t.setEase_of_discovery(rs.getInt("ease_of_discovery"));
+				t.setEase_of_exploit(rs.getInt("ease_of_exploit"));
+				t.setAwareness(rs.getInt("awareness"));
+				t.setIntrusion_detection(rs.getInt("intrusion_detection"));
+				t.setLoss_of_confidentiality(rs.getInt("loss_of_confidentiality"));
+				t.setLoss_of_integrity(rs.getInt("loss_of_integrity"));
+				t.setLoss_of_availability(rs.getInt("loss_of_availability"));
+				t.setLoss_of_accountability(rs.getInt("loss_of_accountability"));
+
 				ts.add(t);
 				System.out.println("prelevato threat= "+rs.getString("threatname")+" id="+rs.getInt("idthreats")+" STRIDE= "+rs.getString("stride"));
 				//System.out.println("inoltro componente= "+c.getName()+c.getDescription()+" id="+c.getId()+" categoria="+c.getType());
@@ -490,6 +503,18 @@ public class Componentservice {
 				t.setsource(rs.getString("source"));
 				t.setanswer(rs.getString("answer"));
 
+				t.setSkill_level(rs.getInt("skill_level"));
+				t.setMotive(rs.getInt("motive"));
+				t.setOpportunity(rs.getInt("opportunity"));
+				t.setSize(rs.getInt("size"));
+				t.setEase_of_discovery(rs.getInt("ease_of_discovery"));
+				t.setEase_of_exploit(rs.getInt("ease_of_exploit"));
+				t.setAwareness(rs.getInt("awareness"));
+				t.setIntrusion_detection(rs.getInt("intrusion_detection"));
+				t.setLoss_of_confidentiality(rs.getInt("loss_of_confidentiality"));
+				t.setLoss_of_integrity(rs.getInt("loss_of_integrity"));
+				t.setLoss_of_availability(rs.getInt("loss_of_availability"));
+				t.setLoss_of_accountability(rs.getInt("loss_of_accountability"));
 				ts.add(t);
 				System.out.println("prelevato threat= "+rs.getString("threatname")+" id="+rs.getInt("idthreats")+" STRIDE= "+rs.getString("stride"));
 				//System.out.println("inoltro componente= "+c.getName()+c.getDescription()+" id="+c.getId()+" categoria="+c.getType());
