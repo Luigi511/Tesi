@@ -18,423 +18,708 @@ limitations under the License.
 -->
 
 
-  	   <style>
-         table, th , td {
-            border: 0px solid grey;
-            border-collapse: collapse;
-            padding: 5px;
-            
-            
-         }
-         
-.tabellaamostr table tr:nth-child(odd) {
-            background-color: #f2f2f2;
-            
-         }
-         
-.tabellaamostr table tr:nth-child(even) {
-            background-color: #ffffff;
-         }
-         textarea {
- 			width:100%;
-		}
-		input[type=number]{
-    		width: 30px;
-		}
-		img	{
-			width:100%;
-		}
-		input[type=checkbox] {
-  		/* All browsers except webkit*/
-  		transform: scale(2);
+<style>
+table, th, td {
+	border: 0px solid grey;
+	border-collapse: collapse;
+	padding: 5px;
+}
 
-  		/* Webkit browsers*/
-  		-webkit-transform: scale(2);
-		}
-		
+.tabellaamostr table tr:nth-child(odd) {
+	background-color: #f2f2f2;
+}
+
+.tabellaamostr table tr:nth-child(even) {
+	background-color: #ffffff;
+}
+
+textarea {
+	width: 100%;
+}
+
+input[type=number] {
+	width: 30px;
+}
+
+img {
+	width: 100%;
+}
+
+input[type=checkbox] {
+	/* All browsers except webkit*/
+	transform: scale(2);
+	/* Webkit browsers*/
+	-webkit-transform: scale(2);
+}
+
 a.tip {
-    
-    text-decoration: none
+	text-decoration: none
 }
+
 a.tip:hover {
-    cursor: help;
-    position: relative
+	cursor: help;
+	position: relative
 }
+
 a.tip span {
-    display: none
+	display: none
 }
+
 a.tip:hover span {
-    border: #c0c0c0 1px dotted;
-    padding: 5px 20px 5px 5px;
-    display: block;
-    z-index: 100;
-    background:  #f0f0f0 no-repeat 100% 5%;
-    left: 0px;
-    margin: 10px;
-    width: 250px;
-    position: absolute;
-    top: 10px;
-    text-decoration: none
+	border: #c0c0c0 1px dotted;
+	padding: 5px 20px 5px 5px;
+	display: block;
+	z-index: 100;
+	background: #f0f0f0 no-repeat 100% 5%;
+	left: 0px;
+	margin: 10px;
+	width: 250px;
+	position: absolute;
+	top: 10px;
+	text-decoration: none
 }
 
 a.tip2 {
-    color:#000000;
-    text-decoration: none
+	color: #000000;
+	text-decoration: none
 }
+
 a.tip2:hover {
-    cursor: help;
-    position: relative
+	cursor: help;
+	position: relative
 }
+
 a.tip2 span {
-    display: none
+	display: none
 }
+
 a.tip2:hover span {
-    border: #c0c0c0 1px dotted;
-    padding: 5px 20px 5px 5px;
-    display: block;
-    z-index: 100;
-    background:  #f0f0f0 no-repeat 100% 5%;
-    left: 0px;
-    margin: 10px;
-    width: 250px;
-    position: absolute;
-    top: 10px;
-    text-decoration: none
+	border: #c0c0c0 1px dotted;
+	padding: 5px 20px 5px 5px;
+	display: block;
+	z-index: 100;
+	background: #f0f0f0 no-repeat 100% 5%;
+	left: 0px;
+	margin: 10px;
+	width: 250px;
+	position: absolute;
+	top: 10px;
+	text-decoration: none
 }
 
 /* tabella a mostro
  */
- .CSSTableGenerator {
-	margin:0px;padding:0px;
-	width:100%;
+.CSSTableGenerator {
+	margin: 0px;
+	padding: 0px;
+	width: 100%;
 	box-shadow: 10px 10px 5px #888888;
-	border:1px solid #000000;
-	
-	-moz-border-radius-bottomleft:0px;
-	-webkit-border-bottom-left-radius:0px;
-	border-bottom-left-radius:0px;
-	
-	-moz-border-radius-bottomright:0px;
-	-webkit-border-bottom-right-radius:0px;
-	border-bottom-right-radius:0px;
-	
-	-moz-border-radius-topright:0px;
-	-webkit-border-top-right-radius:0px;
-	border-top-right-radius:0px;
-	
-	-moz-border-radius-topleft:0px;
-	-webkit-border-top-left-radius:0px;
-	border-top-left-radius:0px;
-}.CSSTableGenerator table{
-    border-collapse: collapse;
-        border-spacing: 0;
-	width:100%;
-	height:100%;
-	margin:0px;padding:0px;
-}.CSSTableGenerator tr:last-child td:last-child {
-	-moz-border-radius-bottomright:0px;
-	-webkit-border-bottom-right-radius:0px;
-	border-bottom-right-radius:0px;
+	border: 1px solid #000000;
+	-moz-border-radius-bottomleft: 0px;
+	-webkit-border-bottom-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+	-moz-border-radius-bottomright: 0px;
+	-webkit-border-bottom-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+	-moz-border-radius-topright: 0px;
+	-webkit-border-top-right-radius: 0px;
+	border-top-right-radius: 0px;
+	-moz-border-radius-topleft: 0px;
+	-webkit-border-top-left-radius: 0px;
+	border-top-left-radius: 0px;
 }
+
+.CSSTableGenerator table {
+	border-collapse: collapse;
+	border-spacing: 0;
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+}
+
+.CSSTableGenerator tr:last-child td:last-child {
+	-moz-border-radius-bottomright: 0px;
+	-webkit-border-bottom-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+}
+
 .CSSTableGenerator table tr:first-child td:first-child {
-	-moz-border-radius-topleft:0px;
-	-webkit-border-top-left-radius:0px;
-	border-top-left-radius:0px;
+	-moz-border-radius-topleft: 0px;
+	-webkit-border-top-left-radius: 0px;
+	border-top-left-radius: 0px;
 }
+
 .CSSTableGenerator table tr:first-child td:last-child {
-	-moz-border-radius-topright:0px;
-	-webkit-border-top-right-radius:0px;
-	border-top-right-radius:0px;
-}.CSSTableGenerator tr:last-child td:first-child{
-	-moz-border-radius-bottomleft:0px;
-	-webkit-border-bottom-left-radius:0px;
-	border-bottom-left-radius:0px;
-}.CSSTableGenerator tr:hover td{
-	background-color:#f2f2f2;
-		
+	-moz-border-radius-topright: 0px;
+	-webkit-border-top-right-radius: 0px;
+	border-top-right-radius: 0px;
+}
 
+.CSSTableGenerator tr:last-child td:first-child {
+	-moz-border-radius-bottomleft: 0px;
+	-webkit-border-bottom-left-radius: 0px;
+	border-bottom-left-radius: 0px;
 }
-.CSSTableGenerator td{
-	vertical-align:middle;
-	
-	background-color:#ffffff;
 
-	border:1px solid #000000;
-	border-width:0px 1px 1px 0px;
-	text-align:center;
-	padding:7px;
-	font-size:14px;
-	font-family:Arial;
-	font-weight:normal;
-	color:#000000;
-}.CSSTableGenerator tr:last-child td{
-	border-width:0px 1px 0px 0px;
-}.CSSTableGenerator tr td:last-child{
-	border-width:0px 0px 1px 0px;
-}.CSSTableGenerator tr:last-child td:last-child{
-	border-width:0px 0px 0px 0px;
+.CSSTableGenerator tr:hover td {
+	background-color: #f2f2f2;
 }
-.CSSTableGenerator tr:first-child td{
-		background:-o-linear-gradient(bottom, #ffffff 5%, #ffffff 100%);	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ffffff), color-stop(1, #ffffff) );
-	background:-moz-linear-gradient( center top, #ffffff 5%, #ffffff 100% );
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff", endColorstr="#ffffff");	background: -o-linear-gradient(top,#ffffff,ffffff);
 
-	background-color:#ffffff;
-	border:0px solid #000000;
-	text-align:center;
-	border-width:0px 0px 1px 1px;
-	font-size:14px;
-	font-family:Arial;
-	font-weight:bold;
-	color:#000000;
+.CSSTableGenerator td {
+	vertical-align: middle;
+	background-color: #ffffff;
+	border: 1px solid #000000;
+	border-width: 0px 1px 1px 0px;
+	text-align: center;
+	padding: 7px;
+	font-size: 14px;
+	font-family: Arial;
+	font-weight: normal;
+	color: #000000;
 }
-.CSSTableGenerator tr:first-child:hover td{
-	background:-o-linear-gradient(bottom, #ffffff 5%, #ffffff 100%);	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ffffff), color-stop(1, #ffffff) );
-	background:-moz-linear-gradient( center top, #ffffff 5%, #ffffff 100% );
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff", endColorstr="#ffffff");	background: -o-linear-gradient(top,#ffffff,ffffff);
 
-	background-color:#ffffff;
+.CSSTableGenerator tr:last-child td {
+	border-width: 0px 1px 0px 0px;
 }
-.CSSTableGenerator tr:first-child td:first-child{
-	border-width:0px 0px 1px 0px;
+
+.CSSTableGenerator tr td:last-child {
+	border-width: 0px 0px 1px 0px;
 }
-.CSSTableGenerator tr:first-child td:last-child{
-	border-width:0px 0px 1px 1px;
+
+.CSSTableGenerator tr:last-child td:last-child {
+	border-width: 0px 0px 0px 0px;
 }
- 
- 
- 
- </style>
+
+.CSSTableGenerator tr:first-child td {
+	background: -o-linear-gradient(bottom, #ffffff 5%, #ffffff 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ffffff
+		), color-stop(1, #ffffff));
+	background: -moz-linear-gradient(center top, #ffffff 5%, #ffffff 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff",
+		endColorstr="#ffffff");
+	background: -o-linear-gradient(top, #ffffff, ffffff);
+	background-color: #ffffff;
+	border: 0px solid #000000;
+	text-align: center;
+	border-width: 0px 0px 1px 1px;
+	font-size: 14px;
+	font-family: Arial;
+	font-weight: bold;
+	color: #000000;
+}
+
+.CSSTableGenerator tr:first-child:hover td {
+	background: -o-linear-gradient(bottom, #ffffff 5%, #ffffff 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ffffff
+		), color-stop(1, #ffffff));
+	background: -moz-linear-gradient(center top, #ffffff 5%, #ffffff 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff",
+		endColorstr="#ffffff");
+	background: -o-linear-gradient(top, #ffffff, ffffff);
+	background-color: #ffffff;
+}
+
+.CSSTableGenerator tr:first-child td:first-child {
+	border-width: 0px 0px 1px 0px;
+}
+
+.CSSTableGenerator tr:first-child td:last-child {
+	border-width: 0px 0px 1px 1px;
+}
+</style>
 
 
 
 
 
 <div class="panel panel-default">
-  <div class="panel-heading">
-    <h2>Risk Rating</h2>
-  </div>
-  <div class="panel-body ">
-    <div class="well">
-		By following the approach here, it is possible to estimate the severity of all of these risks to the business and make an informed decision about what to do about those risks. Having a system in place for rating risks will save time and eliminate arguing about priorities. <br>This system will help to ensure that the business doesn't get distracted by minor risks while ignoring more serious risks that are less well understood. <br>
-		<a href="https://www.owasp.org/index.php/OWASP_Risk_Rating_Methodology" target="_blank">(Reference: The OWASP Risk Rating Methodology)</a>
-    	<br><br>According to the <a href="https://www.owasp.org/index.php/Threat_Risk_Modeling#STRIDE" target="_blank">STRIDE Methodology,</a> the Threats previously selected are grouped in 6 categories:<br>
-    		<ul>
-    			<li>SPOOFING</li>
-    			<li>TAMPERING</li>
-    			<li>REPUDIATION</li>
-    			<li>INFORMATION DISCLOSURE</li>
-    			<li>DENIAL OF SERVICE</li>
-    			<li>ELEVATION OF PRIVILEGES</li>
-    		</ul>
-    	Below are shown only the STRIDE categories corresponding to the selected threats:
-    	for each of them, insert the appropriate values to assess likelihood and impact overall system.
-    	<br>At the end, you'll get an overall risk level according to the scale shown below:<br>
-    	<table align="center">
-    		<tr>
-    			<td align="center" width="90px">VERY LOW</td><td align="center" width="90px">LOW</td><td align="center" width="90px">MEDIUM</td><td align="center" width="90px">HIGH</td><td align="center" width="90px">CRITICAL</td>
-    		</tr>
-    		<tr>
-    			<td style="background:green"></td><td style="background:#d9d926"></td><td style="background:orange"></td><td style="background:red"></td><td style="background:#ff00ff"></td>
-    		</tr>
-    	</table>
-    	<br><span style="color:red">TIPS: if you hover the mouse over each field, you can view additional information!</span>
-    	<br><br><b>Do you want to evaluate the risks for every Threat instead of evaluating the STRIDE categories?
-    	 </b>  <button ng-click="switchRiskRating()">{{valutazione}}</button>
-    	 
-    </div>
-    
-  <div class="panel panel-default" ng-repeat="component in ListComponentFromDB" ng-show="singolarmente">
-  	<h3 align="center">{{component.name}} ({{component.type}})</h3><br>
-  	<p align="center" style="color:red" ng-hide="solosecisonoThreat(component.id)">You didn't select any threats!</p>
-  	<table  style="width: 100%;border:1px solid grey;" >
+	<div class="panel-heading">
+		<h2>Risk Rating</h2>
+	</div>
+	<div class="panel-body ">
+		<div class="well">
+			By following the approach here, it is possible to estimate the
+			severity of all of these risks to the business and make an informed
+			decision about what to do about those risks. Having a system in place
+			for rating risks will save time and eliminate arguing about
+			priorities. <br>This system will help to ensure that the
+			business doesn't get distracted by minor risks while ignoring more
+			serious risks that are less well understood. <br> <a
+				href="https://www.owasp.org/index.php/OWASP_Risk_Rating_Methodology"
+				target="_blank">(Reference: The OWASP Risk Rating Methodology)</a> <br>
+			<br>According to the <a
+				href="https://www.owasp.org/index.php/Threat_Risk_Modeling#STRIDE"
+				target="_blank">STRIDE Methodology,</a> the Threats previously
+			selected are grouped in 6 categories:<br>
+			<ul>
+				<li>SPOOFING</li>
+				<li>TAMPERING</li>
+				<li>REPUDIATION</li>
+				<li>INFORMATION DISCLOSURE</li>
+				<li>DENIAL OF SERVICE</li>
+				<li>ELEVATION OF PRIVILEGES</li>
+			</ul>
+			Below are shown only the STRIDE categories corresponding to the
+			selected threats: for each of them, insert the appropriate values to
+			assess likelihood and impact overall system. <br>At the end,
+			you'll get an overall risk level according to the scale shown below:<br>
+			<table align="center">
+				<tr>
+					<td align="center" width="90px">VERY LOW</td>
+					<td align="center" width="90px">LOW</td>
+					<td align="center" width="90px">MEDIUM</td>
+					<td align="center" width="90px">HIGH</td>
+					<td align="center" width="90px">CRITICAL</td>
+				</tr>
+				<tr>
+					<td style="background: green"></td>
+					<td style="background: #d9d926"></td>
+					<td style="background: orange"></td>
+					<td style="background: red"></td>
+					<td style="background: #ff00ff"></td>
+				</tr>
+			</table>
+			<br>
+			<span style="color: red">TIPS: if you hover the mouse over
+				each field, you can view additional information!</span> <br>
+			<br>
+			<b>Do you want to evaluate the risks for every Threat instead of
+				evaluating the STRIDE categories? </b>
+			<button ng-click="switchRiskRating()">{{valutazione}}</button>
 
-  		<tr ng-repeat='threat in selection | filter:{componentid:component.id}' style="border:1px solid grey;">
-  			<td width="10%"><a class="tip2">{{threat.threat}}<br>({{threat.stride}})<span>{{threat.description}}</span></a></td>
-  			<td align="center"><span ng-style="{'VERY LOW':{color:'green'},'LOW':{color:'#d9d926'},'MEDIUM':{color:'orange'},'HIGH':{color:'red'},'CRITICAL':{color:'#ff00ff'}}[threat.risk]"><b>OVERALL RISK SEVERITY = {{threat.risk}}</b></span>
-  			
-  			<table>
-			<td align="center" valign="top"><b>LIKEHOOD = {{threat.totaleLikehood}}</b>
-			
-				<table>
-				
-				<tr><td align="center"><b>Threat Agent Factors</b></td><td align="center"><b>Vulnerability Factors</b></td></tr>
-				</table>
-				<table>
-				<tr><td><a class="tip">Skill level<span>How technically skilled is this group of threat agents? Security penetration skills (9), network and programming skills (6), advanced computer user (5), some technical skills (3), no technical skills (1)</span></a></td>	
-				<td><input type="number" ng-change="saveRating()" ng-model="threat.skill" min="0" max="9"></td>														
-				<td><a class="tip">Ease of discovery<span>How easy is it for this group of threat agents to discover this vulnerability? Practically impossible (1), difficult (3), easy (7), automated tools available (9)</span></a></td>		
-				<td><input type="number" ng-change="saveRating()" ng-model="threat.discover" min="0" max="9"></td></tr>
-				<tr><td><a class="tip">Motive<span>How motivated are the threat agents to find and exploit this vulnerability? Low or no reward (1), possible reward (4), high reward (9)</span></a></td>			
-				<td><input type="number" ng-change="saveRating()" ng-model="threat.motive" min="0" max="9"></td>														
-				<td><a class="tip">Ease of exploit<span>How easy is it for this group of threat agents to actually exploit this vulnerability? Theoretical (1), difficult (3), easy (5), automated tools available (9)</span></a></td>		
-				<td><input type="number" ng-change="saveRating()" ng-model="threat.ease" min="0" max="9"></td></tr>
-				<tr><td><a class="tip">Opportunity<span>What resources and opportunities are required for this group of threat agents to find and exploit this vulnerability? Full access or expensive resources required (0), special access or resources required (4), some access or resources required (7), no access or resources required (9)</span></a></td>	
-				<td><input type="number" ng-change="saveRating()" ng-model="threat.opportunity" min="0" max="9"></td>												
-				<td><a class="tip">Awareness<span>How well known is this vulnerability to this group of threat agents? Unknown (1), hidden (4), obvious (6), public knowledge (9)</span></a></td>				
-				<td><input type="number" ng-change="saveRating()" ng-model="threat.aware" min="0" max="9"></td></tr>
-				<tr><td><a class="tip">Size<span>How large is this group of threat agents? Developers (2), system administrators (2), intranet users (4), partners (5), authenticated users (6), anonymous Internet users (9)</span></a></td>			
-				<td><input type="number" ng-change="saveRating()" ng-model="threat.size" min="0" max="9"></td>														
-				<td><a class="tip">Intrusion detection<span>How likely is an exploit to be detected? Active detection in application (1), logged and reviewed (3), logged without review (8), not logged (9)</span></a></td>
-				<td><input type="number" ng-change="saveRating()" ng-model="threat.id" min="0" max="9"></td></tr>
-				
-				</table>
-			
-			</td>
-			
-			<td align="center" valign="top"><b>IMPACT = {{threat.totaleImpact}}</b>
-			
-				<table>
-				
-				<tr><td align="center"><b>Technical Impact Factors</b></td><td align="center"><b>Business Impact Factors</b></td></tr>
-				</table>
-				<table>
-				<tr><td><a class="tip">Loss of confidentiality<span>How much data could be disclosed and how sensitive is it? Minimal non-sensitive data disclosed (2), minimal critical data disclosed (6), extensive non-sensitive data disclosed (6), extensive critical data disclosed (7), all data disclosed (9)</span></a></td>	
-				<td><input type="number" ng-change="saveRating()" ng-model="threat.confide" min="0" max="9" value="0"></td>								
-				<td><a class="tip">Financial damage<span>How much financial damage will result from an exploit? Less than the cost to fix the vulnerability (1), minor effect on annual profit (3), significant effect on annual profit (7), bankruptcy (9)</span></a></td>		
-				<td><input type="number" ng-change="saveRating()" ng-model="threat.financial" min="0" max="9" value="0"></td></tr>
-				<tr><td><a class="tip">Loss of integrity<span>How much data could be corrupted and how damaged is it? Minimal slightly corrupt data (1), minimal seriously corrupt data (3), extensive slightly corrupt data (5), extensive seriously corrupt data (7), all data totally corrupt (9)</span></a></td>			
-				<td><input type="number" ng-change="saveRating()" ng-model="threat.integri" min="0" max="9" value="0"></td>								
-				<td><a class="tip">Reputation damage<span>Would an exploit result in reputation damage that would harm the business? Minimal damage (1), Loss of major accounts (4), loss of goodwill (5), brand damage (9)</span></a></td>		
-				<td><input type="number" ng-change="saveRating()" ng-model="threat.reputation" min="0" max="9" value="0"></td></tr>
-				<tr><td><a class="tip">Loss of availability<span>How much service could be lost and how vital is it? Minimal secondary services interrupted (1), minimal primary services interrupted (5), extensive secondary services interrupted (5), extensive primary services interrupted (7), all services completely lost (9)</span></a></td>		
-				<td><input type="number" ng-change="saveRating()" ng-model="threat.avalai" min="0" max="9" value="0"></td>								
-				<td><a class="tip">Non-compliance<span>How much exposure does non-compliance introduce? Minor violation (2), clear violation (5), high profile violation (7)</span></a></td>			
-				<td><input type="number" ng-change="saveRating()" ng-model="threat.noncompliance" min="0" max="9" value="0"></td></tr>
-				<tr><td><a class="tip">Loss of accountability<span>Are the threat agents' actions traceable to an individual? Fully traceable (1), possibly traceable (7), completely anonymous (9)</span></a></td>		
-				<td><input type="number" ng-change="saveRating()" ng-model="threat.accounta" min="0" max="9" value="0"></td>								
-				<td><a class="tip">Privacy violation<span>How much personally identifiable information could be disclosed? One individual (3), hundreds of people (5), thousands of people (7), millions of people (9)</span></a></td>		
-				<td><input type="number" ng-change="saveRating()" ng-model="threat.privacy" min="0" max="9" value="0"></td></tr>
-				
-				</table>
-			
-			</td>
+		</div>
 
-		</table></td>
-		
-		
-  		</tr>
+		<div class="panel panel-default"
+			ng-repeat="component in ListComponentFromDB" ng-show="singolarmente">
+			<h3 align="center">{{component.name}} ({{component.type}})</h3>
+			<br>
+			<p align="center" style="color: red"
+				ng-hide="solosecisonoThreat(component.id)">You didn't select any
+				threats!</p>
+			<table style="width: 100%; border: 1px solid grey;">
 
-  	</table>
-  </div>
-  
-	<!-- valutazione STRIDE -->
-  <div class="panel panel-default" ng-repeat="component in ListSTRIDE" ng-hide="singolarmente">
-  <h3 align="center">{{component.component}} ({{component.type}})</h3><br>
-  	<p align="center" style="color:red" ng-hide="solosecisonoThreat(component.componentid)">You didn't select any threats!</p>
-  	<table  style="width: 100%;border:1px solid grey;" ng-show="solosecisonoThreat(component.componentid)">
+				<tr
+					ng-repeat='threat in selection | filter:{componentid:component.id}'
+					style="border: 1px solid grey;">
+					<td width="10%"><a class="tip2">{{threat.threat}}<br>({{threat.stride}})<span>{{threat.description}}</span></a></td>
+					<td align="center"><span
+						ng-style="{'VERY LOW':{color:'green'},'LOW':{color:'#d9d926'},'MEDIUM':{color:'orange'},'HIGH':{color:'red'},'CRITICAL':{color:'#ff00ff'}}[threat.risk]"><b>OVERALL
+								RISK SEVERITY = {{threat.risk}}</b></span>
 
-  		<tr ng-repeat="threat in component.punteggi" style="border:1px solid grey;" ng-show="solosecisonoThreatSTRIDE(threat.name,component.componentid)">
-  			<td width="10%"><a class="tip2">{{threat.name}}<span>{{threat.description}}</span></a></td>
-  			<td align="center"><span ng-style="{'VERY LOW':{color:'green'},'LOW':{color:'#d9d926'},'MEDIUM':{color:'orange'},'HIGH':{color:'red'},'CRITICAL':{color:'#ff00ff'}}[threat.risk]"><b>OVERALL RISK SEVERITY = {{threat.risk}}</b></span>
+						<table>
+							<td align="center" valign="top"><b>LIKEHOOD =
+									{{threat.totaleLikehood}}</b>
 
-  			
-  			<table>
-			<td align="center" valign="top"><b>LIKEHOOD = {{threat.totaleLikehood}}</b>
-			
-				<table>
-				
-				<tr><td align="center"><b>Threat Agent Factors</b></td><td align="center"><b>Vulnerability Factors</b></td></tr>
-				</table>
-				<table>
-				<tr><td><a class="tip">Skill level<span>How technically skilled is this group of threat agents? Security penetration skills (9), network and programming skills (6), advanced computer user (5), some technical skills (3), no technical skills (1)</span></a></td>	
-				<td><input type="number" ng-change="saveRating()" ng-model="threat.skill" min="0" max="9"></td>														
-				<td><a class="tip">Ease of discovery<span>How easy is it for this group of threat agents to discover this vulnerability? Practically impossible (1), difficult (3), easy (7), automated tools available (9)</span></a></td>		
-				<td><input type="number" ng-change="saveRating()" ng-model="threat.discover" min="0" max="9"></td></tr>
-				<tr><td><a class="tip">Motive<span>How motivated are the threat agents to find and exploit this vulnerability? Low or no reward (1), possible reward (4), high reward (9)</span></a></td>			
-				<td><input type="number" ng-change="saveRating()" ng-model="threat.motive" min="0" max="9"></td>														
-				<td><a class="tip">Ease of exploit<span>How easy is it for this group of threat agents to actually exploit this vulnerability? Theoretical (1), difficult (3), easy (5), automated tools available (9)</span></a></td>		
-				<td><input type="number" ng-change="saveRating()" ng-model="threat.ease" min="0" max="9"></td></tr>
-				<tr><td><a class="tip">Opportunity<span>What resources and opportunities are required for this group of threat agents to find and exploit this vulnerability? Full access or expensive resources required (0), special access or resources required (4), some access or resources required (7), no access or resources required (9)</span></a></td>	
-				<td><input type="number" ng-change="saveRating()" ng-model="threat.opportunity" min="0" max="9"></td>												
-				<td><a class="tip">Awareness<span>How well known is this vulnerability to this group of threat agents? Unknown (1), hidden (4), obvious (6), public knowledge (9)</span></a></td>				
-				<td><input type="number" ng-change="saveRating()" ng-model="threat.aware" min="0" max="9"></td></tr>
-				<tr><td><a class="tip">Size<span>How large is this group of threat agents? Developers (2), system administrators (2), intranet users (4), partners (5), authenticated users (6), anonymous Internet users (9)</span></a></td>			
-				<td><input type="number" ng-change="saveRating()" ng-model="threat.size" min="0" max="9"></td>														
-				<td><a class="tip">Intrusion detection<span>How likely is an exploit to be detected? Active detection in application (1), logged and reviewed (3), logged without review (8), not logged (9)</span></a></td>
-				<td><input type="number" ng-change="saveRating()" ng-model="threat.id" min="0" max="9"></td></tr>
-				
-				</table>
-			
-			</td>
-			
-			<td align="center" valign="top"><b>IMPACT = {{threat.totaleImpact}}</b>
-			
-				<table>
-				
-				<tr><td align="center"><b>Technical Impact Factors</b></td><td align="center"><b>Business Impact Factors</b></td></tr>
-				</table>
-				<table>
-				<tr><td><a class="tip">Loss of confidentiality<span>How much data could be disclosed and how sensitive is it? Minimal non-sensitive data disclosed (2), minimal critical data disclosed (6), extensive non-sensitive data disclosed (6), extensive critical data disclosed (7), all data disclosed (9)</span></a></td>	
-				<td><input type="number" ng-change="saveRating()" ng-model="threat.confide" min="0" max="9" value="0"></td>								
-				<td><a class="tip">Financial damage<span>How much financial damage will result from an exploit? Less than the cost to fix the vulnerability (1), minor effect on annual profit (3), significant effect on annual profit (7), bankruptcy (9)</span></a></td>		
-				<td><input type="number" ng-change="saveRating()" ng-model="threat.financial" min="0" max="9" value="0"></td></tr>
-				<tr><td><a class="tip">Loss of integrity<span>How much data could be corrupted and how damaged is it? Minimal slightly corrupt data (1), minimal seriously corrupt data (3), extensive slightly corrupt data (5), extensive seriously corrupt data (7), all data totally corrupt (9)</span></a></td>			
-				<td><input type="number" ng-change="saveRating()" ng-model="threat.integri" min="0" max="9" value="0"></td>								
-				<td><a class="tip">Reputation damage<span>Would an exploit result in reputation damage that would harm the business? Minimal damage (1), Loss of major accounts (4), loss of goodwill (5), brand damage (9)</span></a></td>		
-				<td><input type="number" ng-change="saveRating()" ng-model="threat.reputation" min="0" max="9" value="0"></td></tr>
-				<tr><td><a class="tip">Loss of availability<span>How much service could be lost and how vital is it? Minimal secondary services interrupted (1), minimal primary services interrupted (5), extensive secondary services interrupted (5), extensive primary services interrupted (7), all services completely lost (9)</span></a></td>		
-				<td><input type="number" ng-change="saveRating()" ng-model="threat.avalai" min="0" max="9" value="0"></td>								
-				<td><a class="tip">Non-compliance<span>How much exposure does non-compliance introduce? Minor violation (2), clear violation (5), high profile violation (7)</span></a></td>			
-				<td><input type="number" ng-change="saveRating()" ng-model="threat.noncompliance" min="0" max="9" value="0"></td></tr>
-				<tr><td><a class="tip">Loss of accountability<span>Are the threat agents' actions traceable to an individual? Fully traceable (1), possibly traceable (7), completely anonymous (9)</span></a></td>		
-				<td><input type="number" ng-change="saveRating()" ng-model="threat.accounta" min="0" max="9" value="0"></td>								
-				<td><a class="tip">Privacy violation<span>How much personally identifiable information could be disclosed? One individual (3), hundreds of people (5), thousands of people (7), millions of people (9)</span></a></td>		
-				<td><input type="number" ng-change="saveRating()" ng-model="threat.privacy" min="0" max="9" value="0"></td></tr>
-				
-				</table>
-			
-			</td>
+								<table>
 
-		</table></td>
-		
-		
-  		</tr>
+									<tr>
+										<td align="center"><b>Threat Agent Factors</b></td>
+										<td align="center"><b>Vulnerability Factors</b></td>
+									</tr>
+								</table>
+								<table>
+									<tr>
+										<td><a class="tip">Skill level<span>How
+													technically skilled is this group of threat agents?
+													Security penetration skills (9), network and programming
+													skills (6), advanced computer user (5), some technical
+													skills (3), no technical skills (1)</span></a></td>
+										<td><input type="number" ng-change="saveRating()"
+											ng-model="threat.skill" min="0" max="9" ng-disabled="!singolarmente"></td>
+										<td><a class="tip">Ease of discovery<span>How
+													easy is it for this group of threat agents to discover this
+													vulnerability? Practically impossible (1), difficult (3),
+													easy (7), automated tools available (9)</span></a></td>
+										<td><input type="number" ng-change="saveRating()"
+											ng-model="threat.discover" min="0" max="9"></td>
+									</tr>
+									<tr>
+										<td><a class="tip">Motive<span>How motivated
+													are the threat agents to find and exploit this
+													vulnerability? Low or no reward (1), possible reward (4),
+													high reward (9)</span></a></td>
+										<td><input type="number" ng-change="saveRating()"
+											ng-model="threat.motive" min="0" max="9"></td>
+										<td><a class="tip">Ease of exploit<span>How
+													easy is it for this group of threat agents to actually
+													exploit this vulnerability? Theoretical (1), difficult (3),
+													easy (5), automated tools available (9)</span></a></td>
+										<td><input type="number" ng-change="saveRating()"
+											ng-model="threat.ease" min="0" max="9"></td>
+									</tr>
+									<tr>
+										<td><a class="tip">Opportunity<span>What
+													resources and opportunities are required for this group of
+													threat agents to find and exploit this vulnerability? Full
+													access or expensive resources required (0), special access
+													or resources required (4), some access or resources
+													required (7), no access or resources required (9)</span></a></td>
+										<td><input type="number" ng-change="saveRating()"
+											ng-model="threat.opportunity" min="0" max="9"></td>
+										<td><a class="tip">Awareness<span>How well
+													known is this vulnerability to this group of threat agents?
+													Unknown (1), hidden (4), obvious (6), public knowledge (9)</span></a></td>
+										<td><input type="number" ng-change="saveRating()"
+											ng-model="threat.aware" min="0" max="9"></td>
+									</tr>
+									<tr>
+										<td><a class="tip">Size<span>How large is this
+													group of threat agents? Developers (2), system
+													administrators (2), intranet users (4), partners (5),
+													authenticated users (6), anonymous Internet users (9)</span></a></td>
+										<td><input type="number" ng-change="saveRating()"
+											ng-model="threat.size" min="0" max="9"></td>
+										<td><a class="tip">Intrusion detection<span>How
+													likely is an exploit to be detected? Active detection in
+													application (1), logged and reviewed (3), logged without
+													review (8), not logged (9)</span></a></td>
+										<td><input type="number" ng-change="saveRating()"
+											ng-model="threat.id" min="0" max="9"></td>
+									</tr>
 
-  	</table>
-  </div>
-  
+								</table></td>
 
+							<td align="center" valign="top"><b>IMPACT =
+									{{threat.totaleImpact}}</b>
 
- <div class="panel panel-default" ng-show="vedirisultati">
-   <table class="CSSTableGenerator" border="1"; width=100%>
-    <tr><td></td>									<td align="center" ng-repeat="component in ListComponentFromDB">{{component.name}}</td> </tr>
-    <tr><td><b>Spoofing</b></td>					<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'SPOOFING')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'SPOOFING')}}</td> </tr>
-    <tr><td><b>Tampering</b></td>					<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'TAMPERING')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'TAMPERING')}}</td> </tr>
-    <tr><td><b>Remediation</b></td>					<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'REPUDIATION')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'REPUDIATION')}}</td> </tr>
-    <tr><td><b>Information Disclosure</b></td>		<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'INFORMATION DISCLOSURE')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'INFORMATION DISCLOSURE')}}</td> </tr>
-    <tr><td><b>Denial of Service</b></td>			<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'DENIAL OF SERVICE')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'DENIAL OF SERVICE')}}</td> </tr>
-    <tr><td><b>Elevation of privileges</b></td>		<td ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'ELEVATION OF PRIVILEGES')]" align="center" ng-repeat="component in ListComponentFromDB" >{{getRisk(component.name,'ELEVATION OF PRIVILEGES')}}</td> </tr>
-   </table>
-   
-   
+								<table>
 
-	
-		
-</div>
+									<tr>
+										<td align="center"><b>Technical Impact Factors</b></td>
+										<td align="center"><b>Business Impact Factors</b></td>
+									</tr>
+								</table>
+								<table>
+									<tr>
+										<td><a class="tip">Loss of confidentiality<span>How
+													much data could be disclosed and how sensitive is it?
+													Minimal non-sensitive data disclosed (2), minimal critical
+													data disclosed (6), extensive non-sensitive data disclosed
+													(6), extensive critical data disclosed (7), all data
+													disclosed (9)</span></a></td>
+										<td><input type="number" ng-change="saveRating()"
+											ng-model="threat.confide" min="0" max="9" value="0"></td>
+										<td><a class="tip">Financial damage<span>How
+													much financial damage will result from an exploit? Less
+													than the cost to fix the vulnerability (1), minor effect on
+													annual profit (3), significant effect on annual profit (7),
+													bankruptcy (9)</span></a></td>
+										<td><input type="number" ng-change="saveRating()"
+											ng-model="threat.financial" min="0" max="9" value="0"></td>
+									</tr>
+									<tr>
+										<td><a class="tip">Loss of integrity<span>How
+													much data could be corrupted and how damaged is it? Minimal
+													slightly corrupt data (1), minimal seriously corrupt data
+													(3), extensive slightly corrupt data (5), extensive
+													seriously corrupt data (7), all data totally corrupt (9)</span></a></td>
+										<td><input type="number" ng-change="saveRating()"
+											ng-model="threat.integri" min="0" max="9" value="0"></td>
+										<td><a class="tip">Reputation damage<span>Would
+													an exploit result in reputation damage that would harm the
+													business? Minimal damage (1), Loss of major accounts (4),
+													loss of goodwill (5), brand damage (9)</span></a></td>
+										<td><input type="number" ng-change="saveRating()"
+											ng-model="threat.reputation" min="0" max="9" value="0"></td>
+									</tr>
+									<tr>
+										<td><a class="tip">Loss of availability<span>How
+													much service could be lost and how vital is it? Minimal
+													secondary services interrupted (1), minimal primary
+													services interrupted (5), extensive secondary services
+													interrupted (5), extensive primary services interrupted
+													(7), all services completely lost (9)</span></a></td>
+										<td><input type="number" ng-change="saveRating()"
+											ng-model="threat.avalai" min="0" max="9" value="0"></td>
+										<td><a class="tip">Non-compliance<span>How
+													much exposure does non-compliance introduce? Minor
+													violation (2), clear violation (5), high profile violation
+													(7)</span></a></td>
+										<td><input type="number" ng-change="saveRating()"
+											ng-model="threat.noncompliance" min="0" max="9" value="0"></td>
+									</tr>
+									<tr>
+										<td><a class="tip">Loss of accountability<span>Are
+													the threat agents' actions traceable to an individual?
+													Fully traceable (1), possibly traceable (7), completely
+													anonymous (9)</span></a></td>
+										<td><input type="number" ng-change="saveRating()"
+											ng-model="threat.accounta" min="0" max="9" value="0"></td>
+										<td><a class="tip">Privacy violation<span>How
+													much personally identifiable information could be
+													disclosed? One individual (3), hundreds of people (5),
+													thousands of people (7), millions of people (9)</span></a></td>
+										<td><input type="number" ng-change="saveRating()"
+											ng-model="threat.privacy" min="0" max="9" value="0"></td>
+									</tr>
 
+								</table></td>
 
-
-
-
-
-
-
+						</table></td>
 
 
-   <button class="btn btn-primary pull-left" ng-click="saveRating()">Save</button>
-   <button class="btn btn-primary pull-left" ng-click="showresults()" ng-show='false'>{{button}}</button>
-   
-   <button class="btn btn-primary pull-left" ng-click="resetRating()" ng-show='done'>Reset</button>
-   <a href="#/negotiate/security"><button class="btn btn-primary pull-right" ng-show="done">Next</button></a>
-   <br>
+				</tr>
 
-<!-- {{selection}}<br>
+			</table>
+		</div>
+
+		<!-- valutazione STRIDE -->
+		<div class="panel panel-default" ng-repeat="component in ListSTRIDE"
+			ng-hide="singolarmente">
+			<h3 align="center">{{component.component}} ({{component.type}})</h3>
+			<br>
+			<p align="center" style="color: red"
+				ng-hide="solosecisonoThreat(component.componentid)">You didn't
+				select any threats!</p>
+			<table style="width: 100%; border: 1px solid grey;"
+				ng-show="solosecisonoThreat(component.componentid)">
+
+				<tr ng-repeat="threat in component.punteggi"
+					style="border: 1px solid grey;"
+					ng-show="solosecisonoThreatSTRIDE(threat.name,component.componentid)">
+					<td width="10%"><a class="tip2">{{threat.name}}<span>{{threat.description}}</span></a></td>
+					<td align="center"><span
+						ng-style="{'VERY LOW':{color:'green'},'LOW':{color:'#d9d926'},'MEDIUM':{color:'orange'},'HIGH':{color:'red'},'CRITICAL':{color:'#ff00ff'}}[threat.risk]"><b>OVERALL
+								RISK SEVERITY = {{threat.risk}}</b></span>
+
+
+						<table>
+							<td align="center" valign="top"><b>LIKEHOOD =
+									{{threat.totaleLikehood}}</b>
+
+								<table>
+
+									<tr>
+										<td align="center"><b>Threat Agent Factors</b></td>
+										<td align="center"><b>Vulnerability Factors</b></td>
+									</tr>
+								</table>
+								<table>
+									<tr>
+										<td><a class="tip">Skill level<span>How
+													technically skilled is this group of threat agents?
+													Security penetration skills (9), network and programming
+													skills (6), advanced computer user (5), some technical
+													skills (3), no technical skills (1)</span></a></td>
+										<td><input type="number" ng-change="saveRating()"
+											ng-model="threat.skill" min="0" max="9"></td>
+										<td><a class="tip">Ease of discovery<span>How
+													easy is it for this group of threat agents to discover this
+													vulnerability? Practically impossible (1), difficult (3),
+													easy (7), automated tools available (9)</span></a></td>
+										<td><input type="number" ng-change="saveRating()"
+											ng-model="threat.discover" min="0" max="9"></td>
+									</tr>
+									<tr>
+										<td><a class="tip">Motive<span>How motivated
+													are the threat agents to find and exploit this
+													vulnerability? Low or no reward (1), possible reward (4),
+													high reward (9)</span></a></td>
+										<td><input type="number" ng-change="saveRating()"
+											ng-model="threat.motive" min="0" max="9"></td>
+										<td><a class="tip">Ease of exploit<span>How
+													easy is it for this group of threat agents to actually
+													exploit this vulnerability? Theoretical (1), difficult (3),
+													easy (5), automated tools available (9)</span></a></td>
+										<td><input type="number" ng-change="saveRating()"
+											ng-model="threat.ease" min="0" max="9"></td>
+									</tr>
+									<tr>
+										<td><a class="tip">Opportunity<span>What
+													resources and opportunities are required for this group of
+													threat agents to find and exploit this vulnerability? Full
+													access or expensive resources required (0), special access
+													or resources required (4), some access or resources
+													required (7), no access or resources required (9)</span></a></td>
+										<td><input type="number" ng-change="saveRating()"
+											ng-model="threat.opportunity" min="0" max="9"></td>
+										<td><a class="tip">Awareness<span>How well
+													known is this vulnerability to this group of threat agents?
+													Unknown (1), hidden (4), obvious (6), public knowledge (9)</span></a></td>
+										<td><input type="number" ng-change="saveRating()"
+											ng-model="threat.aware" min="0" max="9"></td>
+									</tr>
+									<tr>
+										<td><a class="tip">Size<span>How large is this
+													group of threat agents? Developers (2), system
+													administrators (2), intranet users (4), partners (5),
+													authenticated users (6), anonymous Internet users (9)</span></a></td>
+										<td><input type="number" ng-change="saveRating()"
+											ng-model="threat.size" min="0" max="9"></td>
+										<td><a class="tip">Intrusion detection<span>How
+													likely is an exploit to be detected? Active detection in
+													application (1), logged and reviewed (3), logged without
+													review (8), not logged (9)</span></a></td>
+										<td><input type="number" ng-change="saveRating()"
+											ng-model="threat.id" min="0" max="9"></td>
+									</tr>
+
+								</table></td>
+
+							<td align="center" valign="top"><b>IMPACT =
+									{{threat.totaleImpact}}</b>
+
+								<table>
+
+									<tr>
+										<td align="center"><b>Technical Impact Factors</b></td>
+										<td align="center"><b>Business Impact Factors</b></td>
+									</tr>
+								</table>
+								<table>
+									<tr>
+										<td><a class="tip">Loss of confidentiality<span>How
+													much data could be disclosed and how sensitive is it?
+													Minimal non-sensitive data disclosed (2), minimal critical
+													data disclosed (6), extensive non-sensitive data disclosed
+													(6), extensive critical data disclosed (7), all data
+													disclosed (9)</span></a></td>
+										<td><input type="number" ng-change="saveRating()"
+											ng-model="threat.confide" min="0" max="9" value="0"></td>
+										<td><a class="tip">Financial damage<span>How
+													much financial damage will result from an exploit? Less
+													than the cost to fix the vulnerability (1), minor effect on
+													annual profit (3), significant effect on annual profit (7),
+													bankruptcy (9)</span></a></td>
+										<td><input type="number" ng-change="saveRating()"
+											ng-model="threat.financial" min="0" max="9" value="0"></td>
+									</tr>
+									<tr>
+										<td><a class="tip">Loss of integrity<span>How
+													much data could be corrupted and how damaged is it? Minimal
+													slightly corrupt data (1), minimal seriously corrupt data
+													(3), extensive slightly corrupt data (5), extensive
+													seriously corrupt data (7), all data totally corrupt (9)</span></a></td>
+										<td><input type="number" ng-change="saveRating()"
+											ng-model="threat.integri" min="0" max="9" value="0"></td>
+										<td><a class="tip">Reputation damage<span>Would
+													an exploit result in reputation damage that would harm the
+													business? Minimal damage (1), Loss of major accounts (4),
+													loss of goodwill (5), brand damage (9)</span></a></td>
+										<td><input type="number" ng-change="saveRating()"
+											ng-model="threat.reputation" min="0" max="9" value="0"></td>
+									</tr>
+									<tr>
+										<td><a class="tip">Loss of availability<span>How
+													much service could be lost and how vital is it? Minimal
+													secondary services interrupted (1), minimal primary
+													services interrupted (5), extensive secondary services
+													interrupted (5), extensive primary services interrupted
+													(7), all services completely lost (9)</span></a></td>
+										<td><input type="number" ng-change="saveRating()"
+											ng-model="threat.avalai" min="0" max="9" value="0"></td>
+										<td><a class="tip">Non-compliance<span>How
+													much exposure does non-compliance introduce? Minor
+													violation (2), clear violation (5), high profile violation
+													(7)</span></a></td>
+										<td><input type="number" ng-change="saveRating()"
+											ng-model="threat.noncompliance" min="0" max="9" value="0"></td>
+									</tr>
+									<tr>
+										<td><a class="tip">Loss of accountability<span>Are
+													the threat agents' actions traceable to an individual?
+													Fully traceable (1), possibly traceable (7), completely
+													anonymous (9)</span></a></td>
+										<td><input type="number" ng-change="saveRating()"
+											ng-model="threat.accounta" min="0" max="9" value="0"></td>
+										<td><a class="tip">Privacy violation<span>How
+													much personally identifiable information could be
+													disclosed? One individual (3), hundreds of people (5),
+													thousands of people (7), millions of people (9)</span></a></td>
+										<td><input type="number" ng-change="saveRating()"
+											ng-model="threat.privacy" min="0" max="9" value="0"></td>
+									</tr>
+
+								</table></td>
+
+						</table></td>
+
+
+				</tr>
+
+			</table>
+		</div>
+
+
+
+		<div class="panel panel-default" ng-show="vedirisultati">
+			<table class="CSSTableGenerator" border="1" ; width=100%>
+				<tr>
+					<td></td>
+					<td align="center" ng-repeat="component in ListComponentFromDB">{{component.name}}</td>
+				</tr>
+				<tr>
+					<td><b>Spoofing</b></td>
+					<td
+						ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'SPOOFING')]"
+						align="center" ng-repeat="component in ListComponentFromDB">{{getRisk(component.name,'SPOOFING')}}</td>
+				</tr>
+				<tr>
+					<td><b>Tampering</b></td>
+					<td
+						ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'TAMPERING')]"
+						align="center" ng-repeat="component in ListComponentFromDB">{{getRisk(component.name,'TAMPERING')}}</td>
+				</tr>
+				<tr>
+					<td><b>Remediation</b></td>
+					<td
+						ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'REPUDIATION')]"
+						align="center" ng-repeat="component in ListComponentFromDB">{{getRisk(component.name,'REPUDIATION')}}</td>
+				</tr>
+				<tr>
+					<td><b>Information Disclosure</b></td>
+					<td
+						ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'INFORMATION DISCLOSURE')]"
+						align="center" ng-repeat="component in ListComponentFromDB">{{getRisk(component.name,'INFORMATION
+						DISCLOSURE')}}</td>
+				</tr>
+				<tr>
+					<td><b>Denial of Service</b></td>
+					<td
+						ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'DENIAL OF SERVICE')]"
+						align="center" ng-repeat="component in ListComponentFromDB">{{getRisk(component.name,'DENIAL
+						OF SERVICE')}}</td>
+				</tr>
+				<tr>
+					<td><b>Elevation of privileges</b></td>
+					<td
+						ng-style="{'VERY LOW':{background:'green'},'LOW':{background:'yellow'},'MEDIUM':{background:'orange'},'HIGH':{background:'red'},'CRITICAL':{background:'pink'}}[getRisk(component.name,'ELEVATION OF PRIVILEGES')]"
+						align="center" ng-repeat="component in ListComponentFromDB">{{getRisk(component.name,'ELEVATION
+						OF PRIVILEGES')}}</td>
+				</tr>
+			</table>
+
+
+
+
+
+		</div>
+
+
+
+
+
+
+
+
+
+
+		<button class="btn btn-primary pull-left" ng-click="saveRating()">Save</button>
+		<button class="btn btn-primary pull-left" ng-click="showresults()"
+			ng-show='false'>{{button}}</button>
+
+		<button class="btn btn-primary pull-left" ng-click="resetRating()"
+			ng-show='done'>Reset</button>
+		<a href="#/negotiate/security"><button
+				class="btn btn-primary pull-right" ng-show="done">Next</button></a> <br>
+
+		<!-- {{selection}}<br>
  -->
-	<br><br>
-    {{user_name}} {{user_surname}} {{user_id}}<br>
-     
-  </div>
+		<br>
+		<br> {{user_name}} {{user_surname}} {{user_id}}<br>
+
+	</div>
 </div>
 
 
